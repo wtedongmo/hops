@@ -1,0 +1,69 @@
+<html xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layout">
+<head>
+
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div>
+        <cmm-page-header>
+            <section class="content-header">
+                <ol class="breadcrumb">
+                    <li>
+                        <a th:href="@{/user/homepage}" ><i class="fa fa-home"></i></a>
+                    </li>
+                    <li class="active" th:text="#{admin.category.users}">Users</li>
+                </ol>
+            </section>
+        </cmm-page-header>
+    </div>
+
+    <section class="content">
+
+        <div class="box box-info no-border">
+
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 th:text="#{admin.category.users}">Users</h2>
+                    </div>
+                    <div th:if="${successImport}" th:text="#{admin.import.success}" class="row"/>
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <div th:include="user/user-list">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3" th:if="${showAddUserForm == true}" id="addUserContainer">
+                                <div th:include="user/user-form">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3" th:if="${showAUserAssociationForm == true}" id="showAUserAssociationContainer">
+                                <div th:include="user/user-association">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3" th:if="${showResetUserPasswordForm == true}" id="showAResetUserPasswordContainer">
+                                <div th:include="user/user-reset-password-form">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+</body>
+</html>

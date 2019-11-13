@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <div th:fragment="headerfiles">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="icon" type="image/x-icon" th:href="@{/img/favicon.ico}" />
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+        <link rel="stylesheet" type="text/css" th:href="@{/vendor/datatables/datatables.min.css}" />
+
+        <!--
+        <link th:href="@{/dist/css/sb-admin-2.css}" rel="stylesheet"></link>
+        <link th:href="@{/vendor/morrisjs/morris.css}" rel="stylesheet"></link>
+        -->
+
+
+        <link rel="stylesheet" type="text/css" th:href="@{/css/portal_custom.css}" />
+        <link rel="stylesheet" type="text/css" th:href="@{/css/portal_custom_responsive.css}" />
+
+
+        <script type="text/javascript" th:src="@{/js/inline.js}"></script>
+        <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+        <script type="text/javascript" th:src="@{/js/vendor.js}"></script>
+
+
+        <script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+        <script th:src="@{/dist/js/sb-admin-2.js}"></script>
+
+
+    </div>
+    <title th:text="#{modules.title}">ePayment Administration</title>
+</head>
+
+<body class="skin-blue sidebar-mini" style="height: auto;">
+<!--start wrapper-->
+<div class="wrapper" style="overflow-y: hidden; height: auto;">
+    <cmm-top-area th:fragment="header">
+        <header class="main-header">
+
+            <a class="logo" style="cursor: pointer;">
+                <span class="logo-mini"><strong class="logo_symbol"><span class="blind" th:text="#{apps.title}">CAMEROON CUSTOMS</span></strong></span>
+                <span class="logo-lg"><strong class="logo_real"><span class="blind" th:text="#{modules.title}">Administration</span></strong></span>
+            </a>
+
+            <nav class="navbar navbar-static-top">
+                <a class="sidebar-toggle" data-toggle="offcanvas" th:href="@{/admin}" id="sidebar-toggle" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div style="float:left;">
+                    <cmm-top-menu>
+                        <ul class="topmenubar">
+                            <li class="topmenuLI">
+                                <a class="menu_deth"><i class="fa "></i><span th:text="#{apps.title} +' ' + #{modules.title}">ePayment Administration</span></a>
+                            </li>
+                        </ul>
+                    </cmm-top-menu>
+                </div>
+                <a class="m_sidebar-toggle" data-toggle="offcanvas" th:href="@{/admin}" id="m_sidebar-toggle" role="button">
+                    <span class="sr-only">Toggle navigation2</span>
+                </a>
+                <cmm-navbar>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown messages-menu">
+                                <a class="dropdown-toggle" data-toggle="dropdown" th:href="@{/admin}" placement="bottom">
+                                    <i class="fa fa-globe"></i><span class="label label-warning">Lang</span>
+                                </a>
+                                <ul class="dropdown-menu custommm_ty2">
+                                    <li class="header"><span class="hero_badge"><i class="fa fa fa-globe"></i></span> <span th:text="#{lang.change}" th:remove="tag">Language</span></li>
+                                    <li>
+                                        <ul class="menu">
+                                            <li>
+                                                <a href="javascript:;">
+                                                    <div class="inner">
+                                                        <div class="inner_cont">
+                                                            <span class="cont_list locales" data-locale="en" th:text="#{lang.eng}">English</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:;">
+                                                    <div class="inner">
+                                                        <div class="inner_cont">
+                                                            <span class="cont_list locales" data-locale="fr" th:text="#{lang.fr}">Français</span>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li style="cursor: pointer;">
+                                <a class="logout" th:href="@{/logout}"><i class="fa fa-power-off"></i><span th:text="#{logout}">Déconnexion</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </cmm-navbar>
+            </nav>
+        </header>
+    </cmm-top-area>
+
+    <cmm-left-area th:fragment="sidebar">
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <div class="login_lot login_lot_tp">
+                    <!--
+                    <ul class="login_action">
+                        <li><span class="username" th:if="${username}" th:text="${username}">username</span></li>
+                    </ul>
+                    -->
+                    <ul sec:authorize="isAuthenticated()" class="sidebar-menu">
+                        <li class="header" th:text="#{navigation.title}">Navigation Principale</li>
+                        <li sec:authorize="hasAnyAuthority('NANO_ADMIN', 'NANO_READ_ONLY')" th:class="${parentMenuHighlight == 'bank-index'}? 'treeview active' : 'treeview'">
+                            <a>
+                                <i class="fa fa-folder"></i> <span th:text="#{admin.category.users}">Users</span>
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li th:class="${menuHighlight == 'bank-list'}? active : ''">
+                                    <a th:href="@{/admin/users}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.category.users}">Users</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('NANO_ADMIN', 'NANO_READ_ONLY')" th:class="${parentMenuHighlight == 'bank-index'}? 'treeview active' : 'treeview'">
+                            <a>
+                                <i class="fa fa-folder"></i> <span th:text="#{admin.category.outb.inbound}">Participants</span>
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li th:class="${menuHighlight == 'bank-list'}? active : ''">
+                                    <a th:href="@{/admin/outbound-participants}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.category.outbound}">Customs</span>
+                                    </a>
+                                </li>
+                                <li th:class="${menuHighlight == 'bank-list'}? active : ''">
+                                    <a th:href="@{/admin/inbound-participants}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.category.inbound}">Participants</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('NANO_ADMIN', 'NANO_READ_ONLY')" th:class="${parentMenuHighlight == 'notices-index'}? 'treeview active' : 'treeview'">
+                            <a>
+                                <i class="fa fa-folder"></i> <span th:text="#{admin.base-entity.title}">Base entities</span>
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+
+                            <ul class="treeview-menu">
+                                <li th:class="${menuHighlight == 'notices-unpaid'}? 'active' : ''">
+                                    <a th:href="@{/admin/notice-types}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.notice-type.title}">Notice type</span>
+                                    </a>
+                                </li>
+                                <li th:class="${menuHighlight == 'notices-paid'}? 'active' : ''">
+                                    <a th:href="@{/admin/base-entities?id=1}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.declaration-type.title}">Declaration Type</span>
+                                    </a>
+                                </li>
+                                <li th:class="${menuHighlight == 'notices-paid'}? 'active' : ''">
+                                    <a th:href="@{/admin/base-entities?id=3}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.payment-category.title}">Payment Category</span>
+                                    </a>
+                                </li>
+                                <li th:class="${menuHighlight == 'notices-paid'}? 'active' : ''">
+                                    <a th:href="@{/admin/base-entities?id=4}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.payment-method.title}">Payment Method</span>
+                                    </a>
+                                </li>
+                                <li th:class="${menuHighlight == 'notices-paid'}? 'active' : ''">
+                                    <a th:href="@{/admin/base-entities?id=5}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.beneficiary.title}">Organism</span>
+                                    </a>
+                                </li>
+                                <li th:class="${menuHighlight == 'notices-paid'}? 'active' : ''">
+                                    <a th:href="@{/admin/base-entities?id=6}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.office.title}">Office</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('NANO_ADMIN', 'NANO_READ_ONLY')" th:class="${parentMenuHighlight == 'notices-index'}? 'treeview active' : 'treeview'">
+                            <a>
+                                <i class="fa fa-folder"></i> <span th:text="#{admin.load-file-report.title}">Load File Report</span>
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li th:class="${menuHighlight == 'notices-unpaid'}? 'active' : ''">
+                                    <a th:href="@{/admin/load-file-reports}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.load-file-report.title}">Load File Report</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                         <li sec:authorize="hasAnyAuthority('NANO_ADMIN')" th:class="${parentMenuHighlight == 'bank-index'}? 'treeview active' : 'treeview'">
+                            <a>
+                                <i class="fa fa-folder"></i> <span th:text="#{admin.category.import.export}">Import Export Settings</span>
+                                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li th:class="${menuHighlight == 'bank-list'}? active : ''">
+                                    <a th:href="@{/admin/user/import-settings}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.category.import}">Import Settings</span>
+                                    </a>
+                                </li>
+                                <li th:class="${menuHighlight == 'bank-list'}? active : ''">
+                                    <a th:href="@{/admin/export-settings}">
+                                        <i class="fa fa-circle-o"></i> <span th:text="#{admin.category.export}">Export Settings</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </aside>
+    </cmm-left-area>
+
+
+
+    <div class="content-wrapper sub-style" style="min-height: 665.8px; background-color: #fff">
+        <div layout:fragment="content">Fake content</div>
+    </div>
+
+    <cmm-bottom-area th:fragment="footer">
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                Design, Implementation of Customs e-Payment
+            </div>
+            <strong>Copyright © 2019 <a th:href="@{/admin}">Customs e-Payment</a>.</strong> All rights reserved.
+        </footer>
+    </cmm-bottom-area>
+
+</div>
+<!-- end wrapper-->
+<div th:fragment="footerfiles">
+
+
+
+    <script type="text/javascript" th:src="@{/vendor/datatables/datatables.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/portal_custom.js}"></script>
+</div>
+</body>
+</html>

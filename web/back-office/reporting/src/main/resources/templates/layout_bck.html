@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<!--th:with="lang=${#locale.language}" th:lang="${lang}"-->
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content="Portal"/>
+    <meta name="author" content="CAMCIS"/>
+    <link rel="icon" type="image/x-icon" th:href="@{/img/favicon.ico}" />
+    <title>e-Payment Reports</title>
+
+
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/vendor/metisMenu/metisMenu.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/dist/css/sb-admin-2.css}" rel="stylesheet"></link>
+    <link th:href="@{/vendor/morrisjs/morris.css}" rel="stylesheet"></link>
+    <link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"></link>
+    <link rel="stylesheet" th:href="@{/css/epayment-reporting.css}" />
+
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/vendor/raphael/raphael.min.js}"></script>
+    <script th:src="@{/vendor/morrisjs/morris.min.js}"></script>
+    <script th:src="@{/dist/js/sb-admin-2.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"> </script>
+
+</head>
+
+<body>
+<!-- Page Content -->
+<div class="container-fluid">
+    <div class="page">
+        <header th:fragment="headermenu" id="main-header" class="clearfix">
+            <div class="row">
+                <div id="brand-container" class="col-lg-2 w-100 text-center">
+                    <a th:href="@{/}">
+                        <img th:src="@{/img/logo-small.png}" width="50" height="40" alt="logo"/>
+                    </a>
+                    <!--<span ><b>Customs e-Payment System</b></span>-->
+                </div>
+                <div id="nav-container" class="col-lg-10">
+                    <nav sec:authorize="isAuthenticated()" class="navbar navbar-expand-lg bg-light navbar--portal pl-0">
+                        <ul class="navbar-nav navbar--admin">
+                            <!--<li class="nav-item" th:align="left">-->
+                                <!--<span class="nav-item"><b>Customs e-Payment System</b></span>-->
+                            <!--</li>-->
+                            <!--<li class="nav-item">-->
+                                <!--<span class="nav-item" th:text="#{lang.title}">Choose Language</span>-->
+                            <!--</li>-->
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/report?lang=en}" th:text="#{lang.eng}">English</a>
+                                <!--&nbsp;|&nbsp;-->
+                                <!--<a th:href="@{/?lang=fr}" th:text="#{lang.fr}">Login (French)</a>-->
+                            </li>
+                            <!--<li class="nav-item">-->
+                                <!--<select class="form-control form-control-sm" id="locales">-->
+                                    <!--<option value=""></option>-->
+                                    <!--<option value="en" th:text="#{lang.eng}"></option>-->
+                                    <!--<option value="fr" th:text="#{lang.fr}"></option>-->
+                                <!--</select>-->
+                            <!--</li>-->
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/logout}" th:text="#{logout}">Sign out</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <div class="row">
+            <!--menu container-->
+            <div th:fragment="leftmenu" id="menu-container" class="col-lg-2">
+                <!-- Sidebar -->
+                <nav sec:authorize="isAuthenticated()" id="sidebar">
+                    <ul class="list-unstyled components">
+
+                        <li sec:authorize="isAuthenticated()">
+                            <a href="#">
+                                <i class="fa fa-th-list"></i>
+                                <span th:text="#{report.notice.title}">Paid Notices</span>
+                            </a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=101}" >
+                                        <!--target="_blank"-->
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title}">Paid Notices</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=102}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.ontime}">Paid Notice on time </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=103}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.delay}">Paid Notice late</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=104}" >
+                                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                    <span th:text="#{report.notice.title.type}">Paid Notice by Type</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=105}" >
+                                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                    <span th:text="#{report.notice.title.participant}">Paid Notice by participant</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=106}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.beneficiary}">Paid Notice by beneficiary</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=107}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.taxpayer}">Paid Notice by taxpayer</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=108}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.taxpayer.ontime}">Paid Notice by taxpayer on time</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=109}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.taxpayer.delay}">Paid Notice by taxpayer late</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=110}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.office}">Paid Notice by office</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=111}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.paycat}">Paid Notice by payment category</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=112}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.dectype}">Paid Notice by office and by declaration type</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=113}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.paymeth}">Paid Notice by payment method</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/report/paid-notice?id=114}" >
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                        <span th:text="#{report.notice.title.cda}">Paid Notice by CDA</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+
+            <!--main container-->
+            <div id="main-container" class="col-lg-10">
+
+                <h2 sec:authorize="isAuthenticated()" class="mb-4 header--primary" th:text="#{modules.title.entire}">ePayment Reports</h2>
+                <div layout:fragment="content">Fake content</div>
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+
+<!--For Internationalization-->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#locales").change(function () {
+            var selectedOption = $('#locales').val();
+            if (selectedOption != ''){
+                window.location.replace('?lang=' + selectedOption);///ePayment-reports/lang
+            }
+        });
+    });
+</script>
+</body>
+</html>

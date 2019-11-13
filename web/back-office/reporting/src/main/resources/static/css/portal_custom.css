@@ -1,0 +1,77 @@
+
+.dataTables_info, .dataTables_length {
+    float: left;
+
+}
+
+.dataTables_length {
+    margin-top: 2px;
+    width: 200px;
+}
+
+.dataTables_info {
+    width: 80px;
+}
+
+.dataTables_info .tc_num {
+    color: #1b998b;
+    font-weight: 600;
+}
+
+.dataTables_info .control-label {
+    font-weight: 400;
+    letter-spacing: normal;
+    color: #555;
+    text-transform: uppercase;
+}
+
+.dataTables_scroll {
+    border: 1px solid #ddd;
+    border-bottom: 0;
+    margin-bottom: 5px;
+}
+
+.dataTable th {
+    font-weight: 400 !important;
+    color: #666 !important;
+    background: #e5e5e5 !important;
+    border-right: 1px solid #0000001a !important; ;
+    border-bottom: 1px solid #0000001a !important; ;
+}
+
+.dataTable {
+    border-top: 0 !important;
+}
+
+table.dataTable {
+    margin-top:0 !important;
+}
+
+table .details-control {
+    cursor: pointer;
+}
+
+.details-control-child .form-inline .form-group {
+    display:block;
+}
+
+.login_action .username {
+    display: block;
+    width: 100%;
+    height: auto;
+    line-height: 125%;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 15px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: .25s;
+    transition: .25s;
+    word-break: break-all;
+}
+
+.content {
+    overflow: auto;
+}

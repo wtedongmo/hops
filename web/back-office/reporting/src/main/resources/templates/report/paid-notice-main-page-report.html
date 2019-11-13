@@ -1,0 +1,22 @@
+<html xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content" class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div th:if="${participant}" th:include="report/main-participant-reconciliation-report"></div>
+                    <div th:if="${otherUser}" th:include="report/paid-notice-report"></div>
+                    <div th:if="${provider}" th:include="report/paid-notice-provider-report"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

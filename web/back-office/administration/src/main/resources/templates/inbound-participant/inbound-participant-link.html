@@ -1,0 +1,108 @@
+<html
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script>
+        $(document).ready(function () {
+            $("#cancelParticipantLinkButton").click(function () {
+                $("#participantLinkContainer").toggle(1000);
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div th:text="#{admin.outbound.for}"><i class="fa fa-user-circle"></i>&nbsp;Outbound participants for <span
+                th:text="${selectedParticipant.participantName}"></span></div>
+    </div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div th:text="#{admin.participant.linked}">Linked Participants</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(linkedParticipants)}">
+                                <td th:text="#{admin.participant.empty}"></td>
+                            </tr>
+                            <tr th:each="linkedParticipant: ${linkedParticipants}">
+                                <td>
+                                    <div>
+                                        <span th:text="${linkedParticipant.participantName}"/>
+                                    </div>
+                                    <!--<div>-->
+                                        <!--<span th:text="${linkedParticipant.outboundParticipantType}"/>-->
+                                    <!--</div>-->
+                                    <div>
+                                        <span th:text="${'Code:' + linkedParticipant.participantCode + ' Id:' + linkedParticipant.outboundParticipantId}"/>
+                                    </div>
+                                </td>
+                                <td><a
+                                        th:href="@{__${'/admin/inbound-participants/' + selectedParticipant.participantId + '/unlinkParticipant/' + linkedParticipant.outboundParticipantId}__(pageNumber=${currentPage})}"
+                                        th:method="GET">
+                                    <img th:src="@{/images/delete.png}"
+                                         alt="Remove Participant" title="Remove Participant" th:text="#{admin.participant.remove}"/>
+                                </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div th:text="#{admin.participant.unlinked}">Unlinked Participants</div>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(unlinkedParticipants)}">
+                                <td th:text="#{admin.participant.empty}"></td>
+                            </tr>
+                            <tr th:each="unlinkedParticipant: ${unlinkedParticipants}">
+                                <td>
+                                    <div>
+                                        <span th:text="${unlinkedParticipant.participantName}"/>
+                                    </div>
+                                    <!--<div>-->
+                                        <!--<span th:text="${unlinkedParticipant.outboundParticipantType}"/>-->
+                                    <!--</div>-->
+                                    <div>
+                                        <span th:text="${'Code:' + unlinkedParticipant.participantCode + ' Id:' + unlinkedParticipant.outboundParticipantId}"/>
+                                    </div>
+                                </td>
+                                <td><a
+                                        th:href="@{__${'/admin/inbound-participants/' + selectedParticipant.participantId + '/linkParticipant/' + unlinkedParticipant.outboundParticipantId}__(pageNumber=${currentPage})}"
+                                        th:method="GET">
+                                    <img th:src="@{/images/add.png}"
+                                         alt="Add Participant" title="Add Participant" th:text="#{admin.participant.add}"/> </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <button class="btn btn-outline btn-danger btn-lg" id="cancelParticipantLinkButton"
+                    type="button" value="Cancel" th:text="#{button.cancel}">Cancel
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

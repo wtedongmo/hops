@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<!--xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en"-->
+<head>
+    <!--/*/ <th:block th:include="login_fragment :: headerfiles"></th:block> /*/-->
+    <title>Customs E-payment platform - Banking partners</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
+    <link th:href="@{/css/notices.css}" type="text/css" rel="stylesheet"/>
+    <link th:href="@{/css/datatables.css}" type="text/css" rel="stylesheet"/>
+</head>
+<body class="body body--notices">
+<!-- Page Content -->
+<div class="container-fluid">
+    <div class="page page--notices">
+
+            <header th:fragment="headermenu" id="main-header" class="clearfix">
+                <div class="row">
+                    <div id="brand-container" class="col-md-2 w-100 text-center pt-1">
+                        <a th:href="@{/templates/portal/homepage}">
+                            <img th:src="@{/img/logo-small.png}" width="115" height="30" alt="logo"/>
+                        </a>
+                    </div>
+                    <div id="nav-container" class="col-md-10">
+                        <nav class="navbar navbar-expand-md bg-light navbar--portal pl-0">
+                            <a class="nav-container__brand" th:href="@{/templates/portal/list-unpaid-notice}"
+                               th:text="#{portal.title}">E-payment portal</a>
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <!--<select class="form-control form-control-sm" id="locales">-->
+                                        <!--<option value=""></option>-->
+                                        <!--<option value="en" th:text="#{lang.eng}"></option>-->
+                                        <!--&lt;!&ndash;<option value="fr" th:text="#{lang.fr}"></option>&ndash;&gt;-->
+                                    <!--</select>-->
+                                    <a th:href="@{/?lang=en}" th:text="#{lang.eng}">English</a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="nav-link"><span th:if="${username}" th:text="${username}" /></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a th:href="@{/logout}" class="nav-link" th:text="#{portal.signout}">Sign out</a>
+                                </li>
+                            </ul>
+
+                        </nav>
+                    </div>
+                </div>
+        </header>
+
+        <div class="row">
+
+            <!--menu container-->
+            <div th:fragment="leftmenu" id="menu-container" class="col-md-2 p-0">
+                <!-- Sidebar -->
+                <nav id="sidebar">
+                    <ul class="list-unstyled components">
+                        <li th:class="${parentMenuHighlight == 'notices-index'}? active : ''">
+                            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"
+                               th:text="#{notice.label}">Notices</a>
+                            <ul class="collapse list-unstyled show" id="homeSubmenu">
+                                <li th:class="${menuHighlight == 'notices-unpaid'}? active : ''">
+                                    <a th:href="@{/templates/portal/list-unpaid-notice}" th:text="#{notice.unpaid.list.label}">Unpaid</a>
+                                </li>
+                                <li th:class="${menuHighlight == 'notices-paid'}? active : ''">
+                                    <a th:href="@{/templates/portal/list-paid-notice}" th:text="#{notice.paid.list.label}">Paid</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--<li th:class="${parentMenuHighlight == 'bank-index'}? active : ''">-->
+                        <!--<a th:href="@{/portal/list-bank}" th:text="#{bank.list.label}">Banking partners</a>-->
+                        <!--</li>-->
+                        <li th:class="${parentMenuHighlight == 'bank-index'}? active : ''">
+                            <a th:href="@{/templates/portal/list-partner}" th:text="#{partner.list.label}">Payment partners</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!--main container-->
+            <div id="main-container" class="col-md-10 pt-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="mb-4 header--primary" th:text="#{notice.unpaid.list.label}">Unpaid notices</h2>
+                        <div class="card w-100">
+                            <div class="card-body">
+                                <!--begin: Datatable -->
+                                <table class="table table-striped table-hover table--notices" id="table-notices-js">
+                                    <thead>
+                                    <tr>
+                                        <th th:text="#{bank.code}">Code</th>
+                                        <th th:text="#{bank.name}">Name</th>
+                                        <th th:text="#{bank.link}">Link</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr data-th-each="bank : ${Bank}">
+                                        <td data-th-text="${bank.code}"></td>
+                                        <td data-th-text="${bank.name}"></td>
+                                        <td data-th-text="${bank.link}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="login_fragment :: footerfiles" />
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
+<script type="text/javascript" th:src="@{/js/notices.js}"></script>
+
+<!--For Internationalization-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#locales").change(function () {
+            var selectedOption = $('#locales').val();
+            if (selectedOption != ''){
+                window.location.replace('/epayment-portal/lang?language=' + selectedOption);
+            }
+        });
+    });
+</script>
+</body>
+</html>

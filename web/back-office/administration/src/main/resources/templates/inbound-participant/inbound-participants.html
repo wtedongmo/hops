@@ -1,0 +1,67 @@
+<html xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layout">
+<head>
+
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div>
+        <cmm-page-header>
+            <section class="content-header">
+                <ol class="breadcrumb">
+                    <li>
+                        <a th:href="@{/user/homepage}" ><i class="fa fa-home"></i></a>
+                    </li>
+                    <li class="active" th:text="#{admin.participant.title}">Inbound Participants</li>
+                </ol>
+            </section>
+        </cmm-page-header>
+    </div>
+
+    <section class="content">
+
+        <div class="box box-info no-border">
+
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 th:text="#{admin.participant.title}">Inbound Participants</h2>
+                    </div>
+                    <div th:if="${successImport}" th:text="#{admin.import.success}" class="row"/>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div th:include="inbound-participant/inbound-participant-list">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" th:if="${showParticipantAddForm == true}" id="addParticipantContainer">
+                                <div th:include="inbound-participant/inbound-participant-form">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" th:if="${showLinkForm == true}" id="participantLinkContainer">
+                                <div th:include="inbound-participant/inbound-participant-link">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4" th:if="${showFeeLinkForm == true}" id="feeLinkContainer">
+                                <div th:include="inbound-participant/inbound-participant-fee-link">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+</body>
+</html>

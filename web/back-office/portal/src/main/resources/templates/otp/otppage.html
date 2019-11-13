@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<!--//  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"-->
+<!--xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" lang="en"-->
+<head>
+    <title th:text="#{portal.otp.validation.title}">CAMCIS E-payment platform - Code verification</title>
+    <!--/*/ <th:block th:include="login_fragment :: headerfiles"></th:block> /*/-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
+</head>
+<body class="body body--login">
+<!-- Page Content -->
+<div class="container-fluid">
+    <div class="page page--login">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <div th:replace="login_fragment :: loginbranding" />
+                <!-- auth form -->
+                <div class="card">
+                    <div class="card-body">
+                        <!-- verification form-->
+                        <div id="code-verification-container">
+                            <h5 class="card-title header--primary" th:text="#{portal.otp.validation}">Code verification</h5>
+                            <p class="card-text" th:text="#{portal.user.welcome(${useremail})}">Hello
+                                ! To get access, enter the verification code sent to your email address.
+                            </p>
+                            <div th:if="${otpMessage}"  th:text="#{epayment.portal.otp.code.resend}" class="alert alert-warning"/>
+                            <div th:if="${otpMessageError}"  th:text="#{epayment.portal.otp.code.failed}" class="alert alert-warning"/>
+                            <div th:if="${param.error}" class="alert alert-warning" th:text="#{portal.otp.invalid}">
+                                Invalid verification code. Please try again.
+                            </div>
+                            <form name="validateOtp" th:method="post" th:object="${otpForm}" th:action="@{__${orpFormLink}__}" class="signin-container__form mt-4 mb-4" >
+                                <div class="form-group">
+                                    <input type="number" th:min="100000" th:max="999999" class="form-control" th:field="*{otpNumber}"
+                                        name="otpNumber" id="verification-code" th:placeholder="#{portal.otp.type}"  required="true" autofocus="true"/>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn--portal w-100" th:text="#{portal.otp.veriry}">Verify code</button>
+
+                            </form>
+                            <div style="display: inline;" >
+                                <span style="float:left;">
+                                    <a th:href="@{/otp/resend}" class="card-link" th:text="#{portal.otp.resend}">Did not receive code? Resend</a>
+                                </span>
+                                <span style="float:right;">
+                                    <a th:href="@{/login}" class="card-link" th:text="#{portal.otp.cancel}">Cancel</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/*/ <th:block th:include="login_fragment :: footerfiles"></th:block> /*/-->
+</body>
+</html>
