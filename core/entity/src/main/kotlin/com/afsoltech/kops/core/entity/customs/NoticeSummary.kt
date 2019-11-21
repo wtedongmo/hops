@@ -1,6 +1,6 @@
 package com.afsoltech.kops.core.entity.customs
 
-import com.afsoltech.core.entity.BaseAuditEntity
+import com.afsoltech.core.entity.BaseAudit
 import java.math.BigDecimal
 import java.time.LocalDate
 import javax.persistence.*
@@ -26,4 +26,4 @@ data class NoticeSummary (
         @Column(name = "SUMMARY_IDENTIFIER", columnDefinition = "varchar(50)")
         var summaryIdentifier: String? = null
 
-): BaseAuditEntity()
+): BaseAudit()

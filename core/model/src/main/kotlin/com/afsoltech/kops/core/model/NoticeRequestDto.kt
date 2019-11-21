@@ -23,6 +23,3 @@ data class UnpaidNoticeRequestDto (
         val dueDate: String? = null
 )
 
-data class CheckedNoticeRequestDto (
-        val taxpayerNumber: String
-)

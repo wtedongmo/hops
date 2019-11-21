@@ -7,6 +7,7 @@ import java.math.BigDecimal
 data class UnpaidNoticeResponseDto (
 
         var noticeId : Long? = null,
+//        var remoteNoticeId : Long? = null,
         val noticeNumber: String? = null,
         val notificationDate: String? = null,
         val noticeType: String? = null,

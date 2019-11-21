@@ -13,10 +13,10 @@ data class PaymentProcessRequestDto(
         val accountName: String?=null,
         val paymentMethod: String,
 
-        val noticeList: List<NoticePaymentSummaryDto> = emptyList()
+        val noticeList: List<NoticeOfPaymentDto> = emptyList()
 )
 
-data class NoticePaymentSummaryDto(
+data class NoticeOfPaymentDto(
         val noticeId: Long,
         val noticeNumber: String,
         val noticeAmount: BigDecimal

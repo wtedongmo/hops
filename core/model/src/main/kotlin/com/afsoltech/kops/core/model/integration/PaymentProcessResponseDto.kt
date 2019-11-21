@@ -4,8 +4,8 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 data class PaymentProcessResponseDto (
-        val result: String? = null,
-        val message: String? = null,
+        val resultCode: String? = null,
+        val resultMsg: String? = null,
         val epaymentId: Long? = null,
         val bankPaymentNumber: String? = null,
         val paymentResultCode: String? = null,

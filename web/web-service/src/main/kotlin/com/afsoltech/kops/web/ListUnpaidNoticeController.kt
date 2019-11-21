@@ -1,7 +1,7 @@
 package com.nanobnk.epayment.core.web
 
 import com.nanobnk.epayment.model.inbound.*
-import com.nanobnk.epayment.service.ListUnpaidNoticeService
+import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
 import com.nanobnk.util.rest.error.RestException
 import com.nanobnk.util.rest.util.enforce
 import com.nanobnk.util.rest.util.ensureNotNull

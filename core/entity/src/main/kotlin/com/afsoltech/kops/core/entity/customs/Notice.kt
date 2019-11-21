@@ -1,9 +1,8 @@
 package com.afsoltech.kops.core.entity.customs
 
-import com.afsoltech.core.entity.BaseAuditEntity
-import com.afsoltech.kops.core.model.attribute.ErrorCode
-import com.afsoltech.kops.core.model.integration.PaymentStatus
-import com.nanobnk.epayment.model.attribute.VentilationStatus
+import com.afsoltech.core.entity.BaseAudit
+import com.afsoltech.core.model.attribute.PaymentStatus
+import com.afsoltech.core.model.attribute.VentilationStatus
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.math.BigDecimal
@@ -68,8 +67,8 @@ data class Notice(
         @Column(name = "PAYMENT_AMOUNT")
         var paymentAmount: BigDecimal? = null,
 
-        @Column(name = "PAYMENT_METHOD", columnDefinition = "varchar(15)")
-        var paymentMethod : String? = null,
+        @Column(name = "PAYMENT_MODE", columnDefinition = "varchar(15)")
+        var paymentMode : String? = null,
 
         @Column(name = "PAYMENT_CATEGORY", columnDefinition = "char(3)")
         var paymentCategory: String? = null,
@@ -112,10 +111,10 @@ data class Notice(
 
         @Fetch(FetchMode.JOIN)
         @OneToMany(mappedBy = "notice", cascade = [(CascadeType.ALL)])
-        var listNoticeBeneficiary: MutableList<NoticeBeneficiary> = ArrayList()
+        var beneficiaryList: MutableList<NoticeBeneficiary> = ArrayList()
 
 
-) : BaseAuditEntity()
+) : BaseAudit()
 
 
 

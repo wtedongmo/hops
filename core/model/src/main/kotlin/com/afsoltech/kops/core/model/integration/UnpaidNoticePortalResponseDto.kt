@@ -6,6 +6,7 @@ import java.time.LocalDate
 //@JsonIgnoreProperties(ignoreUnknown = true)
 data class UnpaidNoticePortalResponseDto (
 
+        val remoteNoticeId: Long? = null,
         val noticeNumber: String? = null,
         var notificationDate: String? = null,
         var noticeType: String? = null,

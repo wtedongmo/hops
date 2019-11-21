@@ -2,8 +2,11 @@ package com.afsoltech.kops.web
 
 
 import com.afsoltech.core.exception.BadRequestException
+import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.util.enforce
-import com.afsoltech.kops.service.ws.CheckUserInfosService
+import com.afsoltech.kops.core.model.AuthRequestDto
+import com.afsoltech.kops.core.model.AuthResponseDto
+import com.afsoltech.kops.service.integration.CheckUserInfosService
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier

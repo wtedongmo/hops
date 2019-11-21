@@ -1,7 +1,7 @@
 package com.afsoltech.kops.core.entity.customs
 
-import com.afsoltech.core.entity.BaseAuditEntity
-import com.nanobnk.epayment.model.attribute.VentilationStatus
+import com.afsoltech.core.entity.BaseAudit
+import com.afsoltech.core.model.attribute.VentilationStatus
 import java.math.BigDecimal
 import javax.persistence.*
 
@@ -47,4 +47,4 @@ data class NoticeBeneficiary (
         @ManyToOne(fetch = FetchType.LAZY)
         var notice: Notice? = null
 
-): BaseAuditEntity()
+): BaseAudit()

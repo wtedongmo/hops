@@ -1,6 +1,6 @@
 package com.afsoltech.kops.core.entity.customs
 
-import com.afsoltech.core.entity.BaseAuditEntity
+import com.afsoltech.core.entity.BaseAudit
 import javax.persistence.*
 
 @Entity
@@ -20,4 +20,4 @@ data class NoticeType (
         @Basic(optional = false)
         var name: String? = null
 
-): BaseAuditEntity()
+): BaseAudit()

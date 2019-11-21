@@ -14,7 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>integration</module>
+		<module>service-integration</module>
 		<module>service-core</module>
         <module>service-ws</module>
 		<module>service-back-office</module>

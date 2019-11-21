@@ -1,16 +1,16 @@
 package com.afsoltech.kops.core.model.integration
 
-import com.nanobnk.epayment.model.attribute.VentilationStatus
+import com.afsoltech.core.model.attribute.VentilationStatus
 
 
-data class NotificationOfVentilationRequest(
+data class VentilationRequest(
         val bankPaymentNumber : String,
         val bankCode: String?,
         val ventilationStatus: VentilationStatus,
         val ventilationMessage: String?
 )
 
-data class NotificationOfVentilationResponse(
+data class VentilationResponse(
         val resultCode: String,
         val resultMessage: String?,
         val bankPaymentNumber : String?

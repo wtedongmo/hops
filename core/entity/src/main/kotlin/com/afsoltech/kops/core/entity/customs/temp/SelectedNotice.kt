@@ -1,13 +1,10 @@
 package com.afsoltech.kops.core.entity.customs.temp
 
-import com.afsoltech.core.entity.BaseAuditEntity
-import com.afsoltech.kops.core.model.attribute.ErrorCode
-import com.afsoltech.kops.core.model.integration.PaymentStatus
+import com.afsoltech.core.entity.BaseAudit
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.persistence.*
 
 
@@ -47,7 +44,7 @@ data class SelectedNotice(
         var taxpayerNumber: String? = null,
 
         //@Basic(optional = false)
-        @Column(name = "CUSTOMER_NAME")
+        @Column(name = "TAXPAYER_NAME")
         var taxpayerName: String? = null,
 
         @Column(name = "CDA_NUMBER", columnDefinition = "varchar(100)", nullable = true)
@@ -71,15 +68,15 @@ data class SelectedNotice(
         var amount: BigDecimal? = null,
 
 
-        @Column(name = "USER_NAME")
-        var userName: String?= null,
+        @Column(name = "USER_LOGIN")
+        var userLogin: String?= null,
 
         @Fetch(FetchMode.JOIN)
         @OneToMany(mappedBy = "selectedNotice", cascade = [(CascadeType.ALL)])
-        var listNoticeBeneficiary: MutableList<SelectedNoticeBeneficiary> = ArrayList()
+        var beneficiaryList: MutableList<SelectedNoticeBeneficiary> = ArrayList()
 
 
-) : BaseAuditEntity()
+) : BaseAudit()
 
 
 

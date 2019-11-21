@@ -1,6 +1,6 @@
 package com.afsoltech.kops.core.entity.customs.temp
 
-import com.afsoltech.core.entity.BaseAuditEntity
+import com.afsoltech.core.entity.BaseAudit
 import java.math.BigDecimal
 import javax.persistence.*
 
@@ -33,10 +33,9 @@ data class SelectedNoticeBeneficiary (
         @Column(name = "AMOUNT")
         var amount: BigDecimal? = null,
 
-
         @Basic(optional = false)
         @JoinColumn(name = "SELECTED_NOTICE_ID", referencedColumnName = "SELECTED_NOTICE_ID")
         @ManyToOne(fetch = FetchType.LAZY)
         var selectedNotice: SelectedNotice? = null
 
-): BaseAuditEntity()
+): BaseAudit()
