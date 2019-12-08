@@ -1,4 +1,4 @@
-package com.nanobnk.epayment.model.attribute
+package com.afsoltech.kops.portal.model.attribute
 
 enum class OTPStatus {
     CREATED, USED, CANCELED, EXPIRED;

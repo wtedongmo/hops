@@ -21,10 +21,10 @@ import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.StringBuilder
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlin.text.StringBuilder
 
 @Service
 class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRepository, val accountBankRepository: AccountBankRepository,
@@ -35,8 +35,8 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
         var paymentIdInc : Long = 0L
     }
 
-    @Value("\${api.bank.epayment.askBankAuthPaymentUrl}")
-    lateinit var initBillPaymentUrl: String
+//    @Value("\${apiexternal..bank.epayment.askBankAuthPaymentUrl}")
+//    lateinit var initBillPaymentUrl: String
 
     @Value("\${app.bank.code.initial}")
     lateinit var operatorCode: String
@@ -69,22 +69,25 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
 
             var noticeAmount = BigDecimal.ZERO
             var externalAmount = BigDecimal.ZERO
-            var customerNumer :String?=null
+            var customerNumber :String?=null
 //            val noticeNumberList = mutableListOf<String>()
             val noticeNumberList = initPaymentRequest.noticeNumberList
+            val noticeStr =StringBuilder()
 
             selectedNoticeList.forEach {notice ->
                 noticeAmount += notice.amount!!
                 notice.beneficiaryList.forEach { benef ->
                     externalAmount += if(benef.accountNumber!!.startsWith(operatorCode)) BigDecimal.ZERO else benef.amount!!
                 }
-                customerNumer?.let{
-                    customerNumer = notice.taxpayerNumber
+                customerNumber?.let{
+                    customerNumber = notice.taxpayerNumber
                 }
+                noticeStr.append(",").append(notice.noticeNumber)
 //                noticeNumberList.add(notice.noticeNumber!!)
-                if(!noticeNumberList.contains(notice.noticeNumber)){
+                if(!noticeNumberList.isNullOrEmpty() && !noticeNumberList.contains(notice.noticeNumber)){
                     throw BadRequestException("Kops.Error.Payment.Notice.Bad.List")
                 }
+
             }
 
             if(noticeAmount.minus(initPaymentRequest.amount).toInt() != 0){
@@ -92,9 +95,9 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
             }
 
                 /*Evaluate fee Amount*/
-            val feeAmount = calculateFeeNoticeService.calculateFee(noticeAmount, externalAmount) ?:
+            val feeDto = calculateFeeNoticeService.calculateFee(noticeAmount, externalAmount) ?:
                         throw BadRequestException("Kops.Error.Payment.Bank.FeeAmount.Null")
-
+            val feeAmount = feeDto.feeAmount
             val totalAmount = noticeAmount + feeAmount
             if(totalAmount.minus(initPaymentRequest.totalAmount).toInt() != 0)
                 throw BadRequestException("Kops.Error.Payment.Notice.Bad.TotalAmount")
@@ -109,9 +112,9 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
 
 
             var tempPayment = TempPayment(internalPaymentNumber = internalPaymentNumber, bankCode = account.bankCode, bankAgencyCode = account.accountAgency,
-                    customerNumber = customerNumer, payerAccountNumber = account.accountNumber, payerAccountName = account.accountName,
+                    customerNumber = customerNumber, payerAccountNumber = account.accountNumber, payerAccountName = account.accountName,
                     paymentMode = paymentMode, amount = noticeAmount, feeAmount = feeAmount, totalAmount = totalAmount,
-                    paymentDate = LocalDateTime.now(), providerCode = providerNoticeCode, billNumber = noticeNumberList.toString(),
+                    paymentDate = LocalDateTime.now(), providerCode = providerNoticeCode, billNumber = noticeStr.substring(1),
                     operationCode=operationCode, currency=account.currency)
 
             tempPayment = tempPaymentRepository.save(tempPayment)

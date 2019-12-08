@@ -1,6 +1,7 @@
-package com.nanobnk.epayment.portal.model
+package com.afsoltech.kops.portal.model
 
-import com.nanobnk.epayment.model.attribute.RequestTypePortal
+import com.afsoltech.kops.portal.model.attribute.RequestTypePortal
+
 
 class SessionLogDto<T, U>(
         var userId: Long?=null,

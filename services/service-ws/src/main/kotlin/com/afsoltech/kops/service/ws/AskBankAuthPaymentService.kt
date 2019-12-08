@@ -9,9 +9,9 @@ import com.afsoltech.core.repository.temp.TempPaymentRepository
 import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.AskBankAuthPaymentRequestDto
 import com.afsoltech.kops.core.model.AskBankAuthPaymentResponseDto
-import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
-import com.afsoltech.kops.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import mu.KLogging
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.*
@@ -20,11 +20,14 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestTemplate
 
 @Service
-class AskBankAuthPaymentService(val tempPaymentRepository: TempPaymentRepository, val restTemplate: RestTemplate) {
+class AskBankAuthPaymentService(val restTemplate: RestTemplate) {
 
     companion object : KLogging()
 
-    @Value("\${api.bank.epayment.askBankAuthorizePaymentUrl}")
+    @Autowired
+    lateinit var tempPaymentRepository: TempPaymentRepository
+
+    @Value("\${api.external.bank.epayment.askBankAuthorizePaymentUrl}")
     lateinit var askBankAuthorizePaymentUrl: String
 
     /**
@@ -32,13 +35,13 @@ class AskBankAuthPaymentService(val tempPaymentRepository: TempPaymentRepository
      */
     @Transactional
     @Synchronized
-    fun askBankAuthPayment(user: UserApp, tempPayment: TempPayment) : PaymentStatus? { //:Boolean
+    fun askBankAuthPayment(user: UserApp, tempPayment: TempPayment) : AskBankAuthPaymentResponseDto { //:Boolean
 
         val txDate = StringDateFormaterUtils.DateTimeToString.format(tempPayment.paymentDate)
         val askBankPaymentRequestDto = AskBankAuthPaymentRequestDto(opCode=tempPayment.operationCode!!, acntNo = tempPayment.payerAccountNumber!!,
                 providerCode = tempPayment.providerCode!!, customerNo = tempPayment.customerNumber!!, trxRefNo = tempPayment.internalPaymentNumber!!,
                 trxDt = txDate!!, amount = tempPayment.amount!!, fee = tempPayment.feeAmount!!, totalAmount = tempPayment.totalAmount!!,
-                currency = tempPayment.currency!!, billNumber = tempPayment.billNumber!!)
+                currency = tempPayment.currency!!, billNumberList = tempPayment.billNumber!!.split(","))
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -62,8 +65,7 @@ class AskBankAuthPaymentService(val tempPaymentRepository: TempPaymentRepository
         result.resultData?.let{
             tempPayment.bankAuthResultCode = it.authRsltCd
             tempPayment.bankAuthResultMessage = it.authRsltMsg
-            tempPayment.bankAuthNumber = it.authRsltMsg
-            tempPayment.bankAuthResultMessage = it.authCd
+            tempPayment.bankAuthNumber = it.authCd
             tempPayment.bankAccNewBal = it.newBal
             tempPayment.bankAuthResultData = it.toString()
         }
@@ -80,7 +82,7 @@ class AskBankAuthPaymentService(val tempPaymentRepository: TempPaymentRepository
             tempPayment.paymentStatus = PaymentStatus.AUTHORIZATION_ERROR
         tempPaymentRepository.save(tempPayment)
 
-        return tempPayment.paymentStatus
+        return result
 
     }
 

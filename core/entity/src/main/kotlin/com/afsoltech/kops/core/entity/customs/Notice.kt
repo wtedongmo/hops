@@ -15,7 +15,9 @@ import javax.persistence.*
 @Table(name = "NOTICE")
 data class Notice(
 
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+//        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @SequenceGenerator(name = "NOTICE_ID", sequenceName = "NOTICE_ID", allocationSize = 1)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_ID")
         @Id
         @Column(name = "NOTICE_ID")
         var id: Long? = null,

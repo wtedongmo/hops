@@ -8,18 +8,20 @@ import javax.persistence.*
 @Entity
 data class SelectedNoticeBeneficiary (
 
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+//        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @SequenceGenerator(name = "SELECTED_NOTICE_BENEFICIARY_ID", sequenceName = "SELECTED_NOTICE_BENEFICIARY_ID", allocationSize = 1)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SELECTED_NOTICE_BENEFICIARY_ID")
         @Id
         @Column(name = "SELECTED_NOTICE_BENEFICIARY_ID")
         var id: Long? = null,
 
-        @Column(name = "BENEFICIARY_NAME", columnDefinition = "varchar(150)")
+        @Column(name = "NAME", columnDefinition = "varchar(150)")
         @Basic(optional = false)
-        var beneficiaryName : String? = null,
+        var name : String? = null,
 
-        @Column(name = "BENEFICIARY_CODE", columnDefinition = "varchar(10)")
+        @Column(name = "CODE", columnDefinition = "varchar(10)")
         @Basic(optional = false)
-        var beneficiaryCode : String? = null,
+        var code : String? = null,
 
         @Column(name = "BANK_CODE", columnDefinition = "varchar(10)")
         @Basic(optional = false)

@@ -8,7 +8,9 @@ import javax.persistence.*
 @Table(name = "NOTICE_SUMMARY")
 @Entity
 data class NoticeSummary (
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+//        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @SequenceGenerator(name = "NOTICE_SUMMARY_ID", sequenceName = "NOTICE_SUMMARY_ID", allocationSize = 1)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_SUMMARY_ID")
         @Id
         @Column(name = "NOTICE_SUMMARY_ID")
         var id: Long? = null,

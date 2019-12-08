@@ -15,8 +15,8 @@
 
     <modules>
 		<module>template</module>
-		<module>administration</module>
-       <module>reporting</module>
+		<!--<module>administration</module>-->
+       <!--<module>reporting</module>-->
        <module>portal</module>
     </modules>
 

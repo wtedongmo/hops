@@ -7,7 +7,7 @@ import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.kops.core.model.NoticeResponses
 import com.afsoltech.kops.core.model.UnpaidNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import com.afsoltech.kops.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 import javax.servlet.http.HttpServletRequest
 
 
-@Service("list_of_unpaid_notice_service")
+@Service
 class ListUnpaidNoticeService(
         val restTemplate: RestTemplate, val checkParticipantAPIRequest: CheckParticipantAPIRequest
 ) {
@@ -34,20 +34,20 @@ class ListUnpaidNoticeService(
         var unpaidNoticeCache: LoadingCache<String, UnpaidNoticeResponseDto>?=null
     }
 
-    @Value("\${api.customs.epayment.listUnpaidNoticeUrl}")
-    lateinit var listUnpaidNoticeURL: String
+    @Value("\${api.external.customs.epayment.listUnpaidNoticeUrl}")
+    private lateinit var listUnpaidNoticeURL: String
 
     @Autowired
-    lateinit var translateUtils: TranslateUtils
+    private lateinit var translateUtils: TranslateUtils
 
-    @Value("\${app.kops.session.duration.expiry.second:180}")
-    var expiryTimeSeconds: Long=180
+    @Value("\${app.notice.expired.duration.unpaid:60}")
+    var expiryTimeMinute: Long=60
 
 //    @Value("\${api.customs.epayment.bank.apikey}")
 //    lateinit var bankApiKey: String
 
     init {
-        unpaidNoticeCache = CacheBuilder.newBuilder().expireAfterWrite(expiryTimeSeconds, TimeUnit.SECONDS).build(object :
+        unpaidNoticeCache = CacheBuilder.newBuilder().expireAfterWrite(expiryTimeMinute, TimeUnit.MINUTES).build(object :
                 CacheLoader<String, UnpaidNoticeResponseDto>() {
             override fun load(key: String): UnpaidNoticeResponseDto? {
                 return UnpaidNoticeResponseDto()
@@ -61,7 +61,7 @@ class ListUnpaidNoticeService(
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.parameterDataMap.get("api.epayment.bank.apikey") ?:
+        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
             throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
         headers.add("apikey", bankApiKey.value)
 

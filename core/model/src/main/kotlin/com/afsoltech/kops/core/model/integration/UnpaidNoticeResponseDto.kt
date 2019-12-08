@@ -9,7 +9,7 @@ data class UnpaidNoticeResponseDto (
         var noticeId : Long? = null,
 //        var remoteNoticeId : Long? = null,
         val noticeNumber: String? = null,
-        val notificationDate: String? = null,
+        var notificationDate: String? = null,
         val noticeType: String? = null,
         val referenceNumber: String? = null,
         val declarationType: String? = null,
@@ -19,7 +19,7 @@ data class UnpaidNoticeResponseDto (
         val taxPayerRepresentativeCode: String? = null,
         val taxPayerRepresentativeName: String? = null,
         val issuerOffice: String? = null,
-        val dueDate: String? = null,
+        var dueDate: String? = null,
         val noticeAmount: BigDecimal? = null,
 
         var beneficiaryList: List<NoticeBeneficiaryDto>? = null

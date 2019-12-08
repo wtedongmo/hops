@@ -14,7 +14,7 @@
         <link rel="stylesheet" type="text/css" th:href="@{/css/portal_custom.css}" />
         <link rel="stylesheet" type="text/css" th:href="@{/css/portal_custom_responsive.css}" />
     </div>
-    <title th:text="#{portal.title}">Customs e-Portal</title>
+    <title th:text="#{portal.title}">Kops e-Portal</title>
 </head>
 
 <body class="skin-blue sidebar-mini" style="height: auto;">
@@ -24,8 +24,7 @@
             <header class="main-header">
 
                 <a class="logo" style="cursor: pointer;">
-                    <span class="logo-mini"><strong class="logo_symbol"><span class="blind" th:text="#{portal.title}">CAMEROON CUSTOMS</span></strong></span>
-                    <span class="logo-lg"><strong class="logo_real"><span class="blind" th:text="#{portal.title}">Customs Portal</span></strong></span>
+                    <span class="logo-lg"><strong class="logo_real"><span class="blind" th:text="#{portal.title}">Kops Portal</span></strong></span>
                 </a>
 
                 <nav class="navbar navbar-static-top">
@@ -36,7 +35,7 @@
                         <cmm-top-menu>
                             <ul class="topmenubar">
                                 <li class="topmenuLI">
-                                    <a class="menu_deth"><i class="fa "></i><span th:text="#{portal.title}">Customs E-payment</span></a>
+                                    <a class="menu_deth"><i class="fa "></i><span th:text="#{portal.title}">Kops Portal</span></a>
                                 </li>
                             </ul>
                         </cmm-top-menu>
@@ -93,7 +92,7 @@
                 <section class="sidebar">
                     <div class="login_lot login_lot_tp">
                         <ul class="login_action">
-                            <li><span class="username" th:if="${username}" th:text="${username}">username</span></li>
+                            <li><span class="username" th:if="${login}" th:text="${login}">username</span></li>
                         </ul>
                         <ul class="sidebar-menu">
                             <li class="header" th:text="#{navigation.title}">Navigation Principale</li>
@@ -105,12 +104,12 @@
 
                                 <ul class="treeview-menu">
                                     <li th:class="${menuHighlight == 'notices-unpaid'}? 'active' : ''">
-                                        <a th:href="@{/portal/list-unpaid-notice}">
+                                        <a th:href="@{/portal/list-unpaid-customs}">
                                             <i class="fa fa-circle-o"></i> <span th:text="#{notice.unpaid.list.label}">Avis non Payes</span>
                                         </a>
                                     </li>
                                     <li th:class="${menuHighlight == 'notices-paid'}? 'active' : ''">
-                                        <a th:href="@{/portal/list-paid-notice}">
+                                        <a th:href="@{/portal/list-paid-customs}">
                                             <i class="fa fa-circle-o"></i> <span th:text="#{notice.paid.list.label}">Avis payes</span>
                                         </a>
                                     </li>
@@ -146,7 +145,7 @@
                     Design, Implementation of Customs e-Payment
                 </div>
                 <!--th:text="#{app.copyright}"-->
-                <strong> <span >Copyright © 2019</span> <a th:href="@{/portal/}" th:text="#{apps.title}">Customs e-Payment</a>.</strong> All rights reserved.
+                <strong> <span >Copyright © 2019</span> <a th:href="@{/portal/}" th:text="#{apps.title}">Kops Portal</a>.</strong> All rights reserved.
             </footer>
         </cmm-bottom-area>
 
@@ -159,7 +158,7 @@
         <script type="text/javascript" th:src="@{/js/main.js}"></script>
 
         <script type="text/javascript" th:src="@{/vendor/datatables/datatables.min.js}"></script>
-        <script type="text/javascript" th:src="@{/js/portal_custom.js}"></script>
+        <script type="text/javascript" th:src="@{/js/kops_temp.js}"></script>
     </div>
 </body>
 </html>

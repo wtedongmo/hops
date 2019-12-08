@@ -16,9 +16,8 @@ import com.afsoltech.kops.core.repository.NoticeRepository
 import com.afsoltech.kops.core.repository.PaymentOfNoticeRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
 import com.afsoltech.kops.service.mapper.NoticeModelToEntity
-import com.afsoltech.kops.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import com.nanobnk.epayment.service.mapper.NoticeEntityToEntity
-import com.nanobnk.epayment.service.mapper.PaymentProcessMapper
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
@@ -26,38 +25,34 @@ import org.springframework.http.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestTemplate
-import java.sql.Timestamp
-import java.time.LocalDateTime
 
 
 @Service
 class PaymentOfSelectedNoticesService(
-        val restTemplate: RestTemplate, val noticeRepository: NoticeRepository, val beneficiaryRepository: NoticeBeneficiaryRepository,
-        val selectedNoticeRepository: SelectedNoticeRepository, val paymentOfNoticeRepository: PaymentOfNoticeRepository,
-        val tempPaymentRepository: TempPaymentRepository, val paymentRepository: PaymentRepository,
-        val deleteTemporaryNoticeService: DeleteTemporaryNoticeService
+        val restTemplate: RestTemplate,
+        val tempPaymentRepository: TempPaymentRepository
 ) {
 
     companion object : KLogging()
 
-    @Value("\${api.epayment.customs.paymentofNoticeURL}")
-    lateinit var paymentOfNoticeURL: String
+    @Value("\${api.external.customs.epayment.paymentOfNoticeURL}")
+    private lateinit var paymentOfNoticeURL: String
 
-//    @Value("\${api.epayment.bank.apikey}")
+//    @Value("\${app.bank.epayment.apikey}")
 //    lateinit var bankApiKey: String
 
     /**
      * To Call ePayment API to pay the selected notices
      */
 
-    fun paymentOfSelectedNotice(tempPayment: TempPayment, paymentRequest: PaymentProcessRequestDto): PaymentProcessResponseDto? {
+    fun paymentOfSelectedNotice(tempPayment: TempPayment, paymentRequest: PaymentProcessRequestDto): PaymentProcessResponseDto {
 
 //        val selectedNoticeList = getListNoticeCheckExistAndAmount(paymentRequest.noticeList)
 
         /* Send Payment To EPAYMENT */
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.parameterDataMap.get("api.epayment.bank.apikey") ?:
+        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
                 throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
         headers.add("apikey", bankApiKey.value)
         //val paymentRequestToSend = PaymentProcessMapper.ModelMapPaymentProcess.map(paymentRequest)
@@ -90,12 +85,6 @@ class PaymentOfSelectedNoticesService(
 
         /*Update epayment database payment and customs checking response  */
         val tempPaymentSaved = updateTempPaymentFromResponse(responsePayment, tempPayment)
-
-        //If payment success, create payment and notices
-        var paymentId: Long? = null
-        if (tempPaymentSaved.remoteResultCode!!.equals(PäymentResultCode.S.name)) {
-            paymentId = createPaymentAndNoticeOfSuccessResponse(paymentRequest, tempPayment)
-        }
 
         return responsePayment
     }
@@ -136,65 +125,6 @@ class PaymentOfSelectedNoticesService(
         return tempPaymentSaved
     }
 
-
-    @Transactional
-    @Synchronized
-    fun createPaymentAndNoticeOfSuccessResponse(paymentRequest: PaymentProcessRequestDto, tempPayment: TempPayment): Long {
-
-        //Create payment entity
-        val paymentEntity = NoticeModelToEntity.PaymentProcessToEntity.from(paymentRequest, tempPayment)
-        paymentEntity.paymentStatus = PaymentStatus.COMPLETED
-        val paymentSaved = paymentRepository.save(paymentEntity)
-
-        val noticePaidList = NoticeModelToEntity.PaymentOfNoticeModelToEntities.from(paymentRequest.noticeList)
-
-        val noticeNumberList = mutableListOf<String>()
-        noticePaidList.forEach { notice ->
-            notice.payment = paymentSaved
-            noticeNumberList.add(notice.noticeNumber!!)
-        }
-
-        val noticePaidListSaved = paymentOfNoticeRepository.saveAll(noticePaidList)
-
-        val selectedNoticeList = selectedNoticeRepository.findListNoticeNumber(noticeNumberList)
-
-        val noticesList = NoticeEntityToEntity.SelectedNoticeEntityToNoticeEntities.from(selectedNoticeList)
-        noticesList.forEach { notice ->
-            notice.noticeStatus = PaymentStatus.COMPLETED
-            notice.paymentId = paymentSaved.id
-            notice.paymentDate = paymentSaved.paymentDate
-            notice.paymentMode = paymentSaved.paymentMode
-            notice.paymentCategory = "004"
-            notice.paymentAmount = notice.amount // noticePaidListSaved.find{ it -> it.selectedNoticeNumber.equals(customs.noticeNumber) }?.amount
-            notice.paymentNumber = paymentSaved.paymentNumber
-        }
-        val noticeSavedList = noticeRepository.saveAll(noticesList)
-
-        val noticeBenefList = mutableListOf<NoticeBeneficiary>()
-
-        val outbNoticeMap = selectedNoticeList.map { notice -> notice.noticeNumber!! to notice }.toMap()
-
-//        val noticeMap = noticeSavedList.map { customs -> customs.noticeNumber!! to customs }.toMap()
-
-        noticeNumberList.clear()
-        noticeSavedList.forEach { notice ->
-            val listBenef = NoticeEntityToEntity.SelectedNoticeBeneficiaryEntityToEntities
-                    .from(outbNoticeMap.get(notice.noticeNumber)?.beneficiaryList ?: emptyList())
-            listBenef.forEach { benef ->
-                benef.notice = notice
-                noticeBenefList.add(benef)
-            }
-
-            noticeNumberList.add(notice.noticeNumber?:"")
-        }
-
-        val noticeBenefSaved = beneficiaryRepository.saveAll(noticeBenefList)
-
-        // Delete checked customs list
-        deleteTemporaryNoticeService.deleteSelectedNoticeAfterPayment(noticeNumberList)
-
-        return paymentSaved.id!!
-    }
 
 
 }

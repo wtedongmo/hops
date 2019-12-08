@@ -55,8 +55,8 @@ class NoticeModelToEntity {
     object OutboundNoticeBeneficiaryModelToEntity {
         fun from(model: NoticeBeneficiaryDto):  SelectedNoticeBeneficiary {
             val entity = SelectedNoticeBeneficiary(
-                    beneficiaryName = model.beneficiaryName,
-                    beneficiaryCode = model.beneficiaryCode,
+                    name = model.beneficiaryName,
+                    code = model.beneficiaryCode,
                     bankCode = model.bankCode,
                     accountNumber = model.accountNumber,
                     amount = model.amount)

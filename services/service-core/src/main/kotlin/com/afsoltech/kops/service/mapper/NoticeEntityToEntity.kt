@@ -45,8 +45,8 @@ class NoticeEntityToEntity {
     object SelectedNoticeBeneficiaryEntityToEntity {
         fun from(entity: SelectedNoticeBeneficiary): NoticeBeneficiary {
             val result = NoticeBeneficiary(
-                    beneficiaryName = entity.beneficiaryName,
-                    beneficiaryCode = entity.beneficiaryCode,
+                    beneficiaryName = entity.name,
+                    beneficiaryCode = entity.code,
                     bankCode = entity.bankCode,
                     accountNumber = entity.accountNumber,
                     amount = entity.amount)

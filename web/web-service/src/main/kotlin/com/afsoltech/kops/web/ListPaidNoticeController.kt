@@ -1,13 +1,12 @@
 package com.nanobnk.epayment.core.web
 
-import com.nanobnk.epayment.model.inbound.NoticeRequestDto
-import com.nanobnk.epayment.model.inbound.NoticeResponseDto
-import com.nanobnk.epayment.model.inbound.NoticeResponses
-import com.nanobnk.epayment.model.inbound.PaymentProcessResponseDto
-import com.nanobnk.epayment.service.ListPaidNoticeService
-import com.nanobnk.util.rest.error.RestException
-import com.nanobnk.util.rest.util.enforce
-import com.nanobnk.util.rest.util.ensureNotNull
+import com.afsoltech.core.exception.RestException
+import com.afsoltech.core.util.enforce
+import com.afsoltech.kops.core.model.NoticeRequestDto
+import com.afsoltech.kops.core.model.NoticeResponseDto
+import com.afsoltech.kops.core.model.NoticeResponses
+import com.afsoltech.kops.service.integration.ListPaidNoticeService
+
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -19,12 +18,9 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("\${api.epayment.rest.listPaidNoticeUrl}")
-class ListPaidNoticeController{
+@RequestMapping("\${api.internal.customs.epayment.listPaidNotice}")
+class ListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeService){
     companion object : KLogging()
-
-    @Autowired
-    lateinit var listPaidNoticeService: ListPaidNoticeService
 
     @Autowired
     @Qualifier(value = "errorMessageSource")
@@ -42,8 +38,8 @@ class ListPaidNoticeController{
 //            ex.printStackTrace()
             logger.error(ex.message, ex)
             return NoticeResponses<NoticeResponseDto>(
-                    "E",
-                    messageSource.getMessage(ex.message, ex.parameters.toTypedArray(), ex.message, ex.locale))
+                    "F",
+                    messageSource.getMessage(ex.message?:"", ex.parameters.toTypedArray(), ex.message, ex.locale))
         }catch (ex: Exception){
 //            ex.printStackTrace()
             logger.error(ex.message, ex)

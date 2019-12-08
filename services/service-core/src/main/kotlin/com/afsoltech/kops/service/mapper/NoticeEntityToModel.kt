@@ -112,8 +112,8 @@ class NoticeEntityToModel {
     object SelectedNoticeBeneficiaryEntityToModel {
         fun from(entity: SelectedNoticeBeneficiary): NoticeBeneficiaryDto {
             val model = NoticeBeneficiaryDto(
-                    beneficiaryName = entity.beneficiaryName,
-                    beneficiaryCode = entity.beneficiaryCode,
+                    beneficiaryName = entity.name,
+                    beneficiaryCode = entity.code,
                     bankCode = entity.bankCode,
                     accountNumber = entity.accountNumber,
                     amount = entity.amount)

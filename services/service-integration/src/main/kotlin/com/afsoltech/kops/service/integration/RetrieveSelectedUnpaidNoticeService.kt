@@ -1,8 +1,8 @@
 package com.afsoltech.kops.service.integration
 
+import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
-import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNoticeBeneficiary
 import com.afsoltech.kops.core.model.NoticeResponses
 import com.afsoltech.kops.core.model.integration.OutSelectedNoticeRequestDto
@@ -10,7 +10,7 @@ import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeBeneficiaryRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
 import com.afsoltech.kops.service.mapper.NoticeModelToEntity
-import com.afsoltech.kops.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.transaction.Transactional
 
 
-@Service("list_of_selected_unpaid_notice_service")
+@Service
 class RetrieveSelectedUnpaidNoticeService(
         val restTemplate: RestTemplate, val selectedNoticeRepository: SelectedNoticeRepository,
         val selectedNoticeBeneficiaryRepository: SelectedNoticeBeneficiaryRepository, val checkParticipantAPIRequest: CheckParticipantAPIRequest
@@ -32,16 +32,17 @@ class RetrieveSelectedUnpaidNoticeService(
 
     companion object : KLogging()
 
-    @Value("\${api.customs.epayment.selectedUnpaidNoticeUrl}")
-    lateinit var selectedUnpaidNoticeUrl: String
+    @Value("\${api.external.customs.epayment.selectedUnpaidNoticeUrl}")
+    private lateinit var selectedUnpaidNoticeUrl: String
     
 
-    fun listSelectedUnpaidNotice(selectedRequest: OutSelectedNoticeRequestDto, userLogin: String, request: HttpServletRequest?): NoticeResponses<UnpaidNoticeResponseDto>? {
+    fun listSelectedUnpaidNotice(selectedRequest: OutSelectedNoticeRequestDto, userLogin: String, request: HttpServletRequest):
+            NoticeResponses<UnpaidNoticeResponseDto> {
 
         checkParticipantAPIRequest.checkAPIRequest(request)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.parameterDataMap.get("api.epayment.bank.apikey") ?:
+        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
             throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
         headers.add("apikey", bankApiKey.value)
 
@@ -49,14 +50,14 @@ class RetrieveSelectedUnpaidNoticeService(
         val responce = restTemplate.exchange(selectedUnpaidNoticeUrl, HttpMethod.POST, entity,
                 object : ParameterizedTypeReference<NoticeResponses<UnpaidNoticeResponseDto>>() {})
 
-        var result = responce.body
+        val result = responce.body ?: throw BadRequestException("Kops.Error.Parameter.Value")
         logger.trace { "List of selected unPaid Notice \n $result" }
 //
 //
-        val listUnpaidNotice = result?.result()
-        if (listUnpaidNotice == null || listUnpaidNotice.isEmpty())
+        val listUnpaidNotice = result.result()
+        if (listUnpaidNotice.isEmpty())
             return result
-        else if (result?.resultCode!!.equals("S", true)) {
+        else if (result.resultCode!!.equals("S", true)) {
             updateExistingNotice(listUnpaidNotice, userLogin)
             logger.trace { "Temporary save of Un Paid Notice : $listUnpaidNotice" }
         }
@@ -78,7 +79,7 @@ class RetrieveSelectedUnpaidNoticeService(
             listExistingNotice.forEach { it ->
                 noticeIdMap.put(it.noticeNumber, it.id)
                 it.beneficiaryList.forEach { b ->
-                    noticeIdBenefMap.put(it.noticeNumber+"#"+b.beneficiaryCode, b.id)
+                    noticeIdBenefMap.put(it.noticeNumber+"#"+b.code, b.id)
                 }
             }
             listEntity.forEach { it ->
@@ -103,8 +104,8 @@ class RetrieveSelectedUnpaidNoticeService(
             val listBenef = NoticeModelToEntity.OutboundNoticeBeneficiaryModelToEntities
                     .from(noticeBenefMap.get(notice.noticeNumber)?: emptyList())
             listBenef.forEach { benef ->
-                if(noticeIdBenefMap.contains(notice.noticeNumber+"#"+benef.beneficiaryCode)){
-                    benef.id=noticeIdBenefMap.get(notice.noticeNumber+"#"+benef.beneficiaryCode)
+                if(noticeIdBenefMap.contains(notice.noticeNumber+"#"+benef.code)){
+                    benef.id=noticeIdBenefMap.get(notice.noticeNumber+"#"+benef.code)
                 }
                 benef.selectedNotice = notice
                 noticeBenefList.add(benef)

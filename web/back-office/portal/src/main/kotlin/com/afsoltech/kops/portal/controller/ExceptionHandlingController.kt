@@ -1,10 +1,7 @@
-package com.nanobnk.epayment.portal.controller
+package com.afsoltech.kops.portal.controller
 
-import com.nanobnk.util.rest.error.ExpiredException
+import com.afsoltech.core.exception.ExpiredException
 import mu.KLogging
-import org.springframework.core.annotation.AnnotationUtils
-import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.ResourceAccessException
@@ -19,7 +16,7 @@ import javax.servlet.http.HttpServletResponse
 class ExceptionHandlingController {
 
     companion object : KLogging()
-    val DEFAULT_ERROR_VIEW = "error/error"
+    val DEFAULT_ERROR_VIEW = "error"
 
     @ExceptionHandler(value = arrayOf(Exception::class, ServletException::class, IOException::class,
             UninitializedPropertyAccessException::class, ResourceAccessException::class, TemplateProcessingException::class,
@@ -31,25 +28,25 @@ class ExceptionHandlingController {
         // the framework handle it - like the OrderNotFoundException example
         // at the start of this post.
         // AnnotationUtils is a Spring Framework utility class.
-        if (AnnotationUtils.findAnnotation(e.javaClass, ResponseStatus::class.java) != null)
-            throw e
+//        if (AnnotationUtils.findAnnotation(e.javaClass, ResponseStatus::class.java) != null)
+//            throw e
 
+        logger.error { e.message + "\n" +e.printStackTrace() }
         // Otherwise setup and send the portal to a default error-view.
         val mav = ModelAndView()
         mav.addObject("status", reqRes.status)
-//        mav.addObject("error", e.message)
+        mav.addObject("error", e.message)
         mav.addObject("message", "Application error")
 //        mav.addObject("message", e)
 //        mav.addObject("exception", e)
         mav.addObject("url", req.getRequestURL())
 
-        val auth = SecurityContextHolder.getContext().authentication
+//        val auth = SecurityContextHolder.getContext().authentication
 //        if(auth!=null && !auth.principal.toString().equals("ANONYMOUSUSER", true))
-//            mav.setViewName(DEFAULT_ERROR_VIEW)
+        mav.setViewName(DEFAULT_ERROR_VIEW)
 //        else
-        mav.setViewName("retirect:/error?status=${reqRes.status}&message='Application Error'&url=${req.getRequestURL()}")
+//        mav.setViewName("redirect:/error?status=${reqRes.status}&message='Application Error'&url=${req.getRequestURL()}")
 
-        logger.error { e.message + "\n" +e.printStackTrace() }
         return mav
     }
 }

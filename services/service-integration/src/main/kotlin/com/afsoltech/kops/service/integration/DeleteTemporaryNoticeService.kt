@@ -19,7 +19,7 @@ class DeleteTemporaryNoticeService (val selectedNoticeRepository: SelectedNotice
 
     companion object : KLogging()
 
-    @Value("\${app.customs.selected.notice.expired.duration}")
+    @Value("\${app.notice.expired.duration.selected}")
     var expiredSelectedDuration: Long=10
 
     fun deleteTemporarySelectedNotice(){
@@ -39,10 +39,10 @@ class DeleteTemporaryNoticeService (val selectedNoticeRepository: SelectedNotice
             selectedNoticeRepository.deleteAll(delNoticeList)
     }
 
-    @Value("\${sql.request.reset.sequence.temprary.customs}")
+    @Value("\${sql.request.reset.sequence.temprary.notice}")
     lateinit var requestResetSelectedNotice: String
 
-    @Value("\${sql.request.reset.sequence.temprary.customs.beneficiary}")
+    @Value("\${sql.request.reset.sequence.temprary.notice.beneficiary}")
     lateinit var requestResetSelectedNoticeBeneficiary: String
 
         @Autowired

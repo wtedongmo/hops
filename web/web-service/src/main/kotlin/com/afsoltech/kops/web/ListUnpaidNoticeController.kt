@@ -1,10 +1,12 @@
 package com.nanobnk.epayment.core.web
 
-import com.nanobnk.epayment.model.inbound.*
+import com.afsoltech.core.exception.RestException
+import com.afsoltech.core.util.enforce
+import com.afsoltech.kops.core.model.NoticeResponses
+import com.afsoltech.kops.core.model.UnpaidNoticeRequestDto
+import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
-import com.nanobnk.util.rest.error.RestException
-import com.nanobnk.util.rest.util.enforce
-import com.nanobnk.util.rest.util.ensureNotNull
+
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -16,12 +18,9 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("\${api.epayment.rest.listUnpaidNoticeUrl}")
-class ListUnpaidNoticeController{
+@RequestMapping("\${api.internal.customs.epayment.listUnpaidNotice}")
+class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeService){
     companion object : KLogging()
-
-    @Autowired
-    lateinit var listUnpaidNoticeService: ListUnpaidNoticeService
 
     @Autowired
     @Qualifier(value = "errorMessageSource")
@@ -39,8 +38,8 @@ class ListUnpaidNoticeController{
 //            ex.printStackTrace()
             logger.error(ex.message, ex)
             return NoticeResponses<UnpaidNoticeResponseDto>(
-                    "E",
-                    messageSource.getMessage(ex.message, ex.parameters.toTypedArray(), ex.message, ex.locale))
+                    "F",
+                    messageSource.getMessage(ex.message?:"", ex.parameters.toTypedArray(), ex.message, ex.locale))
         }catch (ex: Exception){
 //            ex.printStackTrace()
             logger.error(ex.message, ex)

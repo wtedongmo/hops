@@ -8,7 +8,7 @@ data class NoticeResponseDto (
 
         //val noticeId : Long? = null,
         val noticeNumber: String? = null,
-        val notificationDate: String? = null,
+        var notificationDate: String? = null,
         val noticeType: String? = null,
         val referenceNumber: String? = null,
         val declarationType: String? = null,
@@ -18,7 +18,7 @@ data class NoticeResponseDto (
         val taxPayerRepresentativeCode: String? = null,
         val taxPayerRepresentativeName: String? = null,
         val issuerOffice: String? = null,
-        val paymentDate: String? = null,
+        var paymentDate: String? = null,
         val amountReceived: BigDecimal? = null,
         val paymentCategory: String? = null,
         var paymentNumber: String? = null,

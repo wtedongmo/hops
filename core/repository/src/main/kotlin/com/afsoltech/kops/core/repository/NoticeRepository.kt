@@ -26,7 +26,7 @@ interface NoticeRepository : BaseRepository<Notice, Long> {
 
     fun findByPaymentCategory(paymentCategory: String) : List<Notice>
 
-    fun findByPaymentMethod(paymentMethod: String) : List<Notice>
+    fun findByPaymentMode(paymentMode: String) : List<Notice>
 
     fun findByIssuerOffice(issuerOffice: String) : List<Notice>
 }

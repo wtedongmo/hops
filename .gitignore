@@ -7,4 +7,5 @@
 /*.log.json
 /core/release/web/*.log
 *.log
+*.zip
 */logs

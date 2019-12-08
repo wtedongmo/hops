@@ -5,11 +5,9 @@ import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.model.attribute.PaymentStatus
 import com.afsoltech.core.repository.PaymentRepository
-import com.afsoltech.kops.core.model.integration.PaymentProcessResponseDto
 import com.afsoltech.kops.core.model.integration.VentilationRequest
 import com.afsoltech.kops.core.model.integration.VentilationResponse
-import com.afsoltech.kops.service.integration.PaymentOfSelectedNoticesService
-import com.afsoltech.kops.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
@@ -23,18 +21,18 @@ class VentilationService (val restTemplate: RestTemplate, val paymentRepository:
 
     companion object : KLogging()
 
-    @Value("\${api.epayment.customs.notifyVentilationUrl}")
-    lateinit var notifyVentilationUrl: String
+    @Value("\${api.external.customs.epayment.notifyVentilationUrl}")
+    private lateinit var notifyVentilationUrl: String
 
     @Synchronized
-    fun notifyVentilation(ventilationRequest: VentilationRequest, request: HttpServletRequest?): VentilationResponse?{
+    fun notifyVentilation(ventilationRequest: VentilationRequest, request: HttpServletRequest?): VentilationResponse{
 
         val payment = paymentRepository.findByPaymentNumber(ventilationRequest.bankPaymentNumber) ?:
             throw BadRequestException("Kops.Error.Ventilation.BankPaymentNumber.NotExists", listOf(ventilationRequest.bankPaymentNumber))
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.parameterDataMap.get("api.epayment.bank.apikey") ?:
+        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
         throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
         headers.add("apikey", bankApiKey.value)
         //val paymentRequestToSend = PaymentProcessMapper.ModelMapPaymentProcess.map(paymentRequest)

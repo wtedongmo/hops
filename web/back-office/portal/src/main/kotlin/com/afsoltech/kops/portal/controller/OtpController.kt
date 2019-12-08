@@ -1,20 +1,13 @@
-package com.nanobnk.epayment.portal.controller
+package com.afsoltech.kops.portal.controller
 
-import com.nanobnk.epayment.model.attribute.OtpDto
-import com.nanobnk.epayment.model.inbound.UnpaidNoticePortalRequestDto
-import com.nanobnk.epayment.portal.repository.AppUserRepository
-import com.nanobnk.epayment.portal.service.OTPService
+import com.afsoltech.core.repository.user.UserAppRepository
+import com.afsoltech.core.service.OTPService
+import com.afsoltech.kops.portal.model.OtpDto
 import mu.KLogging
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpHeaders
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 
-import java.util.ArrayList
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -22,7 +15,7 @@ import javax.servlet.http.HttpServletRequest
  * Dec 15, 2017
  */
 @RestController
-class OtpController(val userRepository: AppUserRepository, val otpService: OTPService) { //, val myEmailService: EmailService
+class OtpController(val userRepository: UserAppRepository, val otpService: OTPService) { //, val myEmailService: EmailService
 
     companion object : KLogging()
 
@@ -45,7 +38,7 @@ class OtpController(val userRepository: AppUserRepository, val otpService: OTPSe
         val user = userRepository.findByUsername(username)
         otpService.generateOTPAndSendMail(user!!, false)
         val model = ModelAndView()
-        model.addObject("username", user.username)
+        model.addObject("login", user.login)
         model.addObject("otpForm", OtpDto())
         model.viewName = "otp/otppage"
         return model
@@ -86,10 +79,10 @@ class OtpController(val userRepository: AppUserRepository, val otpService: OTPSe
 
         user?.let{
             otpService.generateOTPAndSendMail(user,true)
-            model.addObject("otpMessage", "epayment.portal.otp.code.resend")//RESENDMESSAGE
+            model.addObject("otpMessage", "bank.portal.otp.code.resend")//RESENDMESSAGE
             model.addObject("otpForm", OtpDto())
             model.addObject("useremail", user.email)
-            model.addObject("username", user.username)
+            model.addObject("login", user.login)
             model.addObject("orpFormLink", "/validateOtp")
             model.viewName = "otp/otppage"
             return model
@@ -112,23 +105,23 @@ class OtpController(val userRepository: AppUserRepository, val otpService: OTPSe
 
         logger.info(" Otp Number : " + otpnum.otpNumber!!)
 
-        val user = userRepository!!.findByUsername(username)
+        val user = userRepository.findByUsername(username)
 
         //Validate the Otp
         if (otpnum.otpNumber != null) {
-            if (otpService!!.validateOTP(user, otpnum.otpNumber!!)) {
+            if (otpService.validateOTP(user, otpnum.otpNumber!!)) {
                 model.addObject("otpMessage", "epayment.portal.otp.code.valid") //SUCCESS
 
-                val updatedAuthorities = ArrayList<GrantedAuthority>() //auth.getAuthorities()
-                updatedAuthorities.add(SimpleGrantedAuthority(user!!.privilege!!.name)) //add your role here [e.g., new SimpleGrantedAuthority("ROLE_NEW_ROLE")]
+//                val updatedAuthorities = ArrayList<GrantedAuthority>() //auth.getAuthorities()
+//                updatedAuthorities.add(SimpleGrantedAuthority(user!!.privilege!!.name)) //add your role here [e.g., new SimpleGrantedAuthority("ROLE_NEW_ROLE")]
+//
+//                val newAuth = UsernamePasswordAuthenticationToken(auth.principal, auth.credentials, updatedAuthorities)
+//                SecurityContextHolder.getContext().authentication = newAuth
 
-                val newAuth = UsernamePasswordAuthenticationToken(auth.principal, auth.credentials, updatedAuthorities)
-                SecurityContextHolder.getContext().authentication = newAuth
+                model.addObject("billPaymentValidatedForm", "Success payment of bill")
+                model.viewName = "portal/bill-payment-valid-form"
 
-                model.addObject("unpaidNoticeForm", UnpaidNoticePortalRequestDto())
-                model.viewName = "portal/unpaid-customs-form"
-
-                servletRequest.getSession().setAttribute("loggedInUser", username);
+//                servletRequest.getSession().setAttribute("loggedInUser", username);
                 return model
             }
         }

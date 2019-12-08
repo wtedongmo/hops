@@ -9,7 +9,9 @@ import javax.persistence.*
 @Entity
 data class PaymentOfNotice (
 
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+//        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @SequenceGenerator(name = "PAYMENT_OF_NOTICE_ID", sequenceName = "PAYMENT_OF_NOTICE_ID", allocationSize = 1)
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PAYMENT_OF_NOTICE_ID")
         @Id
         @Column(name = "PAYMENT_OF_NOTICE_ID")
         var id: Long? = null,
