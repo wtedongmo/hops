@@ -3,9 +3,9 @@ package com.afsoltech.kops.service.integration
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
-import com.afsoltech.kops.core.model.NoticeRequestDto
-import com.afsoltech.kops.core.model.NoticeResponseDto
-import com.afsoltech.kops.core.model.NoticeResponses
+import com.afsoltech.kops.core.model.notice.NoticeRequestDto
+import com.afsoltech.kops.core.model.notice.NoticeResponseDto
+import com.afsoltech.kops.core.model.notice.NoticeResponses
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
@@ -52,18 +52,21 @@ class ListPaidNoticeService(
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
-            throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
-        headers.add("apikey", bankApiKey.value)
+//        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
 
-        val entity = HttpEntity(noticeRequest, headers)
-        val responce = restTemplate.exchange(listPaidNoticeURL, HttpMethod.POST, entity,
-                object : ParameterizedTypeReference<NoticeResponses<NoticeResponseDto>>() {})
+        LoadBaseDataToMap.ePaymentApiKey?.let {
+            headers.add("apikey", it)
 
-        var responses = responce.body ?: throw BadRequestException("Kops.Error.Parameter.Value")
-        logger.trace{"List of Paid Notice \n $responses"}
+            val entity = HttpEntity(noticeRequest, headers)
+            val responce = restTemplate.exchange(listPaidNoticeURL, HttpMethod.POST, entity,
+                    object : ParameterizedTypeReference<NoticeResponses<NoticeResponseDto>>() {})
 
-        return responses
+            var responses = responce.body ?: throw BadRequestException("Error.Parameter.Value")
+            logger.trace{"List of Paid Notice \n $responses"}
+
+            return responses
+        }
+         throw UnauthorizedException("Error.Payment.Parameter.ApiKey.NotFound")
     }
 
 }

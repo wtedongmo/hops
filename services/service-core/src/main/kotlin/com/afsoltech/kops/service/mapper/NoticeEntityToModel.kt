@@ -1,14 +1,12 @@
-package com.nanobnk.epayment.service.mapper
+package com.afsoltech.epayment.service.mapper
 
 import com.afsoltech.kops.core.entity.customs.Notice
 import com.afsoltech.kops.core.entity.customs.NoticeBeneficiary
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNoticeBeneficiary
-import com.afsoltech.kops.core.model.NoticeBeneficiaryDto
-import com.afsoltech.kops.core.model.NoticeResponseDto
+import com.afsoltech.kops.core.model.notice.NoticeBeneficiaryDto
+import com.afsoltech.kops.core.model.notice.NoticeResponseDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
 class NoticeEntityToModel {
 
@@ -28,7 +26,7 @@ class NoticeEntityToModel {
                     issuerOffice = entity.issuerOffice,
                     paymentDate = entity.paymentDate.toString(),
                     amountReceived = entity.paymentAmount!!
-                    )
+            )
             model.beneficiaryList = NoticeBeneficiaryEntitiesToModel.from(entity.beneficiaryList)
             return model
         }

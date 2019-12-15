@@ -1,4 +1,4 @@
-package com.nanobnk.epayment.service
+package com.afsoltech.epayment.service
 
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.RestException
@@ -27,13 +27,13 @@ class VentilationService (val restTemplate: RestTemplate, val paymentRepository:
     @Synchronized
     fun notifyVentilation(ventilationRequest: VentilationRequest, request: HttpServletRequest?): VentilationResponse{
 
-        val payment = paymentRepository.findByPaymentNumber(ventilationRequest.bankPaymentNumber) ?:
-            throw BadRequestException("Kops.Error.Ventilation.BankPaymentNumber.NotExists", listOf(ventilationRequest.bankPaymentNumber))
+        val payment = paymentRepository.findOneByPaymentNumber(ventilationRequest.bankPaymentNumber).get() ?:
+            throw BadRequestException("Error.Ventilation.BankPaymentNumber.NotExists", listOf(ventilationRequest.bankPaymentNumber))
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
-        throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
+        throw UnauthorizedException("Error.Payment.Parameter.ApiKey.NotFound")
         headers.add("apikey", bankApiKey.value)
         //val paymentRequestToSend = PaymentProcessMapper.ModelMapPaymentProcess.map(paymentRequest)
         val httpEntity = HttpEntity(ventilationRequest, headers)
@@ -56,7 +56,7 @@ class VentilationService (val restTemplate: RestTemplate, val paymentRepository:
             if (!httpStatus.toString().startsWith("2"))
                 throw RestException(httpStatus, httpStatus.reasonPhrase)
             if (responseVent == null)
-                throw BadRequestException("Kops.Error.Payment.Ventil.Error")
+                throw BadRequestException("Error.Payment.Ventil.Error")
         }
         payment.ventilationStatus = ventilationRequest.ventilationStatus
         payment.ventilationMessage = ventilationRequest.ventilationMessage

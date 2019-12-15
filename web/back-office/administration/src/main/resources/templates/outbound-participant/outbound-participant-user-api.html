@@ -1,0 +1,75 @@
+<html
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script>
+        $(document).ready(function () {
+            $("#cancelButton").click(function () {
+                $("#showOutboundUserAPIFormContainer").toggle(1000);
+                $("#showOutboundUserAPIForm").val(false);
+            });
+        });
+    </script>
+    <script>
+        var check = function() {
+            if (document.getElementById('userPassword').value ==
+                document.getElementById('confirm_password').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'matching';
+                document.getElementById('submit').disabled = false;
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'not matching';
+                document.getElementById('submit').disabled = true;
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div th:text="#{admin.outbound.auth}"> <i class="fa fa-user-circle-o"></i>&nbsp;Customs API Auth</div>
+    </div>
+    <div class="panel-body">
+
+        <div th:if="${errorMessage}" th:text="#{__${errorMessage}__}" style="color:red"/>
+        <form action="#" th:action="@{/admin/outbound-participants/auth-api}" th:object="${outboundUserApiAuth}"
+              th:method="post">
+            <input type="hidden" id="pageNumber" name="pageNumber" th:value="${currentPage}"/>
+            <input type="hidden" id="outboundParticipantId" name="outboundParticipantId"
+                   th:field="*{outboundParticipantId}" th:value="${outboundParticipantId}"/>
+
+            <div class="form-group">
+                <label th:text="#{outbound.api.user.id}">API User ID</label>
+                <input class="form-control" type="text"
+                       th:field="*{userID}" th:value="${userID}" required="true"/>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{outbound.api.user.password}">API Password</label>
+                <input class="form-control" type="password"
+                       th:field="*{userPassword}" th:value="${userPassword}" required="true" onkeyup='check();'/>
+            </div>
+
+            <div class="form-group" >
+                <label th:text="#{user.password.confirm}">Confirm Password</label>
+                <input class="form-control" type="password" id="confirm_password" required="true" onkeyup='check();' />
+                <span id='message'></span>
+            </div>
+
+            <div class="form-group">
+                <label th:text="#{outbound.api.user.passphrase}">Passphrase</label>
+                <input class="form-control" type="text"
+                       th:field="*{userPasspharse}" th:value="${userPasspharse}" pattern=".{6,}" required="true"/>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-outline btn-primary btn-lg" type="submit" id="submit" value="Save" th:text="#{button.submit}">Save</button>
+                <button class="btn btn-outline btn-danger btn-lg" id="cancelButton" type="reset" value="Cancel" th:text="#{button.cancel}">Cancel
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

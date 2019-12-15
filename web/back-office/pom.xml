@@ -14,10 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
-		<module>template</module>
-		<!--<module>administration</module>-->
+		<module>portal</module>
+		<module>agent-banking</module>
+		<module>administration</module>
        <!--<module>reporting</module>-->
-       <module>portal</module>
     </modules>
 
 </project>

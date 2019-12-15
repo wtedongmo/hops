@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param
 
 interface NoticeBeneficiaryRepository : BaseRepository<NoticeBeneficiary, Long> {
 
-    @Query("select n from NoticeBeneficiary n where n.notice.noticeId = :noticeId")
+    @Query("select n from NoticeBeneficiary n where n.notice.id = :noticeId")
     fun findByNoticeId(@Param("noticeId") noticeId: Long) : List<NoticeBeneficiary>
 
     @Query("select n from NoticeBeneficiary n where n.notice.noticeNumber = :noticeNumber")

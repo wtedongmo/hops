@@ -9,6 +9,7 @@ data class InitPaymentRequestDto(
         val amount: BigDecimal,
         val fee: BigDecimal,
         val totalAmount: BigDecimal,
+        val customerNumber: String,
         val noticeNumberList : List<String>?
 )
 
@@ -77,6 +78,7 @@ data class AskBankAuthPaymentRespDataDto(
         val audTrNum: String?=null,
         val currency: String?=null,
         val billNumberList : List<String>?=null,
+        val providerCode: String?=null,
         val authCd: String,
         val authRsltCd: String,
         val authRsltMsg: String,

@@ -1,0 +1,46 @@
+<html
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script>
+        $(document).ready(function () {
+            $("#cancelParticipantLinkButton").click(function () {
+                $("#participantLinkContainer").toggle(1000);
+            });
+        });
+    </script>
+</head>
+<body>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div th:text="#{admin.participant.unlinked}">Unlinked Participants</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr th:if="${#lists.isEmpty(unlinkedParticipants)}">
+                                    <td th:text="#{admin.participant.empty}"></td>
+                                </tr>
+                                <tr th:each="unlinkedParticipant: ${unlinkedParticipants}">
+                                    <td>
+                                        <div>
+                                            <span th:text="${unlinkedParticipant.participantName}"/>
+                                        </div>
+                                        <div>
+                                            <span th:text="${'Id:' + unlinkedParticipant.participantId}"/>
+                                        </div>
+                                    </td>
+                                    <td><a
+                                            th:href="@{__${'/admin/users/' + user.userId + '/linkParticipant/' + unlinkedParticipant.participantId}__(pageNumber=${currentPage})}"
+                                            th:method="GET">
+                                        <img th:src="@{/images/add.png}"
+                                             alt="Link Participant" title="Link Participant" th:text="#{admin.participant.link}"/> </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+</body>
+</html>

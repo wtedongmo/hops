@@ -1,6 +1,6 @@
 package com.afsoltech.kops.core.model.integration
 
-import com.afsoltech.kops.core.model.NoticeBeneficiaryDto
+import com.afsoltech.kops.core.model.notice.NoticeBeneficiaryDto
 import java.math.BigDecimal
 
 //@JsonIgnoreProperties(ignoreUnknown = true)

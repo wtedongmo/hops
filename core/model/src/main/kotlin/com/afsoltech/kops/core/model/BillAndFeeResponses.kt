@@ -1,5 +1,7 @@
 package com.afsoltech.kops.core.model
 
+import com.afsoltech.kops.core.model.notice.BillFeeDto
+
 
 data class BillAndFeeResponses<T>(
         val resultCode: String? = null,

@@ -4,8 +4,8 @@ import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
 import com.afsoltech.core.service.utils.TranslateUtils
-import com.afsoltech.kops.core.model.NoticeResponses
-import com.afsoltech.kops.core.model.UnpaidNoticeRequestDto
+import com.afsoltech.kops.core.model.notice.NoticeResponses
+import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import com.google.common.cache.CacheBuilder
@@ -40,13 +40,15 @@ class ListUnpaidNoticeService(
     @Autowired
     private lateinit var translateUtils: TranslateUtils
 
-    @Value("\${app.notice.expired.duration.unpaid:60}")
+//    @Value("\${app.notice.expired.duration.unpaid:60}")
     var expiryTimeMinute: Long=60
 
 //    @Value("\${api.customs.epayment.bank.apikey}")
 //    lateinit var bankApiKey: String
 
     init {
+        expiryTimeMinute = LoadBaseDataToMap.settingMap.get("app.notice.expired.duration.unpaid")?.value?.toLong()?: 10
+
         unpaidNoticeCache = CacheBuilder.newBuilder().expireAfterWrite(expiryTimeMinute, TimeUnit.MINUTES).build(object :
                 CacheLoader<String, UnpaidNoticeResponseDto>() {
             override fun load(key: String): UnpaidNoticeResponseDto? {
@@ -57,34 +59,35 @@ class ListUnpaidNoticeService(
 
     fun listUnpaidNotice(noticeRequest: UnpaidNoticeRequestDto, request: HttpServletRequest?): NoticeResponses<UnpaidNoticeResponseDto> {
 
-        checkParticipantAPIRequest.checkAPIRequest(request)
+//        checkParticipantAPIRequest.checkAPIRequest(request)
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
-            throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
-        headers.add("apikey", bankApiKey.value)
+        LoadBaseDataToMap.ePaymentApiKey?.let {
+            headers.add("apikey", it)
 
-        val entity = HttpEntity(noticeRequest, headers)
-        val responce = restTemplate.exchange(listUnpaidNoticeURL, HttpMethod.POST, entity,
-                object : ParameterizedTypeReference<NoticeResponses<UnpaidNoticeResponseDto>>() {})
+            val entity = HttpEntity(noticeRequest, headers)
+            val responce = restTemplate.exchange(listUnpaidNoticeURL, HttpMethod.POST, entity,
+                    object : ParameterizedTypeReference<NoticeResponses<UnpaidNoticeResponseDto>>() {})
 
-        var result = responce.body ?: throw BadRequestException("Kops.Error.Parameter.Value")
-        logger.trace { "List of Paid Notice \n $result" }
+            var result = responce.body ?: throw BadRequestException("Error.Parameter.Value")
+            logger.trace { "List of UnPaid Notice \n $result" }
 
-        val listUnpaidNotice = result.result()
-        listUnpaidNotice.forEach { notice ->
-            unpaidNoticeCache!!.put(notice.noticeNumber!!, notice)
+            val listUnpaidNotice = result.result()
+            listUnpaidNotice.forEach { notice ->
+                unpaidNoticeCache!!.put(notice.noticeNumber!!, notice)
+            }
+
+            //        if (listUnpaidNotice == null || listUnpaidNotice.isEmpty())
+            //            return result
+            //        else if(result.resultCode!!.equals("S", true)) {
+            //            val outboundNoticeSaveList = updateExistingNotice(listUnpaidNotice)
+            //            logger.trace { "Temporary save of Paid Notice" }
+            //        }
+
+            return result
         }
-
-//        if (listUnpaidNotice == null || listUnpaidNotice.isEmpty())
-//            return result
-//        else if(result.resultCode!!.equals("S", true)) {
-//            val outboundNoticeSaveList = updateExistingNotice(listUnpaidNotice)
-//            logger.trace { "Temporary save of Paid Notice" }
-//        }
-
-        return result
+        throw UnauthorizedException("Error.Payment.Parameter.ApiKey.NotFound")
     }
 
 

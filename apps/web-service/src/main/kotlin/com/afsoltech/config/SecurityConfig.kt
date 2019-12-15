@@ -1,6 +1,6 @@
-package com.nanobnk.config
+package com.afsoltech.config
 
-import com.nanobnk.security.IpWhiteListSecurityFilter
+import com.afsoltech.security.IpWhiteListSecurityFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
@@ -24,7 +24,7 @@ class SecurityConfig {
 //    }
 
     @Bean
-    fun registerIpSecurityFilter(): FilterRegistrationBean {
+    fun registerIpSecurityFilter(): FilterRegistrationBean<IpWhiteListSecurityFilter> {
         val filter= IpWhiteListSecurityFilter(env)
         val reg = FilterRegistrationBean(filter)
 //        reg.order = 5

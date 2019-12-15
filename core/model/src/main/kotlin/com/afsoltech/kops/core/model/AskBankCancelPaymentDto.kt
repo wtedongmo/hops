@@ -42,9 +42,10 @@ data class AskBankCancelPaymentRespDataDto(
         val audTrNum: String?=null,
         val currency: String?=null,
         val billNumberList : List<String>?=null,
-        val authCd: String,
-        val authRsltCd: String,
-        val authRsltMsg: String,
+        val providerCode: String,
+        val authCode: String,
+        val cancelRsltCd: String,
+        val cancelRsltMsg: String,
         val newBal: BigDecimal?=null
 
 //        val entName: String,

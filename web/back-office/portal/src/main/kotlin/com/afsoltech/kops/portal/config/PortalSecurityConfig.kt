@@ -1,7 +1,7 @@
 //package com.afsoltech.kops.portal.config
 //
 //import ccom.afsoltech.kops.portal.model.attribute.UserPrivilege
-//import com.afsoltech.kops.portal.service.PortailUserDetailsService
+//import com.afsoltech.kops.portal.service.CustomUserDetailsService
 //import org.springframework.beans.factory.annotation.Autowired
 //import org.springframework.context.annotation.Configuration
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -19,7 +19,7 @@
 //    lateinit var accessDeniedHandler: ErrorHandler
 //
 //    @Autowired
-//    lateinit var myUserDetailsService: PortailUserDetailsService
+//    lateinit var myUserDetailsService: CustomUserDetailsService
 //
 //    @Throws(Exception::class)
 //    override fun configure(http: HttpSecurity) {
@@ -55,7 +55,7 @@
 //    fun configureGlobal(auth: AuthenticationManagerBuilder) {
 //
 //        val passwordEncoder = BCryptPasswordEncoder()
-//        auth.userDetailsService<PortailUserDetailsService>(myUserDetailsService).passwordEncoder(passwordEncoder)
+//        auth.userDetailsService<CustomUserDetailsService>(myUserDetailsService).passwordEncoder(passwordEncoder)
 //    }
 //
 ////    @Throws(Exception::class)

@@ -4,13 +4,14 @@ import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNoticeBeneficiary
-import com.afsoltech.kops.core.model.NoticeResponses
+import com.afsoltech.kops.core.model.notice.NoticeResponses
 import com.afsoltech.kops.core.model.integration.OutSelectedNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeBeneficiaryRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
 import com.afsoltech.kops.service.mapper.NoticeModelToEntity
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
@@ -39,35 +40,34 @@ class RetrieveSelectedUnpaidNoticeService(
     fun listSelectedUnpaidNotice(selectedRequest: OutSelectedNoticeRequestDto, userLogin: String, request: HttpServletRequest):
             NoticeResponses<UnpaidNoticeResponseDto> {
 
-        checkParticipantAPIRequest.checkAPIRequest(request)
+//        checkParticipantAPIRequest.checkAPIRequest(request)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
-            throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
-        headers.add("apikey", bankApiKey.value)
+        LoadBaseDataToMap.ePaymentApiKey?.let {
+            headers.add("apikey", it)
 
-        val entity = HttpEntity(selectedRequest, headers)
-        val responce = restTemplate.exchange(selectedUnpaidNoticeUrl, HttpMethod.POST, entity,
-                object : ParameterizedTypeReference<NoticeResponses<UnpaidNoticeResponseDto>>() {})
+            val entity = HttpEntity(selectedRequest, headers)
+            val responce = restTemplate.exchange(selectedUnpaidNoticeUrl, HttpMethod.POST, entity,
+                    object : ParameterizedTypeReference<NoticeResponses<UnpaidNoticeResponseDto>>() {})
 
-        val result = responce.body ?: throw BadRequestException("Kops.Error.Parameter.Value")
-        logger.trace { "List of selected unPaid Notice \n $result" }
-//
-//
-        val listUnpaidNotice = result.result()
-        if (listUnpaidNotice.isEmpty())
+            val result = responce.body ?: throw BadRequestException("Error.Parameter.Value")
+            logger.trace { "List of selected unPaid Notice \n $result" }
+            val listUnpaidNotice = result.result()
+            if (listUnpaidNotice.isEmpty())
+                return result
+            else if (result.resultCode!!.equals("S", true)) {
+                updateExistingNotice(listUnpaidNotice, userLogin)
+                logger.trace { "Temporary save of Un Paid Notice : $listUnpaidNotice" }
+            }
+
             return result
-        else if (result.resultCode!!.equals("S", true)) {
-            updateExistingNotice(listUnpaidNotice, userLogin)
-            logger.trace { "Temporary save of Un Paid Notice : $listUnpaidNotice" }
         }
-
-        return result
+        throw UnauthorizedException("Error.Payment.Parameter.ApiKey.NotFound")
     }
 
     @Transactional
     @Synchronized
-    fun updateExistingNotice(listUnpaidNotice: List<UnpaidNoticeResponseDto>?, userLogin: String) { //: MutableList<OutboundNoticeEntity>
+    fun updateExistingNotice(listUnpaidNotice: List<UnpaidNoticeResponseDto>?, userLogin: String) :List<SelectedNotice> { //: MutableList<OutboundNoticeEntity>
 
         val listNoticeNumber = listUnpaidNotice?.map { it -> it.noticeNumber!! } ?: emptyList()
         val listExistingNotice = selectedNoticeRepository.findListNoticeNumber(listNoticeNumber)
@@ -93,15 +93,14 @@ class RetrieveSelectedUnpaidNoticeService(
             it.userLogin = userLogin
         }
         val selectedNoticeList = selectedNoticeRepository.saveAll(listEntity)
-        logger.trace { "\n\nResult Unpaid Notice without beneficiary :\n$selectedNoticeList" }
+//        logger.trace { "\n\nResult Unpaid Notice without beneficiary :\n$selectedNoticeList" }
 
         val noticeBenefMap = listUnpaidNotice?.map { notice -> notice.noticeNumber!! to notice.beneficiaryList!!
         }!!.toMap()
 
         val noticeBenefList = mutableListOf<SelectedNoticeBeneficiary>()
-
         selectedNoticeList.forEach { notice ->
-            val listBenef = NoticeModelToEntity.OutboundNoticeBeneficiaryModelToEntities
+            val listBenef = NoticeModelToEntity.SelectedNoticeBeneficiaryModelToEntities
                     .from(noticeBenefMap.get(notice.noticeNumber)?: emptyList())
             listBenef.forEach { benef ->
                 if(noticeIdBenefMap.contains(notice.noticeNumber+"#"+benef.code)){
@@ -113,15 +112,25 @@ class RetrieveSelectedUnpaidNoticeService(
         }
 
         val noticeBenefSaved = selectedNoticeBeneficiaryRepository.saveAll(noticeBenefList)
-        val noticeMap = selectedNoticeList.map { notice ->
-            notice.noticeNumber!! to notice.id!!
-        }.toMap()
-
-        listUnpaidNotice.forEach { notice ->
-            notice.noticeId = noticeMap.get(notice.noticeNumber)
+        val noticeBenefMapSaved = hashMapOf<Long, MutableList<SelectedNoticeBeneficiary>>()
+        noticeBenefSaved.forEach {
+            var benefList= noticeBenefMapSaved.get(it.selectedNotice?.id)
+            if(benefList == null) {
+                benefList = mutableListOf<SelectedNoticeBeneficiary>()
+                noticeBenefMapSaved.put(it.selectedNotice!!.id!!, benefList)
+            }
+            benefList.add(it)
         }
-        logger.trace { "\n\nResult Unpaid Beneficiary :\n$listUnpaidNotice" }
 
+//        listUnpaidNotice.forEach { notice ->
+//            notice.noticeId = noticeMap.get(notice.noticeNumber)
+//        }
+        selectedNoticeList.forEach {
+            it.beneficiaryList = noticeBenefMapSaved.get(it.id!!)?: ArrayList()
+        }
+//        logger.trace { "\n\nResult Unpaid :\n$selectedNoticeList" }
+
+        return selectedNoticeList
     }
 
 }

@@ -1,6 +1,6 @@
-package com.nanobnk.security
+package com.afsoltech.security
 
-import com.nanobnk.util.rest.error.ForbiddenException
+import com.afsoltech.core.exception.ForbiddenException
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment

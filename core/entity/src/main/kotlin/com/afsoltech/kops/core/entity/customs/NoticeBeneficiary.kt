@@ -9,7 +9,6 @@ import javax.persistence.*
 @Entity
 data class NoticeBeneficiary (
 
-//        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @SequenceGenerator(name = "NOTICE_BENEFICIARY_ID", sequenceName = "NOTICE_BENEFICIARY_ID", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_BENEFICIARY_ID")
         @Id

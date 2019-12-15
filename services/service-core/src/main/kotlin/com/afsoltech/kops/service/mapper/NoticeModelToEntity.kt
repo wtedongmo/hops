@@ -6,11 +6,10 @@ import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.entity.customs.PaymentOfNotice
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNoticeBeneficiary
-import com.afsoltech.kops.core.model.NoticeBeneficiaryDto
+import com.afsoltech.kops.core.model.notice.NoticeBeneficiaryDto
 import com.afsoltech.kops.core.model.integration.NoticeOfPaymentDto
 import com.afsoltech.kops.core.model.integration.PaymentProcessRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import java.time.LocalDateTime
 
 /*
   * This class help to copy data from response model to entity data class before save
@@ -52,7 +51,7 @@ class NoticeModelToEntity {
     }
 
 
-    object OutboundNoticeBeneficiaryModelToEntity {
+    object SelectedNoticeBeneficiaryModelToEntity {
         fun from(model: NoticeBeneficiaryDto):  SelectedNoticeBeneficiary {
             val entity = SelectedNoticeBeneficiary(
                     name = model.beneficiaryName,
@@ -64,12 +63,12 @@ class NoticeModelToEntity {
         }
     }
 
-    object OutboundNoticeBeneficiaryModelToEntities {
+    object SelectedNoticeBeneficiaryModelToEntities {
         fun from(models: List<NoticeBeneficiaryDto>): MutableList<SelectedNoticeBeneficiary> {
             val entities = mutableListOf<SelectedNoticeBeneficiary>()
 
             models.forEach { it ->
-                entities.add(OutboundNoticeBeneficiaryModelToEntity.from(it))
+                entities.add(SelectedNoticeBeneficiaryModelToEntity.from(it))
             }
 
             return entities

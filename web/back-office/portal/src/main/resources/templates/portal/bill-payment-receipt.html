@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<!--/*/ <th:block th:include="page_tpl_fragment :: headerfiles"></th:block> /*/-->
+	<title th:text="#{portal.title}">Customs e-Portal</title>
+</head>
+<body class="skin-blue sidebar-mini" style="height: auto;">
+<!--start wrapper-->
+<div class="wrapper" style="overflow-y: hidden; height: auto;">
+
+	<!--/*/ <th:block th:include="page_tpl_fragment :: header"></th:block> /*/-->
+	<!--/*/ <th:block th:include="page_tpl_fragment :: sidebar"></th:block> /*/-->
+
+
+	<div class="content-wrapper sub-style" style="min-height: 665.8px; background-color: #fff">
+
+		<care-0501001q>
+			<div>
+				<cmm-page-header>
+					<section class="content-header">
+						<h1 th:text="#{app.payment.bill.receipt.label}">
+							Avis non Payes
+						</h1>
+						<ol class="breadcrumb">
+							<li>
+								<a th:href="@{/portal/}" ><i class="fa fa-home"></i></a>
+							</li>
+							<li><a th:href="@{/portal/list-unpaid-customs}" th:text="#{app.payment.bill.label}">Avis de paiement</a></li>
+							<li class="active" th:text="#{app.payment.bill.receipt.label}">Avis non Payes</li>
+						</ol>
+					</section>
+				</cmm-page-header>
+			</div>
+
+			<section class="content">
+
+				<div class="box box-info">
+					<div th:if="${errorMessage}" th:text="#{__${errorMessage}__}" style="color:red"/>
+					<h4 th:if="${message}" th:text="#{__${message}__}" style="color:green"/>
+					<h2 th:text="#{app.payment.bill.receipt.label}" />
+
+					<div class="box-body no-padding" style="text-align:center">
+						<table class="table table--portal" style="width:50%" id="table-notices-js">
+							<thead>
+							<tr>
+								<!--<th th:text="#{notice.selected}">Number</th>-->
+								<th th:text="#{bank.name}">Bank</th>
+								<th th:text="#{bank.code}">Bank</th>
+								<th th:text="#{bank.agency}">Agency</th>
+								<th th:text="#{account.number}">Account</th>
+								<th th:text="#{account.name}">Name</th>
+								<th th:text="#{transaction.number}">Total Amount</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr data-th-each="billPay : ${billPayResume}">
+								<td data-th-text="${billPay.bankName}"></td>
+								<td data-th-text="${billPay.bankCode}"></td>
+								<td data-th-text="${billPay.bankAgency}"></td>
+								<td data-th-text="${billPay.accountNumber}"></td>
+								<td data-th-text="${billPay.accountName}"></td>
+								<td data-th-text="${billPay.transactionNumber}"></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<h3 th:text="#{notice.paid.list.label}"></h3>
+					<div class="box-body no-padding">
+						<table class="table table--portal" style="width:80%" id="table-notices-js">
+							<thead>
+							<tr>
+								<!--<th th:text="#{notice.selected}">Number</th>-->
+								<th th:text="#{notice.taxpayer.nui}">NUI</th>
+								<th th:text="#{notice.taxpayer.name}">Name</th>
+								<th th:text="#{notice.number}">Number</th>
+								<th th:text="#{notice.notification.date}">Notification Date</th>
+								<!--<th th:text="#{notice.type}">Type</th>-->
+								<!--<th th:text="#{notice.declaration.type}">Declaration Type</th>-->
+								<!--<th th:text="#{notice.issuer.office}">Office</th>-->
+								<th th:text="#{notice.due.date}">Due Date</th>
+								<th th:text="#{notice.amount}">Notice Amount</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr data-th-each="notice : ${selectedBills}">
+								<td data-th-text="${notice.taxPayerNumber}"></td>
+								<td data-th-text="${notice.taxPayerName}"></td>
+								<td data-th-text="${notice.noticeNumber}"></td>
+								<td data-th-text="${notice.notificationDate}"></td>
+								<!--<td data-th-text="${notice.noticeType}"></td>-->
+								<!--<td data-th-text="${customs.referenceNumber}"></td>-->
+								<!--<td data-th-text="${notice.declarationType}"></td>-->
+								<!--<td data-th-text="${notice.issuerOffice}"></td>-->
+								<td data-th-text="${notice.dueDate}"></td>
+								<td data-th-text="${notice.noticeAmount}"></td>
+							</tr>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+
+				<br/> <br/> <br/>
+
+				<!--start bill and fee Table -->
+				<h3 th:text="#{app.payment.bill.amount.detail.label}"></h3>
+				<div class="box-body no-padding" style="text-align:center">
+					<table class="table table--portal" style="width:30%" id="table-notices-js">
+						<thead>
+						<tr>
+							<!--<th th:text="#{notice.selected}">Number</th>-->
+							<th th:text="#{bill.amount.label}">Amount</th>
+							<th th:text="#{bill.fee.label}">Fee</th>
+							<th th:text="#{bill.total.amount.label}">Total Amount</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr data-th-each="bill : ${billFee}">
+							<td data-th-text="${bill.amount}"></td>
+							<td data-th-text="${bill.feeAmount}"></td>
+							<td data-th-text="${bill.totalAmount}"></td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</care-0501001q>
+
+	</div>
+
+	<!--/*/ <th:block th:include="page_tpl_fragment :: footer"></th:block> /*/-->
+
+</div>
+<!-- end wrapper-->
+<!--/*/ <th:block th:include="page_tpl_fragment :: footerfiles"></th:block> /*/-->
+</body>
+</html>

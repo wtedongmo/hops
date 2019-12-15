@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<!--/*/ <th:block th:include="page_tpl_fragment :: headerfiles"></th:block> /*/-->
+	<title th:text="#{portal.title}">Customs e-Portal</title>
+</head>
+<body class="skin-blue sidebar-mini" style="height: auto;">
+<!--start wrapper-->
+<div class="wrapper" style="overflow-y: hidden; height: auto;">
+
+	<!--/*/ <th:block th:include="page_tpl_fragment :: header"></th:block> /*/-->
+	<!--/*/ <th:block th:include="page_tpl_fragment :: sidebar"></th:block> /*/-->
+
+
+	<div class="content-wrapper sub-style" style="min-height: 665.8px; background-color: #fff">
+
+		<care-0501001q>
+			<div>
+				<cmm-page-header>
+					<section class="content-header">
+						<h1 th:text="#{notice.unpaid.list.label}">
+							Avis non Payes
+						</h1>
+						<ol class="breadcrumb">
+							<li>
+								<a th:href="@{/portal/}" ><i class="fa fa-home"></i></a>
+							</li>
+							<li><a th:href="@{/portal/list-unpaid-customs}" th:text="#{notice.label}">Avis de paiement</a></li>
+							<li class="active" th:text="#{notice.unpaid.list.label}">Avis non Payes</li>
+						</ol>
+					</section>
+				</cmm-page-header>
+			</div>
+
+			<section class="content">
+
+				<div class="box">
+					<div th:if="${errorMessage}" th:text="#{__${errorMessage}__}" style="color:red"/>
+					<form class="form-horizontal" th:action="@{/portal/save-selected-customs}" th:method="post">
+						<!--th:object="${unpaidNoticeForm}"-->
+						<div class="box-body no-padding">
+						<table class="table table--portal" style="width:100%" id="table-notices-js">
+							<thead>
+							<tr>
+								<th th:text="#{notice.check}">Number</th>
+								<th th:text="#{notice.taxpayer.nui}">NUI</th>
+								<th th:text="#{notice.taxpayer.name}">Name</th>
+								<th th:text="#{notice.number}">Number</th>
+								<th th:text="#{notice.notification.date}">Notification Date</th>
+								<!--<th th:text="#{notice.type}">Type</th>-->
+								<!--<th th:text="#{customs.reference}">Reference</th>-->
+								<!--<th th:text="#{notice.declaration.type}">Declaration Type</th>-->
+								<!--<th th:text="#{customs.taxpayer.representative.number}">CDA NUI</th>-->
+								<!--<th th:text="#{customs.taxpayer.representative.code}">CDA Code</th>-->
+								<!--<th th:text="#{customs.taxpayer.representative.name}">Representative name</th>-->
+								<!--<th th:text="#{notice.issuer.office}">Office</th>-->
+								<th th:text="#{notice.due.date}">Due Date</th>
+								<th th:text="#{notice.amount}">Notice Amount</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr data-th-each="notice : ${UnpaidNotice}">
+								<td>
+									<input type="checkbox" name="selectedNotices" th:value="${notice.noticeNumber}"/>
+								</td>
+								<td data-th-text="${notice.taxPayerNumber}"></td>
+								<td data-th-text="${notice.taxPayerName}"></td>
+								<td data-th-text="${notice.noticeNumber}" class="details-control" th:attr="data-parent-row=${notice.noticeNumber}"></td>
+								<td data-th-text="${notice.notificationDate}"></td>
+								<!--<td data-th-text="${notice.noticeType}"></td>-->
+								<!--<td data-th-text="${customs.referenceNumber}"></td>-->
+								<!--<td data-th-text="${notice.declarationType}"></td>-->
+								<!--<td data-th-text="${customs.taxPayerRepresentativeNumber}"></td>-->
+								<!--<td data-th-text="${customs.taxPayerRepresentativeCode}"></td>-->
+								<!--<td data-th-text="${customs.taxPayerRepresentativeName}"></td>-->
+								<!--<td data-th-text="${notice.issuerOffice}"></td>-->
+								<td data-th-text="${notice.dueDate}"></td>
+								<td data-th-text="${notice.noticeAmount}"></td>
+							</tr>
+							</tbody>
+						</table>
+							<div class="box-footer">
+								<button class="btn btn-result pull-right" type="submit"><i class="fa fa-credit-card"></i> <span th:text="#{button.next}" th:remove="tag">Search</span></button>
+							</div>
+					</div>
+					</form>
+				</div>
+
+
+
+				<!--start AP details -->
+				<div th:each="notice : ${UnpaidNotice}" th:class="${'ap-details-' + notice.noticeNumber + ' blind'}">
+					<div class="box details-control-child">
+						<care-cgtr>
+							<div class="box-header">
+								<h4 class="subtitle text-light-blue"><span>Avis de paiement</span></h4>
+							</div>
+							<form class="form-horizontal " novalidate="">
+								<div class="box">
+									<div class="box-body no-padding bottom-border">
+										<div class="row no-margin">
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_carrNm"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.number}">Number</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.noticeNumber}"></span>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_trnpMethIdfyNo"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.notification.date}">Date de notif.</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.notificationDate}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row no-margin">
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_trnpRferNo"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.type}">Type d'avis de paiement</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.noticeType}"></span>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_arvlDttm"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.reference}">Reference</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.referenceNumber}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row no-margin">
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_dptrPortCd"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.declaration.type}">Declaration Type</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.declarationType}"></span>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_ldunPortCd"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.issuer.office}">Office</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.issuerOffice}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row no-margin">
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_ldunPortCd"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.taxpayer.nui}">NUI</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.taxPayerNumber}"></span>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_carrCd"><label class="control-label col-sm-4 label_tit" style="height: 36px;">
+														<span th:text="#{notice.taxpayer.name}">Name</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.taxPayerName}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row no-margin">
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_carrCd"><label class="control-label col-sm-4 label_tit" style="height: 36px;">
+														<span th:text="#{notice.taxpayer.representative.number}">CDA NUI</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.taxPayerRepresentativeNumber}"></span>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_carrCd"><label class="control-label col-sm-4 label_tit"  style="height: 36px;">
+														<span th:text="#{notice.due.date}">Date d'echenance</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.dueDate}">20/12/2019</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row no-margin">
+											<div class="col-sm-6">
+												<div class="form-group form-group-sm">
+													<cmm-label for="careCgtrForm_carrCd"><label class="control-label col-sm-4 label_tit" style="height: 36px;">
+														<span th:text="#{notice.amount}">Notice Amount</span>
+													</label>
+													</cmm-label>
+													<div class="txt-one col-sm-8">
+														<span th:text="${notice.noticeAmount}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</care-cgtr>
+					</div>
+				</div>
+				<!--end AP details -->
+
+			</section>
+		</care-0501001q>
+
+	</div>
+	<!--/*/ <th:block th:include="page_tpl_fragment :: footer"></th:block> /*/-->
+
+</div>
+<!-- end wrapper-->
+<!--/*/ <th:block th:include="page_tpl_fragment :: footerfiles"></th:block> /*/-->
+</body>
+</html>

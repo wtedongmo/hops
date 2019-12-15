@@ -1,4 +1,4 @@
-//package com.nanobnk.epayment.portal.config;
+//package com.afsoltech.epayment.portal.config;
 //
 //import org.springframework.stereotype.Component;
 //

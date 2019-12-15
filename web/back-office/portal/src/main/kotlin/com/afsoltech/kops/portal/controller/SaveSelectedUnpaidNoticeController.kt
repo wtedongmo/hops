@@ -1,12 +1,9 @@
-package com.nanobnk.epayment.core.web
+package com.afsoltech.core.controller
 
-import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.service.AccountBankService
-import com.afsoltech.core.util.enforce
-import com.afsoltech.kops.core.model.NoticeResponses
-import com.afsoltech.kops.core.model.attribute.FieldsAttribute
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import com.afsoltech.kops.portal.controller.ListUnpaidNoticeController
 import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
 import com.afsoltech.kops.service.ws.CalculateFeeNoticeService
 import com.afsoltech.kops.service.ws.SaveSelectedNoticeService
@@ -25,9 +22,9 @@ class SaveSelectedUnpaidNoticeController (val saveSelectedNoticeService: SaveSel
                                           val calculateFeeNoticeService: CalculateFeeNoticeService, val accountBankService: AccountBankService){
     companion object : KLogging()
 
-    @Autowired
-    @Qualifier(value = "errorMessageSource")
-    lateinit var messageSource: MessageSource
+//    @Autowired
+//    @Qualifier(value = "errorMessageSource")
+//    lateinit var messageSource: MessageSource
 
     @PostMapping
     fun saveSelectedNotices(@RequestParam("selectedNotices") selectedNoticeNumberList: List<String>?,
@@ -36,31 +33,43 @@ class SaveSelectedUnpaidNoticeController (val saveSelectedNoticeService: SaveSel
         val auth = SecurityContextHolder.getContext().authentication
         val username= auth.name
 
-        ListUnpaidNoticeController.logger.info("\nUser: $username; Selected Notices: $selectedNoticeNumberList" )
+        logger.info("\nUser: $username; Selected Notices: $selectedNoticeNumberList" )
 
         //Call Service to save selected Notices
         if(selectedNoticeNumberList.isNullOrEmpty()){
             return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
         }
-        saveSelectedNoticeService.saveSelectedNotices(username, selectedNoticeNumberList)
+        val selectedNoticeList = saveSelectedNoticeService.saveSelectedNotices(username, selectedNoticeNumberList)
         val selectedNotices = mutableListOf<UnpaidNoticeResponseDto>()
-        selectedNoticeNumberList.forEach {
-            selectedNotices.add(ListUnpaidNoticeService.unpaidNoticeCache!!.get(it))
+        var taxpayerNumber=""
+        selectedNoticeList.forEach {notice ->
+            val noticeCache = ListUnpaidNoticeService.unpaidNoticeCache!!.get(notice.noticeNumber!!)
+            noticeCache.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.notificationDate)
+            noticeCache.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.dueDate)
+            selectedNotices.add(noticeCache)
+
+            if(taxpayerNumber.isEmpty())
+                taxpayerNumber = notice.taxpayerNumber!!
         }
 
-        val billFeeDto = calculateFeeNoticeService.calculateFeeNotice(username)
+        val billFeeDto = calculateFeeNoticeService.calculateFee(selectedNoticeList)
         val accountList = accountBankService.findByUser(username)
 
         val modelAndView = ModelAndView()
         modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("message", "kops.payment.choose.account")
-        modelAndView.addObject("selectedNotices", selectedNotices)
-        modelAndView.addObject("billFeeNotice", billFeeDto)
+        modelAndView.addObject("message", "app.payment.bill.choose.account")
+        modelAndView.addObject("selectedBills", selectedNotices)
+        modelAndView.addObject("billFee", billFeeDto)
         modelAndView.addObject("accountList", accountList)
+        val billFeeAct = BillPaymentNoticeModel(otp = null, accountNumber = null, selectedBills = selectedNotices, billFee = billFeeDto,
+                taxpayerNumber = taxpayerNumber)
+        request.session.setAttribute(username+"_billPayInfo", billFeeAct)
+
+        modelAndView.addObject("BillPayment", billFeeAct)
         // menu highlight
         modelAndView.addObject("parentMenuHighlight", "notices-index")
         modelAndView.addObject("menuHighlight", "notices-list")
-        modelAndView.viewName = "portal/selected-unpaid-notice"
+        modelAndView.viewName = "portal/bill-select-account"
         return modelAndView
     }
 }

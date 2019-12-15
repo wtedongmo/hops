@@ -1,8 +1,8 @@
-package com.nanobnk.epayment.core.web
+package com.afsoltech.epayment.core.web
 
-import com.nanobnk.epayment.model.inbound.*
-import com.nanobnk.epayment.repository.OutboundNoticeRepository
-import com.nanobnk.epayment.service.utils.StringDateFormaterUtils
+import com.afsoltech.epayment.model.inbound.*
+import com.afsoltech.epayment.repository.OutboundNoticeRepository
+import com.afsoltech.epayment.service.utils.StringDateFormaterUtils
 import mu.KLogging
 import org.junit.Assert
 import org.junit.Test
@@ -20,16 +20,16 @@ companion object : KLogging()
 
 
     @Autowired
-    lateinit var listUnpaidNoticeController: com.nanobnk.epayment.core.web.ListUnpaidNoticeController
+    lateinit var listUnpaidNoticeController: com.afsoltech.epayment.core.web.ListUnpaidNoticeController
 
     @Autowired
-    lateinit var listPaidNoticeController: com.nanobnk.epayment.core.web.ListPaidNoticeController
+    lateinit var listPaidNoticeController: com.afsoltech.epayment.core.web.ListPaidNoticeController
 
     @Autowired
     lateinit var outboundNoticeRepository: OutboundNoticeRepository
 
     @Autowired
-    lateinit var paymentOfNoticeController: com.nanobnk.epayment.core.web.PaymentOfNoticeController
+    lateinit var paymentOfNoticeController: com.afsoltech.epayment.core.web.PaymentOfNoticeController
 
     @Autowired
     lateinit var checkUserInfosController: CheckUserInfosController

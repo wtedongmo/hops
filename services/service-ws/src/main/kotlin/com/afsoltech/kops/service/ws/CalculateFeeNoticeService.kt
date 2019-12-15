@@ -4,14 +4,12 @@ import com.afsoltech.core.entity.fee.FeeAppliedType
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.repository.ProviderRepository
 import com.afsoltech.core.repository.fee.ProviderFeeRepository
+import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import com.afsoltech.core.util.enforce
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
-import com.afsoltech.kops.core.model.BillFeeDto
-import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
+import com.afsoltech.kops.core.model.notice.BillFeeDto
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeBeneficiaryRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
-import com.afsoltech.kops.service.mapper.NoticeModelToEntity
-import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -19,16 +17,22 @@ import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 
 @Service
-class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepository, val providerRepository: ProviderRepository,
-                                val providerFeeRepository: ProviderFeeRepository) {
+class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepository,
+                                val selectedNoticeBenfRepository: SelectedNoticeBeneficiaryRepository,
+                                val providerRepository: ProviderRepository, val providerFeeRepository: ProviderFeeRepository) {
 
     companion object : KLogging()
 
-    @Value("\${app.bank.code.initial}")
-    lateinit var operatorCode: String
+    //    @Value("\${app.bank.code.initial}")
+//    private var bankCode: String=""
 
-    @Value("\${app.notice.provider.code}")
-    lateinit var providerNoticeCode: String
+    //    @Value("\${app.provider.notice.code}")
+//    private var providerNoticeCode: String=""
+
+    init{
+//        bankCode = LoadBaseDataToMap.settingMap.get("app.bank.code.initial")?.value?: ""
+//        providerNoticeCode = LoadBaseDataToMap.settingMap.get("app.provider.notice.code")?.value?: ""
+    }
 
 
     fun calculateFeeNotice(userLogin: String): BillFeeDto { //:Boolean
@@ -38,19 +42,33 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
         return calculateFee(selectedNoticeList)
     }
 
+    fun calculateFeeNotice(noticeNumberList: List<String>): BillFeeDto { //:Boolean
+
+        val selectedNoticeList = selectedNoticeRepository.findListNoticeNumber(noticeNumberList)
+
+        return calculateFee(selectedNoticeList)
+    }
+
     fun calculateFee(selectedNoticeList: List<SelectedNotice>): BillFeeDto {
 
         if(selectedNoticeList.isEmpty()){
-            throw BadRequestException("Kops.Error.Selected.NotFound")
+            throw BadRequestException("Error.Selected.NotFound")
         }
         var totalAmount =BigDecimal.ZERO
         var externalAmount =BigDecimal.ZERO
 
+        val noticeIdList = mutableListOf<Long>()
         selectedNoticeList.forEach {notice ->
             totalAmount += notice.amount!!
-            notice.beneficiaryList.forEach { benef ->
-                externalAmount += if(benef.accountNumber!!.startsWith(operatorCode)) BigDecimal.ZERO else benef.amount!!
-            }
+            noticeIdList.add(notice.id!!)
+//            notice.beneficiaryList.forEach { benef ->
+//                externalAmount += if(benef.accountNumber!!.startsWith(LoadBaseDataToMap.bankCode)) BigDecimal.ZERO else benef.amount!!
+//            }
+        }
+
+        val benefList = selectedNoticeBenfRepository.findBySelectedNoticeList(noticeIdList)
+        benefList.forEach { benef ->
+            externalAmount += if(benef.accountNumber!!.startsWith(LoadBaseDataToMap.bankCode)) BigDecimal.ZERO else benef.amount!!
         }
 
         return calculateFee(totalAmount, externalAmount)
@@ -58,12 +76,15 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
 
     @Transactional
     @Synchronized
-    fun calculateFee(totalAmount: BigDecimal, externalAmount: BigDecimal) : BillFeeDto{
-        enforce(totalAmount <= BigDecimal.ZERO, listOf(totalAmount)) { "Invalid.Amount" }
-        enforce(externalAmount < BigDecimal.ZERO, listOf(externalAmount)) { "Invalid.Amount" }
+    fun calculateFee(totalAmount: BigDecimal, externalAmount: BigDecimal) : BillFeeDto {
+        enforce(totalAmount > BigDecimal.ZERO, listOf(totalAmount)) { "Invalid.Amount" }
+        enforce(externalAmount >= BigDecimal.ZERO, listOf(externalAmount)) { "Invalid.Amount" }
+
+//        bankCode = LoadBaseDataToMap.settingMap.get("app.bank.code.initial")?.value?: ""
+//        providerNoticeCode = LoadBaseDataToMap.settingMap.get("app.provider.notice.code")?.value?: ""
 
         var feeAmount = BigDecimal.ZERO
-        val providerOp = providerRepository.findByParticipantCode(providerNoticeCode)
+        val providerOp = providerRepository.findOneByParticipantCode(LoadBaseDataToMap.providerNoticeCode)
         if(providerOp.isPresent) {
             val provider = providerOp.get()
             val providerFeeList = providerFeeRepository.findByAmountIntervalAndProviderAndFeeType(totalAmount, provider.id!!,
@@ -84,7 +105,7 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
             return BillFeeDto(totalAmount, feeAmount, totalAmount + feeAmount)
         }
 
-        throw BadRequestException("Kops.Error.Provider.NotFound", listOf(providerNoticeCode))
+        throw BadRequestException("Error.Provider.NotFound", listOf(LoadBaseDataToMap.providerNoticeCode))
     }
 
 }

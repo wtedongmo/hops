@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 
 //@EnableWebSecurity
-@SpringBootApplication//(scanBasePackages = ["com.nanobnk"], exclude = [SecurityAutoConfiguration::class])
+@SpringBootApplication//(scanBasePackages = ["com.afsoltech"], exclude = [SecurityAutoConfiguration::class])
 class KopsPortalApp
 
 fun main(args: Array<String>) {

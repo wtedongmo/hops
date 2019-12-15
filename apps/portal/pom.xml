@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Nanobnk -->
+        <!-- Afsoltech -->
         <dependency>
             <groupId>com.afsoltech.kops</groupId>
             <artifactId>kops-web-back-office-portal</artifactId>

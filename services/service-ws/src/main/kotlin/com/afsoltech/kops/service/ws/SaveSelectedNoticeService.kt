@@ -1,10 +1,8 @@
 package com.afsoltech.kops.service.ws
 
-import com.afsoltech.kops.core.model.NoticeResponses
+import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import com.afsoltech.kops.core.repository.temp.SelectedNoticeBeneficiaryRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
-import com.afsoltech.kops.service.mapper.NoticeModelToEntity
 import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
 import com.afsoltech.kops.service.integration.RetrieveSelectedUnpaidNoticeService
 import mu.KLogging
@@ -19,14 +17,14 @@ class SaveSelectedNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
 
     @Transactional
     @Synchronized
-    fun saveSelectedNotices(userLogin: String, selectedNoticeList: List<String>)  { //:Boolean
+    fun saveSelectedNotices(userLogin: String, selectedNoticeList: List<String>) : List<SelectedNotice> { //:Boolean
 
         val selectedUnpaidNoticeList = mutableListOf<UnpaidNoticeResponseDto>()
         selectedNoticeList.forEach {
             selectedUnpaidNoticeList.add(ListUnpaidNoticeService.unpaidNoticeCache!!.get(it))
         }
 
-        retrieveSelectedUnpaidNoticeService.updateExistingNotice(selectedUnpaidNoticeList, userLogin)
+        return retrieveSelectedUnpaidNoticeService.updateExistingNotice(selectedUnpaidNoticeList, userLogin)
 
 //        val existingList = selectedNoticeRepository.findByUserLogin(userLogin)
 //        if(existingList.isNotEmpty()){

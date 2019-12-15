@@ -3,8 +3,8 @@ package com.afsoltech.kops.service.integration
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
-import com.afsoltech.kops.core.model.AuthRequestDto
-import com.afsoltech.kops.core.model.AuthResponseDto
+import com.afsoltech.kops.core.model.notice.AuthRequestDto
+import com.afsoltech.kops.core.model.notice.AuthResponseDto
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
@@ -26,19 +26,19 @@ class CheckUserInfoService(val restTemplate: RestTemplate, val checkParticipantA
 
     fun checkUserInfo(authRequest: AuthRequestDto, request: HttpServletRequest?): AuthResponseDto {
 
-        checkParticipantAPIRequest.checkAPIRequest(request)
+//        checkParticipantAPIRequest.checkAPIRequest(request)
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
-            throw UnauthorizedException("Kops.Error.Payment.Parameter.ApiKey.NotFound")
-        headers.add("apikey", bankApiKey.value)
+        LoadBaseDataToMap.ePaymentApiKey?.let {
+            headers.add("apikey", it)
+            val entity = HttpEntity(authRequest, headers)
+            val responce = restTemplate.exchange(userAuthURL, HttpMethod.POST, entity, AuthResponseDto::class.java)
+            var authResponse = responce.body ?: throw BadRequestException("Error.Parameter.Value")
 
-        val entity = HttpEntity(authRequest, headers)
-        val responce = restTemplate.exchange(userAuthURL, HttpMethod.POST, entity, AuthResponseDto::class.java)
-        var authResponse = responce.body ?: throw BadRequestException("Kops.Error.Parameter.Value")
-
-        return authResponse
+            return authResponse
+        }
+        throw UnauthorizedException("Error.Payment.Parameter.ApiKey.NotFound")
     }
 
 }

@@ -1,12 +1,12 @@
-//package com.nanobnk.epayment.core.web
+//package com.afsoltech.epayment.core.web
 //
-//import com.nanobnk.EPaymentRestApp
-//import com.nanobnk.epayment.model.inbound.AuthRequestDto
-//import com.nanobnk.epayment.model.inbound.NoticeRequestDto
-//import com.nanobnk.epayment.model.inbound.UnpaidNoticeRequestDto
-//import com.nanobnk.epayment.service.PortalCheckUserInfosService
-//import com.nanobnk.epayment.service.PortalListPaidNoticeService
-//import com.nanobnk.epayment.service.PortalListUnpaidNoticeService
+//import com.afsoltech.EPaymentRestApp
+//import com.afsoltech.epayment.model.inbound.AuthRequestDto
+//import com.afsoltech.epayment.model.inbound.NoticeRequestDto
+//import com.afsoltech.epayment.model.inbound.UnpaidNoticeRequestDto
+//import com.afsoltech.epayment.service.PortalCheckUserInfosService
+//import com.afsoltech.epayment.service.PortalListPaidNoticeService
+//import com.afsoltech.epayment.service.PortalListUnpaidNoticeService
 //import mu.KLogging
 //import org.junit.Assert
 //import org.junit.Test

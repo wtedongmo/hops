@@ -1,7 +1,6 @@
-package com.nanobnk
+package com.afsoltech
 
-import com.nanobnk.epayment.entity.OutboundNoticePaymentBeneficiaryEntity
-import com.nanobnk.epayment.service.DeleteTemporaryNoticeService
+import com.afsoltech.kops.service.ws.DeleteTemporaryNoticeService
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -19,15 +18,15 @@ class RunScheduledDeleteTask (val deleteNoticeService: DeleteTemporaryNoticeServ
     @Scheduled(cron = "\${app.schedule.delete.checked.customs}")
     fun deleteTemporaryCheckedNotice(){
 
-        deleteNoticeService.deleteTemporaryCheckedNotice()
+        deleteNoticeService.deleteTemporarySelectedNotice()
     }
 
 
-    @Scheduled(cron = "\${app.schedule.delete.unpaid.customs}")
-    fun deleteTemporaryUnpaidNotice(){
-
-        deleteNoticeService.deleteTemporaryUnpaidNotice()
-    }
+//    @Scheduled(cron = "\${app.schedule.delete.unpaid.customs}")
+//    fun deleteTemporaryUnpaidNotice(){
+//
+//        deleteNoticeService.deleteTemporaryUnpaidNotice()
+//    }
 
 
     @Scheduled(cron = "\${app.schedule.reset.customs.temporary.table}")

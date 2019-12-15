@@ -9,7 +9,7 @@
         <artifactId>kops-core</artifactId>
          <version>1.0.0-SNAPSHOT</version>
 		<!--<version>2.2.1.RELEASE</version>-->
-        <relativePath/>
+        <!--<relativePath/>-->
     </parent>
 	
     <artifactId>kops-apps</artifactId>
@@ -20,6 +20,8 @@
     <modules>
 		<module>web-service</module>
 		<module>portal</module>
+		<module>agent-banking</module>
+		<module>administration</module>
     </modules>
 
 

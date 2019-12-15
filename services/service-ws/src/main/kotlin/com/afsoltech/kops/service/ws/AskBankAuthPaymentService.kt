@@ -27,7 +27,7 @@ class AskBankAuthPaymentService(val restTemplate: RestTemplate) {
     @Autowired
     lateinit var tempPaymentRepository: TempPaymentRepository
 
-    @Value("\${api.external.bank.epayment.askBankAuthorizePaymentUrl}")
+    @Value("\${api.external.bank.askBankAuthorizePaymentUrl}")
     lateinit var askBankAuthorizePaymentUrl: String
 
     /**
@@ -59,7 +59,7 @@ class AskBankAuthPaymentService(val restTemplate: RestTemplate) {
         }
 
         tempPayment.bankResponseStatus = response.statusCode.value()
-        val result = response.body?: throw BadRequestException("Kops.Error.Payment.Bank.Auth.Null")
+        val result = response.body?: throw BadRequestException("Error.Payment.Bank.Auth.Null")
         tempPayment.bankResultCode = result.resultCode
         tempPayment.bankResultMsg = result.resultMsg
         result.resultData?.let{

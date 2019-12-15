@@ -1,7 +1,7 @@
-//package com.nanobnk.security
+//package com.afsoltech.security
 //
-//import com.nanobnk.epayment.repository.InboundParticipantRepository
-//import com.nanobnk.util.rest.error.ForbiddenException
+//import com.afsoltech.epayment.repository.InboundParticipantRepository
+//import com.afsoltech.util.rest.error.ForbiddenException
 //import mu.KLogging
 //import org.springframework.beans.factory.annotation.Value
 //import org.springframework.stereotype.Service
@@ -16,8 +16,8 @@
 //@Service
 //class ApiKeySecurityFilter (val inboundParticipantRepository: InboundParticipantRepository) : GenericFilterBean() {
 //    companion object : KLogging() {
-//        val userHeader = "x-nanobnk-internal-user"
-//        val keyHeader = "x-nanobnk-apikey"
+//        val userHeader = "x-afst-internal-user"
+//        val keyHeader = "x-afst-apikey"
 //    }
 //
 ////    @Value("")

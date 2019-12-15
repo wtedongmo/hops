@@ -1,4 +1,4 @@
-package com.nanobnk.epayment.service.mapper
+package com.afsoltech.epayment.service.mapper
 
 import com.afsoltech.kops.core.entity.customs.Notice
 import com.afsoltech.kops.core.entity.customs.NoticeBeneficiary
@@ -24,7 +24,7 @@ class NoticeEntityToEntity {
                     dueDate = entity.dueDate,
                     amount = entity.amount
                     )
-            //result.listNoticeBeneficiary = OutboundNoticeBeneficiaryEntityToEntities.from(entity.listNoticeBeneficiary)
+//            result.beneficiaryList = SelectedNoticeBeneficiaryEntityToEntities.from(entity.beneficiaryList)
             return result
         }
 

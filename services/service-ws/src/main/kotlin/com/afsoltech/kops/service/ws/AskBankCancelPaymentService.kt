@@ -7,11 +7,8 @@ import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.model.attribute.PaymentStatus
 import com.afsoltech.core.repository.temp.TempPaymentRepository
 import com.afsoltech.core.service.utils.StringDateFormaterUtils
-import com.afsoltech.kops.core.model.AskBankAuthPaymentRequestDto
-import com.afsoltech.kops.core.model.AskBankAuthPaymentResponseDto
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
-import com.afsoltech.kops.core.model.AskBankCancelPaymentRequestDto
-import com.afsoltech.kops.core.model.AskBankCancelPaymentResponseDto
+import com.afsoltech.kops.core.model.*
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -29,7 +26,7 @@ class AskBankCancelPaymentService(val restTemplate: RestTemplate) {
     @Autowired
     lateinit var tempPaymentRepository: TempPaymentRepository
 
-    @Value("\${api.external.bank.epayment.askBankCancelePaymentUrl}")
+    @Value("\${api.external.bank.askBankCancelePaymentUrl}")
     lateinit var askBankCancelePaymentUrl: String
 
     /**
@@ -45,6 +42,16 @@ class AskBankCancelPaymentService(val restTemplate: RestTemplate) {
                 trxDt = txDate!!, amount = tempPayment.amount!!, fee = tempPayment.feeAmount!!, totalAmount = tempPayment.totalAmount!!,
                 currency = tempPayment.currency!!, billNumberList = tempPayment.billNumber!!.split(","), authCode = tempPayment.bankAuthNumber!!)
 
+        var bool = true
+        if(bool) {
+            return AskBankCancelPaymentResponseDto(PäymentResultCode.S.name, "Success",
+                    AskBankCancelPaymentRespDataDto(opCode=tempPayment.operationCode!!, acntNo = tempPayment.payerAccountNumber!!,
+                            providerCode = tempPayment.providerCode!!, customerNo = tempPayment.customerNumber!!, trxRefNo = tempPayment.internalPaymentNumber!!,
+                            trxDt = txDate!!, amount = tempPayment.amount!!, fee = tempPayment.feeAmount!!, totalAmount = tempPayment.totalAmount!!,
+                            currency = tempPayment.currency!!, billNumberList = tempPayment.billNumber!!.split(","),
+                            authCode = tempPayment.bankAuthNumber!!, cancelRsltCd="001", cancelRsltMsg="Success"))
+
+        }
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 //            headers.add("apikey", )
@@ -61,18 +68,18 @@ class AskBankCancelPaymentService(val restTemplate: RestTemplate) {
         }
 
         tempPayment.bankResponseStatus = response.statusCode.value()
-        val result = response.body?: throw BadRequestException("Kops.Error.Payment.Bank.Auth.Null")
+        val result = response.body?: throw BadRequestException("Error.Payment.Bank.Auth.Cancel.Null")
         tempPayment.bankResultCode = result.resultCode
         tempPayment.bankResultMsg = result.resultMsg
         result.resultData?.let{
-            tempPayment.bankAuthResultCode = it.authRsltCd
-            tempPayment.bankAuthResultMessage = it.authRsltMsg
+            tempPayment.bankAuthResultCode = it.cancelRsltCd
+            tempPayment.bankAuthResultMessage = it.cancelRsltMsg
             tempPayment.bankAuthResultData = it.toString()
         }
 
         /*Update of payment status*/
         if(result.resultCode.equals(PäymentResultCode.S.name)) {
-            if(result.resultData?.authRsltCd!!.equals(LoadBaseDataToMap.bankAuthCodeApproved!!))
+            if(result.resultData?.cancelRsltCd!!.equals(LoadBaseDataToMap.bankAuthCodeApproved!!))
                 tempPayment.paymentStatus = PaymentStatus.AUTH_CANCEL
             else
                 tempPayment.paymentStatus = PaymentStatus.AUTH_CANCEL_FAIL

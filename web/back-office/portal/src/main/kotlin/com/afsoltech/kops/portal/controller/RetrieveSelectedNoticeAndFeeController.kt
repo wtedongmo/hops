@@ -1,15 +1,12 @@
-package com.nanobnk.epayment.core.web
+package com.afsoltech.core.controller
 
-import com.afsoltech.core.exception.RestException
+import com.afsoltech.core.exception.NotFoundException
 import com.afsoltech.core.service.AccountBankService
-import com.afsoltech.core.util.enforce
-import com.afsoltech.kops.core.model.BillAndFeeResponses
-import com.afsoltech.kops.core.model.NoticeResponses
-import com.afsoltech.kops.core.model.UnpaidNoticeRequestDto
-import com.afsoltech.kops.core.model.attribute.FieldsAttribute
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.integration.OutSelectedNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
+import com.afsoltech.kops.core.model.notice.BillFeeDto
 import com.afsoltech.kops.service.integration.RetrieveSelectedUnpaidNoticeService
 import com.afsoltech.kops.service.ws.CalculateFeeNoticeService
 
@@ -20,44 +17,127 @@ import org.springframework.context.MessageSource
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
+import java.lang.Exception
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-//@RequestMapping("\${api.internal.customs.epayment.retrieveSelectedAndFeeNotice}")
+@RequestMapping("/portal")
 class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeService: RetrieveSelectedUnpaidNoticeService,
                                              val calculateFeeNoticeService: CalculateFeeNoticeService, val accountBankService: AccountBankService){
     companion object : KLogging()
 
-    @Autowired
-    @Qualifier(value = "errorMessageSource")
-    lateinit var messageSource: MessageSource
 
-    @GetMapping("/portal/retrieve-selected-customs/{taxpayerNumber}")
-    fun retrieveSelectedNoticeAndFee(@RequestParam taxpayerNumber: String, request: HttpServletRequest): ModelAndView {
+    @GetMapping("/retrieve-selected-customs/{taxpayerNumber}")///
+    fun retrieveSelectedNoticeAndFee(@PathVariable taxpayerNumber: String, //(value = "taxpayerNumber", required = false)
+                                     @RequestParam(value = "errorMessage", required = false) errorMessage: String?,
+                                     request: HttpServletRequest): ModelAndView {
 
-        if(taxpayerNumber.isNullOrBlank())
-            return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
+//        if(taxpayerNumber.isNullOrBlank())
+//            return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
 
         val auth = SecurityContextHolder.getContext().authentication
         val username= auth.name
         val selectedRequest= OutSelectedNoticeRequestDto(taxpayerNumber)
         val result = retrieveSelectedUnpaidNoticeService.listSelectedUnpaidNotice(selectedRequest, username, request)
-            logger.trace { result }
+            logger.trace { "Retrieved selected unpaid notice $result" }
 
-        val billFeeDto = calculateFeeNoticeService.calculateFeeNotice(username)
+        var billFeeDto :BillFeeDto?=null
+        val selectedNoticeList = result.result()
+        selectedNoticeList.forEach { item ->
+            item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
+            item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
+            val noticeNumberList = result.resultData!!.map { it.noticeNumber!! }
+            billFeeDto = calculateFeeNoticeService.calculateFeeNotice(noticeNumberList)
+        }
+
         val accountList = accountBankService.findByUser(username)
 
         val modelAndView = ModelAndView()
+        errorMessage?.let {
+            modelAndView.addObject("errorMessage", errorMessage)
+        }
+
         modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("message", "kops.payment.choose.account")
-        modelAndView.addObject("selectedNotices", result.resultData)
-        modelAndView.addObject("billFeeNotice", billFeeDto)
+        modelAndView.addObject("message", "app.payment.bill.choose.account")
+        modelAndView.addObject("selectedBills", selectedNoticeList)
+        modelAndView.addObject("billFee", billFeeDto)
         modelAndView.addObject("accountList", accountList)
+
+        val billFeeAct = BillPaymentNoticeModel(otp = null, accountNumber = null, selectedBills = selectedNoticeList, billFee = billFeeDto,
+                taxpayerNumber = taxpayerNumber)
+        modelAndView.addObject("BillPayment", billFeeAct)
+        request.session.setAttribute(username+"_billPayInfo", billFeeAct)
         // menu highlight
         modelAndView.addObject("parentMenuHighlight", "notices-index")
         modelAndView.addObject("menuHighlight", "notices-list")
-        modelAndView.viewName = "portal/selected-unpaid-notice"
+        modelAndView.viewName = "portal/bill-select-account"
         return modelAndView
+
+    }
+
+    /*Portal form to type NIU Customs Potal User*/
+    @GetMapping("/retrieve-selected-customer-form")
+    fun formSelectedNotice(@RequestParam(value = "errorMessage", required = false) errorMessage: String?,
+                           request: HttpServletRequest): ModelAndView {
+        val modelAndView = ModelAndView()
+        errorMessage?.let {
+            modelAndView.addObject("errorMessage", errorMessage)
+        }
+        modelAndView.addObject("niu", String())
+        modelAndView.addObject("parentMenuHighlight", "notices-index")
+        modelAndView.addObject("menuHighlight", "notices-selected")
+        modelAndView.viewName = "portal/customer-selected-notice-form"
+        return modelAndView
+    }
+
+    @PostMapping("/retrieve-selected-customs")
+    fun retrieveSelectedNotice(@ModelAttribute("Customs") customerNiu: String,
+                               request: HttpServletRequest): ModelAndView {
+        return ModelAndView("redirect:/portal/retrieve-selected-customs/$customerNiu")
+    }
+
+    @GetMapping("/display-selected-customs/{taxpayerNumber}")
+    fun displaySelectedNoticeAndFee(@PathVariable taxpayerNumber: String,
+                                     @RequestParam(value = "errorMessage", required = false) errorMessage: String?,
+                                     request: HttpServletRequest): ModelAndView {
+
+        if(taxpayerNumber.isBlank() || taxpayerNumber.isEmpty())
+            return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
+
+
+        val auth = SecurityContextHolder.getContext().authentication
+        val username= auth.name
+
+        try {
+            val billFeeAct = request.session.getAttribute(username+"_billPayInfo") as BillPaymentNoticeModel?:
+                throw NotFoundException("Error.Session.Variable.Bill.Payment.NotFound")
+
+            val accountList = accountBankService.findByUser(username)
+
+            val modelAndView = ModelAndView()
+
+            errorMessage?.let {
+                modelAndView.addObject("errorMessage", errorMessage)
+            }
+
+            modelAndView.addObject("username", auth.name)
+            modelAndView.addObject("message", "app.payment.bill.choose.account")
+            modelAndView.addObject("selectedBills", billFeeAct.selectedBills)
+            modelAndView.addObject("billFeeNotice", billFeeAct.billFee)
+            modelAndView.addObject("accountList", accountList)
+
+            modelAndView.addObject("BillPayment", billFeeAct)
+            request.session.setAttribute(username+"_billPayInfo", billFeeAct)
+            // menu highlight
+            modelAndView.addObject("parentMenuHighlight", "notices-index")
+            modelAndView.addObject("menuHighlight", "notices-list")
+            modelAndView.viewName = "portal/bill-select-account"
+            return modelAndView
+        }catch (ex: Exception){
+            logger.error { ex.message+"\n"+ ex.printStackTrace()} //Error.Unable.to.resent.otp
+            return ModelAndView("redirect:/portal/retrieve-selected-customs/${taxpayerNumber}?errorMessage=" +ex.message);
+        }
+
 
     }
 }
