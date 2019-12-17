@@ -50,10 +50,11 @@
                                 <!--<th th:text="#{customs.taxpayer.representative.code}">CDA Code</th>-->
                                 <!--<th th:text="#{customs.taxpayer.representative.name}">Representative name</th>-->
                                 <th th:text="#{notice.issuer.office}">Office</th>
+                                <th th:text="#{notice.payment.camcis.number}">Payment Number</th>
                                 <th th:text="#{notice.payment.number}">Payment Number</th>
                                 <th th:text="#{notice.payment.date}">Payment Date</th>
                                 <th th:text="#{notice.payment.amount}">Payment Amount</th>
-                                <th th:text="#{notice.payment.category}">Payment Category</th>
+                                <!--<th th:text="#{notice.payment.category}">Payment Category</th>-->
                             </tr>
                             </thead>
                             <tbody>
@@ -69,10 +70,11 @@
                                 <!--<td data-th-text="${customs.taxPayerRepresentativeCode}"></td>-->
                                 <!--<td data-th-text="${customs.taxPayerRepresentativeName}"></td>-->
                                 <td data-th-text="${notice.issuerOffice}"></td>
+                                <td data-th-text="${notice.camcisPaymentNumber}"></td>
                                 <td data-th-text="${notice.paymentNumber}"></td>
                                 <td data-th-text="${notice.paymentDate}"></td>
                                 <td data-th-text="${notice.amountReceived}"></td>
-                                <td data-th-text="${notice.paymentCategory}"></td>
+                                <!--<td data-th-text="${notice.paymentCategory}"></td>-->
                             </tr>
                             </tbody>
                         </table>
@@ -237,20 +239,20 @@
                                             </div>
 
                                         </div>
-                                        <div class="row no-margin">
-                                            <div class="col-sm-6">
-                                                <div class="form-group form-group-sm">
-                                                    <cmm-label for="careCgtrForm_carrCd">
-                                                        <label class="control-label col-sm-4 label_tit" style="height: 36px;">
-                                                            <span th:text="#{notice.payment.category}">Payment Category</span>
-                                                        </label>
-                                                    </cmm-label>
-                                                    <div class="txt-one col-sm-8">
-                                                        <span th:text="${notice.paymentCategory}"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <!--<div class="row no-margin">-->
+                                            <!--<div class="col-sm-6">-->
+                                                <!--<div class="form-group form-group-sm">-->
+                                                    <!--<cmm-label for="careCgtrForm_carrCd">-->
+                                                        <!--<label class="control-label col-sm-4 label_tit" style="height: 36px;">-->
+                                                            <!--<span th:text="#{notice.payment.category}">Payment Category</span>-->
+                                                        <!--</label>-->
+                                                    <!--</cmm-label>-->
+                                                    <!--<div class="txt-one col-sm-8">-->
+                                                        <!--<span th:text="${notice.paymentCategory}"></span>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                     </div>
                                 </div>
                             </form>

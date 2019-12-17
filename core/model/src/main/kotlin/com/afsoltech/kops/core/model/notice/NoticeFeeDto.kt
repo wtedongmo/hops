@@ -12,6 +12,7 @@ data class FeeResponseDto (
 
 data class BillFeeDto (
        val amount: BigDecimal,
-        val feeAmount: BigDecimal,
-        val totalAmount: BigDecimal
+       val feeAmount: BigDecimal,
+       val totalAmount: BigDecimal,
+       var number: Int?=null
 )

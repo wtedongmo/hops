@@ -7,5 +7,7 @@ data class BillPaymentResumeDto(
         var bankAgency: String? = null,
         var accountNumber: String? = null,
         val accountName: String? = null,
-        val transactionNumber: String? = null
+        val transactionNumber: String? = null,
+        var camcisPaymentNumber: String?=null,
+        var paymentDate: String?=null
 )

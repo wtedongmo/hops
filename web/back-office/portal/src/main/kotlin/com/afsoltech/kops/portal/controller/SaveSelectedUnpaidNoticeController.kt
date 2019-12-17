@@ -53,6 +53,7 @@ class SaveSelectedUnpaidNoticeController (val saveSelectedNoticeService: SaveSel
         }
 
         val billFeeDto = calculateFeeNoticeService.calculateFee(selectedNoticeList)
+        billFeeDto.number = selectedNoticeList.size
         val accountList = accountBankService.findByUser(username)
 
         val modelAndView = ModelAndView()

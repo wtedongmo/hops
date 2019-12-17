@@ -134,15 +134,20 @@ class KopsPaymentOfNoticeService(val userAppRepository: UserAppRepository,
                         if(payNoticeList.resultCode.equals(PäymentResultCode.S.name)){
                             val noticeNumberList = mutableSetOf<String>()
                             val paymentNumberList = mutableSetOf<String>()
-                            payNoticeList.resultData?.forEach { notice ->
+                            val paymentNumberMap = hashMapOf<String, String?>()
+                            payNoticeList.result().forEach { notice ->
                                 if(noticeNumberToPayList.contains(notice.noticeNumber))
                                     noticeNumberList.add(notice.noticeNumber!!)
-                                notice.paymentNumber?.let{paymentNumberList.add(it)}
+                                notice.paymentNumber?.let{
+                                    paymentNumberList.add(it)
+                                    paymentNumberMap.put(it, notice.camcisPaymentNumber)
+                                }
                             }
                             if(noticeNumberList.containsAll(noticeNumberToPayList)){
 //                                var paymentId: Long? = null
                                 if (response.result!!.equals(PäymentResultCode.S.name) || paymentNumberList.contains(paymentRequest.bankPaymentNumber)) {
                                     createPaymentAndNoticeOfSuccessResponse(paymentRequest, tempPayment, selectedNoticeToPaidList)
+                                    response.camcisPaymentNumber = paymentNumberMap.get(paymentRequest.bankPaymentNumber)
                                     continueCheck= false
                                     noticePaidBool=true
                                 }
@@ -182,6 +187,8 @@ class KopsPaymentOfNoticeService(val userAppRepository: UserAppRepository,
 //                        if(response.resultCode!!.equals("S"))
 //                            throw BadRequestException("Error.Payment.Cancel.Sucess.", listOf(user.login!!))
                     }
+
+                    response.paymentDate = txDate
 
                     return response
                 } catch (ex: Exception){

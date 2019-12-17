@@ -55,7 +55,7 @@ class AgentListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeSer
         var listPaidNotice = listPaidNoticeService.listPaidNotice(noticeRequest).resultData
         listPaidNotice?.forEach { item ->
             item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-            item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.paymentDate)
+            item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
         }
         logger.trace {"Paid Notice List "+ listPaidNotice }
 

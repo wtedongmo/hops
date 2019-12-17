@@ -82,6 +82,7 @@
 						<thead>
 						<tr>
 							<!--<th th:text="#{notice.selected}">Number</th>-->
+							<th th:text="#{bill.number.label}">Amount</th>
 							<th th:text="#{bill.amount.label}">Amount</th>
 							<th th:text="#{bill.fee.label}">Fee</th>
 							<th th:text="#{bill.total.amount.label}">Total Amount</th>
@@ -89,6 +90,7 @@
 						</thead>
 						<tbody>
 						<tr data-th-each="bill : ${billFee}">
+							<td data-th-text="${bill.number}"></td>
 							<td data-th-text="${bill.amount}"></td>
 							<td data-th-text="${bill.feeAmount}"></td>
 							<td data-th-text="${bill.totalAmount}"></td>

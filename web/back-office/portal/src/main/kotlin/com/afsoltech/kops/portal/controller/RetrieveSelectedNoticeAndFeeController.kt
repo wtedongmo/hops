@@ -41,14 +41,16 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
         val result = retrieveSelectedUnpaidNoticeService.listSelectedUnpaidNotice(selectedRequest, username, request)
             logger.trace { "Retrieved selected unpaid notice $result" }
 
-        var billFeeDto :BillFeeDto?=null
+//        var billFeeDto :BillFeeDto?=null
         val selectedNoticeList = result.result()
+        val noticeNumberList = mutableListOf<String>()
         selectedNoticeList.forEach { item ->
             item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
             item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
-            val noticeNumberList = result.resultData!!.map { it.noticeNumber!! }
-            billFeeDto = calculateFeeNoticeService.calculateFeeNotice(noticeNumberList)
+            noticeNumberList.add(item.noticeNumber!!)
         }
+        val billFeeDto = calculateFeeNoticeService.calculateFeeNotice(noticeNumberList)
+        billFeeDto.number = selectedNoticeList.size
 
         val accountList = accountBankService.findByUser(username)
 

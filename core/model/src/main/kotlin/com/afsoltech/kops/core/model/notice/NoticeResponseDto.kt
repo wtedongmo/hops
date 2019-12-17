@@ -21,6 +21,7 @@ data class NoticeResponseDto (
         val amountReceived: BigDecimal? = null,
         val paymentCategory: String? = null,
         var paymentNumber: String? = null,
+        var camcisPaymentNumber: String? = null,
 
         var beneficiaryList: List<NoticeBeneficiaryDto>? = null
 

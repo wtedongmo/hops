@@ -10,8 +10,6 @@
 
 	<!--/*/ <th:block th:include="page_tpl_fragment :: header"></th:block> /*/-->
 	<!--/*/ <th:block th:include="page_tpl_fragment :: sidebar"></th:block> /*/-->
-
-
 	<div class="content-wrapper sub-style" style="min-height: 665.8px; background-color: #fff">
 
 		<care-0501001q>
@@ -40,7 +38,8 @@
 					<h2 th:text="#{app.payment.bill.receipt.label}" />
 
 					<div class="box-body no-padding" style="text-align:center">
-						<table class="table table--portal" style="width:50%" id="table-notices-js">
+						<table class="table" style="width:50%" >
+							<!--table&#45;&#45;portal  id="table-notices-js"-->
 							<thead>
 							<tr>
 								<!--<th th:text="#{notice.selected}">Number</th>-->
@@ -49,7 +48,9 @@
 								<th th:text="#{bank.agency}">Agency</th>
 								<th th:text="#{account.number}">Account</th>
 								<th th:text="#{account.name}">Name</th>
-								<th th:text="#{transaction.number}">Total Amount</th>
+								<th th:text="#{transaction.number}">Payment Number</th>
+								<th th:text="#{notice.payment.camcis.number}">Camcis Payment Number</th>
+								<th th:text="#{transaction.date}">Payment Date</th>
 							</tr>
 							</thead>
 							<tbody>
@@ -60,6 +61,8 @@
 								<td data-th-text="${billPay.accountNumber}"></td>
 								<td data-th-text="${billPay.accountName}"></td>
 								<td data-th-text="${billPay.transactionNumber}"></td>
+								<td data-th-text="${billPay.camcisPaymentNumber}"></td>
+								<td data-th-text="${billPay.paymentDate}"></td>
 							</tr>
 							</tbody>
 						</table>
@@ -78,7 +81,7 @@
 								<!--<th th:text="#{notice.type}">Type</th>-->
 								<!--<th th:text="#{notice.declaration.type}">Declaration Type</th>-->
 								<!--<th th:text="#{notice.issuer.office}">Office</th>-->
-								<th th:text="#{notice.due.date}">Due Date</th>
+								<!--<th th:text="#{notice.payment.date}">Due Date</th>-->
 								<th th:text="#{notice.amount}">Notice Amount</th>
 							</tr>
 							</thead>
@@ -92,7 +95,7 @@
 								<!--<td data-th-text="${customs.referenceNumber}"></td>-->
 								<!--<td data-th-text="${notice.declarationType}"></td>-->
 								<!--<td data-th-text="${notice.issuerOffice}"></td>-->
-								<td data-th-text="${notice.dueDate}"></td>
+								<!--<td data-th-text="${notice.paymentDate}"></td>-->
 								<td data-th-text="${notice.noticeAmount}"></td>
 							</tr>
 							</tbody>
@@ -101,7 +104,7 @@
 					</div>
 				</div>
 
-				<br/> <br/> <br/>
+				<br/>
 
 				<!--start bill and fee Table -->
 				<h3 th:text="#{app.payment.bill.amount.detail.label}"></h3>
@@ -110,16 +113,18 @@
 						<thead>
 						<tr>
 							<!--<th th:text="#{notice.selected}">Number</th>-->
+							<th th:text="#{bill.number.label}">Amount</th>
 							<th th:text="#{bill.amount.label}">Amount</th>
 							<th th:text="#{bill.fee.label}">Fee</th>
 							<th th:text="#{bill.total.amount.label}">Total Amount</th>
 						</tr>
 						</thead>
 						<tbody>
-						<tr data-th-each="bill : ${billFee}">
-							<td data-th-text="${bill.amount}"></td>
-							<td data-th-text="${bill.feeAmount}"></td>
-							<td data-th-text="${bill.totalAmount}"></td>
+						<tr>
+							<td data-th-text="${billFee.number}"></td>
+							<td data-th-text="${billFee.amount}"></td>
+							<td data-th-text="${billFee.feeAmount}"></td>
+							<td data-th-text="${billFee.totalAmount}"></td>
 						</tr>
 						</tbody>
 					</table>

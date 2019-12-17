@@ -4,6 +4,7 @@ import com.afsoltech.core.model.attribute.RequestType
 import com.afsoltech.core.service.AccountBankService
 import com.afsoltech.core.service.OTPService
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.BillPaymentResumeDto
@@ -68,7 +69,9 @@ class ValidPaymentBillOtpController(val kopsPaymentOfNoticeService: KopsPaymentO
             else
                 payResume = BillPaymentResumeDto(bankName = LoadBaseDataToMap.bankName, bankCode = LoadBaseDataToMap.bankCode,
                         bankAgency = account.accountAgency, accountNumber = account.accountNumber,
-                        accountName = account.accountName, transactionNumber = paymentResp.bankPaymentNumber)
+                        accountName = account.accountName, transactionNumber = paymentResp.bankPaymentNumber,
+                        camcisPaymentNumber = paymentResp.camcisPaymentNumber,
+                        paymentDate =  StringDateFormaterUtils.ParsePaymentDate.formatDateTime(paymentResp.paymentDate!!))
 
             //Build model and view for response
             val modelAndView = ModelAndView()

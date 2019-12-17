@@ -19,10 +19,10 @@ class ListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeService)
     @GetMapping
     fun paidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?, request: HttpServletRequest): ModelAndView {
 
-        val authCustoms = request.getSession().getAttribute("Auth_Customs") as AuthRequestDto?
-        if(authCustoms==null){
-            return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=app.auth.customs.required")
-        }
+//        val authCustoms = request.getSession().getAttribute("Auth_Customs") as AuthRequestDto?
+//        if(authCustoms==null){
+//            return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=app.auth.customs.required")
+//        }
 
         val model = ModelAndView()
 
@@ -48,41 +48,50 @@ class ListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeService)
     fun getListPaidNotice(@ModelAttribute("paidNoticeForm") portalRequest: NoticeRequestDto, request: HttpServletRequest): ModelAndView { //
 
         val authCustoms = request.getSession().getAttribute("Auth_Customs") as AuthRequestDto?
-        if(authCustoms==null){
-            return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=app.auth.customs.required")
-        }
         val auth = SecurityContextHolder.getContext().authentication
-        val username= auth.name
-        val nuiUser = authCustoms.taxpayerNumber!! //username.split("#").first()
-        val nui = if(portalRequest.taxpayerNumber.isNullOrBlank()) nuiUser
-                else portalRequest.taxpayerNumber
+        val listPaidNotice :List<NoticeResponseDto>
 
-        val representative = if(!portalRequest.taxpayerRepresentativeNumber.isNullOrBlank()) portalRequest.taxpayerRepresentativeNumber
-                    else if(!nui.equals(nuiUser, true)) nuiUser
-                    else ""
+        if(authCustoms==null){
+            if(!portalRequest.noticeNumber.isNullOrBlank() && !portalRequest.taxpayerNumber.isNullOrBlank()){
+                portalRequest.notificationDate =  portalRequest.notificationDate?.replace("-", "")?.trim()
+                portalRequest.paymentDate =  portalRequest.paymentDate?.replace("-", "")?.trim()
+                listPaidNotice = listPaidNoticeService.listPaidNotice(portalRequest, request).result()
+            }else
+                return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=app.auth.customs.required")
+        }else {
+            val username = auth.name
+            val nuiUser = authCustoms.taxpayerNumber!! //username.split("#").first()
+            val nui = if (portalRequest.taxpayerNumber.isNullOrBlank()) nuiUser
+            else portalRequest.taxpayerNumber
 
-        if(!nui.equals(nuiUser, true) && !representative.equals(nuiUser, true)){
-            return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
-        }
+            val representative = if (!portalRequest.taxpayerRepresentativeNumber.isNullOrBlank()) portalRequest.taxpayerRepresentativeNumber
+            else if (!nui.equals(nuiUser, true)) nuiUser
+            else ""
+
+            if (!nui.equals(nuiUser, true) && !representative.equals(nuiUser, true)) {
+                return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
+            }
 //        val portalRequest = NoticePortalRequestDto()
 //        val paymentDate = portalRequest.paymentDate?.replace("-","")
-        val noticeRequest = NoticeRequestDto(
-                portalRequest.noticeNumber,
-                portalRequest.notificationDate?.replace("-", ""),
-                nui,
-                representative,
-                portalRequest.paymentDate?.replace("-", "")
-        )
-        var listPaidNotice = listPaidNoticeService.listPaidNotice(noticeRequest).resultData
-        listPaidNotice?.forEach { item ->
+            val noticeRequest = NoticeRequestDto(
+                    portalRequest.noticeNumber,
+                    portalRequest.notificationDate?.replace("-", ""),
+                    nui,
+                    representative,
+                    portalRequest.paymentDate?.replace("-", "")
+            )
+            listPaidNotice = listPaidNoticeService.listPaidNotice(noticeRequest).result()
+        }
+
+        listPaidNotice.forEach { item ->
             item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-            item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.paymentDate)
+            item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
         }
         logger.trace {"Paid Notice List "+ listPaidNotice }
 
         val modelAndView = ModelAndView()
         modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("PaidNotice", listPaidNotice?: emptyList<NoticeResponseDto>())
+        modelAndView.addObject("PaidNotice", listPaidNotice)
         modelAndView.addObject("parentMenuHighlight", "notices-index")
         modelAndView.addObject("menuHighlight", "notices-paid")
         modelAndView.viewName = "portal/list-paid-customs"

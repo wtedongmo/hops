@@ -8,6 +8,8 @@ data class PaymentProcessResponseDto (
         val message: String? = null,
         val epaymentId: Long? = null,
         val bankPaymentNumber: String? = null,
+        var camcisPaymentNumber: String? = null,
+        var paymentDate: String? = null,
         val paymentResultCode: String? = null,
         val paymentResultMsg: String? = null,
         var noticesList: List<PaymentResultNoticesListDto>? = null
