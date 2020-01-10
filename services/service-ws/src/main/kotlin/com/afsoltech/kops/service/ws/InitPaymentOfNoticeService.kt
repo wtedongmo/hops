@@ -74,7 +74,7 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
     @Synchronized
     fun initPaymentOfNotice(user: UserApp, selectedNoticeList: List<SelectedNotice>, initPaymentRequest: InitPaymentRequestDto) : TempPayment { //:Boolean
 
-        val accountOp = accountBankRepository.findOneByAccountNumber(initPaymentRequest.acntNo)
+        val accountOp = accountBankRepository.findOneByAccountNo(initPaymentRequest.acntNo)
         if(accountOp.isPresent){
             val account = accountOp.get()
             if(account.userApp!!.id!= user.id)
@@ -124,7 +124,7 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
             val internalPaymentNumber = getInternalPaymentNumber()
 
             val tempPayment = TempPayment(internalPaymentNumber = internalPaymentNumber, bankCode = LoadBaseDataToMap.bankCode,
-                    bankAgencyCode = account.accountAgency, customerNumber = initPaymentRequest.customerNumber, payerAccountNumber = account.accountNumber,
+                    bankAgencyCode = account.branchCode, customerNumber = initPaymentRequest.customerNumber, payerAccountNumber = account.accountNo,
                     payerAccountName = account.accountName, paymentMode = LoadBaseDataToMap.paymentMode, amount = noticeAmount, feeAmount = feeAmount,
                     totalAmount = totalAmount,  paymentDate = LocalDateTime.now(), providerCode = LoadBaseDataToMap.providerNoticeCode,
                     billNumber = noticeStr.substring(1), operationCode=LoadBaseDataToMap.operationCode, currency=account.currency, userLogin = user.login)

@@ -1,9 +1,9 @@
-package com.afsoltech.kops.administration.controller
+package com.afsoltech.core.administration.controller
 
 import com.afsoltech.core.backoffice.controller.AbstractBasePagingController
 import com.afsoltech.core.model.BaseEntityModel
 import com.afsoltech.core.model.SearchModel
-import com.afsoltech.kops.administration.utils.CheckAuth
+import com.afsoltech.core.administration.utils.CheckAuth
 import com.afsoltech.kops.service.backoffice.BaseEntitiesService
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,11 +25,11 @@ class BaseEntitiesController(val baseEntitiesService: BaseEntitiesService): Abst
 
     private val showTypeAddFormField = "showTypeAddForm"
 
-    @GetMapping
-    fun loadBaseEntityMainPage(@RequestParam(value = "pageNumber", required = false) pageNumber: Int?,
-                                        @RequestParam(value = "showTypeAddForm", required = false) showTypeAddForm: Boolean?,
-                                        @RequestParam(value = "editId", required = false) editId: Long?,
-        @RequestParam(value = "id", required = false) entityId: Int?, @RequestParam(value = "deleteId", required = false) deleteId: Long?,
+    @GetMapping("/{id}", name="Base entities")
+    fun loadBaseEntityMainPage(@PathVariable(value = "id", required = false) entityId: Int?, @RequestParam(value = "pageNumber", required = false) pageNumber: Int?,
+                               @RequestParam(value = "showTypeAddForm", required = false) showTypeAddForm: Boolean?,
+                               @RequestParam(value = "editId", required = false) editId: Long?,
+                               @RequestParam(value = "deleteId", required = false) deleteId: Long?,
                                @RequestParam(value = "accessDenied", required = false) accessDenied: Boolean?,
                                @RequestParam(value = "success", required = false) success: Boolean?,
                                @ModelAttribute("searchForm") searchForm: SearchModel?,

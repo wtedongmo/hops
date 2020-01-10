@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/agent-banking/", "/agent-banking/list-unpaid-customs")
+@RequestMapping("/agent-banking/", "/agent-banking/list-unpaid-customs", "/")
 class AgentListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeService){
     companion object : KLogging()
 

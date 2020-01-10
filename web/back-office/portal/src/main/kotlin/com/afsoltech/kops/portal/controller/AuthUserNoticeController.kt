@@ -7,8 +7,8 @@ import com.afsoltech.core.model.OtpDto
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.kops.core.model.notice.AuthRequestDto
 import com.afsoltech.kops.service.integration.CheckUserInfoService
-import com.nanobnk.epayment.model.attribute.AuthUserCustomsDto
-import com.nanobnk.epayment.model.attribute.CustomsUserCategory
+import com.afsoltech.core.model.attribute.AuthUserCustomsDto
+import com.afsoltech.core.model.attribute.CustomsUserCategory
 import mu.KLogging
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
@@ -17,7 +17,7 @@ import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 
 @RestController
-@RequestMapping("/portal")
+@RequestMapping("/portal", "")
 class AuthUserNoticeController(val checkUserInfoService: CheckUserInfoService, val otpService: OTPService){
     companion object : KLogging()
 

@@ -1,4 +1,4 @@
-package com.nanobnk.epayment.model.attribute
+package com.afsoltech.core.model.attribute
 
 import org.hibernate.validator.constraints.Length
 

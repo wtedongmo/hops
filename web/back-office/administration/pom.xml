@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>com.afsoltech.core</groupId>
-            <artifactId>afsoltech-web-back-office-template</artifactId>
+            <artifactId>afsoltech-web-back-office-administration</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
