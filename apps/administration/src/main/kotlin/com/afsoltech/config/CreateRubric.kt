@@ -39,7 +39,7 @@ class CreateRubric(val requestMappingHandlerMapping: RequestMappingHandlerMappin
         var menu2 : Menu
         if(menuOp.isPresent)
             menu2 = menuOp.get()
-        else menu2 = Menu(2, "Admin")
+        else menu2 = Menu(2, "Application")
         menu2.status = BaseStatus.ACTIVE
         menu2 = menuRepository.save(menu2)
 
@@ -48,12 +48,29 @@ class CreateRubric(val requestMappingHandlerMapping: RequestMappingHandlerMappin
         methods.forEach { key, value ->
             logger.trace { "$key ==== ${value.beanType.`package`.name}" }
             if(key.methodsCondition.methods.contains(RequestMethod.GET) && (value.beanType.`package`.name.contains("administration", true))){
+                key.name?.let{name ->
+                    val boolMenu= value.beanType.`package`.name.contains("security", true)
+                    val code: String
+                    if(name.contains(' ') || name.contains('_')){
+                        val tabs = if(name.contains(' ')) name.split(' ') else name.split('_')
+                        val index=0
+                        val stBuild = StringBuilder()
+                        while(index<tabs.size){
+                            stBuild.append(tabs.get(index).substring(0,2))
+                            if(stBuild.length>4)
+                                break
+                        }
+                        code = stBuild.toString().toUpperCase()
+                    } else if(name.length<5)
+                        code = name.toUpperCase()
+                    else
+                        code = name.substring(0,4).toUpperCase()
 
-                val boolMenu= value.beanType.`package`.name.contains("security", true)
-                val rubric = Rubric(id = index++, code = null, label = key.name?:key.patternsCondition.patterns.elementAt(0),
-                        uri = key.patternsCondition.patterns.elementAt(0), menu = if(boolMenu) menu else menu2)
-                rubric.status = BaseStatus.ACTIVE
-                rubricList.add(rubricRepository.save(rubric))
+                    val rubric = Rubric(id = index++, code = code, label = name,
+                            uri = key.patternsCondition.patterns.elementAt(0), menu = if(boolMenu) menu else menu2)
+                    rubric.status = BaseStatus.ACTIVE
+                    rubricList.add(rubricRepository.save(rubric))
+                }
             }
         }
 
