@@ -1,7 +1,7 @@
 package com.afsoltech.kops.core.entity.customs
 
 import com.afsoltech.core.entity.BaseAudit
-import com.afsoltech.core.entity.Payment
+import com.afsoltech.core.entity.cap.Payment
 import java.math.BigDecimal
 import javax.persistence.*
 

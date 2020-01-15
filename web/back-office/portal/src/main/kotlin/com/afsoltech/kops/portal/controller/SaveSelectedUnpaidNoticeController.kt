@@ -1,16 +1,12 @@
 package com.afsoltech.core.controller
 
 import com.afsoltech.core.service.AccountBankService
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
 import com.afsoltech.kops.service.ws.CalculateFeeNoticeService
 import com.afsoltech.kops.service.ws.SaveSelectedNoticeService
 import mu.KLogging
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.context.MessageSource
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView

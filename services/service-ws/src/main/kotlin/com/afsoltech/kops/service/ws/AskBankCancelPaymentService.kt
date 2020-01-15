@@ -6,7 +6,6 @@ import com.afsoltech.core.entity.user.UserApp
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.model.attribute.PaymentStatus
 import com.afsoltech.core.repository.temp.TempPaymentRepository
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import com.afsoltech.kops.core.model.*
 import mu.KLogging

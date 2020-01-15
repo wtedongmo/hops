@@ -2,18 +2,14 @@ package com.afsoltech.kops.agent.controller
 
 import com.afsoltech.core.exception.NotFoundException
 import com.afsoltech.core.model.attribute.RequestType
-import com.afsoltech.core.service.OTPService
+import com.afsoltech.core.service.user.OTPService
 import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.service.ws.AccountBalanceService
 
 import mu.KLogging
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.context.MessageSource
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
-import java.math.BigDecimal
 import javax.servlet.http.HttpServletRequest
 
 @RestController

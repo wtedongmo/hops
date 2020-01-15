@@ -1,6 +1,5 @@
 package com.afsoltech.core.controller
 
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.core.model.notice.AuthRequestDto

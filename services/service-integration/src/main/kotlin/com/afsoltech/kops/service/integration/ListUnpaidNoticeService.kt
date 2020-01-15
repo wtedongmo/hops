@@ -3,7 +3,6 @@ package com.afsoltech.kops.service.integration
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
-import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.kops.core.model.notice.NoticeResponses
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto

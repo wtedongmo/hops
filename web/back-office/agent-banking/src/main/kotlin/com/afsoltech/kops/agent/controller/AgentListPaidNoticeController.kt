@@ -1,7 +1,5 @@
 package com.afsoltech.kops.agent.controller
 
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
-import com.afsoltech.kops.core.model.notice.AuthRequestDto
 import com.afsoltech.kops.core.model.notice.NoticeRequestDto
 import com.afsoltech.kops.core.model.notice.NoticeResponseDto
 import com.afsoltech.kops.service.integration.ListPaidNoticeService

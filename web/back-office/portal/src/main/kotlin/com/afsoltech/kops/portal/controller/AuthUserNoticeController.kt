@@ -1,7 +1,7 @@
 package com.afsoltech.core.controller
 
 import com.afsoltech.core.model.attribute.RequestType
-import com.afsoltech.core.service.OTPService
+import com.afsoltech.core.service.user.OTPService
 import com.afsoltech.core.util.enforce
 import com.afsoltech.core.model.OtpDto
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto

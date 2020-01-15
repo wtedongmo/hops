@@ -1,11 +1,8 @@
 package com.afsoltech.kops.agent.controller
 
-import com.afsoltech.core.model.attribute.RequestType
 import com.afsoltech.core.service.AccountBankService
-import com.afsoltech.core.service.OTPService
+import com.afsoltech.core.service.user.OTPService
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
-import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.BillPaymentResumeDto
 import com.afsoltech.kops.core.model.InitPaymentRequestDto
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
-import java.math.BigDecimal
 import javax.servlet.http.HttpServletRequest
 
 @RestController

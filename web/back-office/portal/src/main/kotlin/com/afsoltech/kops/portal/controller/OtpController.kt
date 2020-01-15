@@ -1,6 +1,6 @@
 package com.afsoltech.core.controller
 
-import com.afsoltech.core.service.OTPService
+import com.afsoltech.core.service.user.OTPService
 import com.afsoltech.core.model.OtpDto
 import mu.KLogging
 import org.springframework.security.core.context.SecurityContextHolder

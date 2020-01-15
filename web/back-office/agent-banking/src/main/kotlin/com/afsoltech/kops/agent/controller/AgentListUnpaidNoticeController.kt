@@ -1,9 +1,6 @@
 package com.afsoltech.kops.agent.controller
 
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
-import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import com.afsoltech.kops.core.model.notice.AuthRequestDto
 import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
 import mu.KLogging
 import org.springframework.security.core.context.SecurityContextHolder

@@ -7,7 +7,6 @@ import com.afsoltech.core.model.attribute.PaymentStatus
 import com.afsoltech.core.repository.PaymentRepository
 import com.afsoltech.core.repository.user.UserAppRepository
 import com.afsoltech.core.service.utils.LoadBaseDataToMap
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.entity.customs.NoticeBeneficiary
 import com.afsoltech.kops.core.model.InitPaymentRequestDto
 import com.afsoltech.kops.core.model.notice.NoticeRequestDto
@@ -28,7 +27,6 @@ import com.afsoltech.kops.core.model.AskBankAuthPaymentRespDataDto
 import com.afsoltech.kops.core.model.AskBankAuthPaymentResponseDto
 import mu.KLogging
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.util.*
 import javax.servlet.http.HttpServletRequest

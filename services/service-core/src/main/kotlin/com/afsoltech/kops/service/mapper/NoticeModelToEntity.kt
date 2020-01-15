@@ -1,6 +1,8 @@
 package com.afsoltech.kops.service.mapper
 
 import com.afsoltech.core.entity.Payment
+import com.afsoltech.core.entity.cap.Payment
+import com.afsoltech.core.entity.cap.temp.TempPayment
 import com.afsoltech.core.entity.temp.TempPayment
 import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.entity.customs.PaymentOfNotice
