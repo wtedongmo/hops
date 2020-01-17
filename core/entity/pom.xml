@@ -5,20 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.afsoltech.kops</groupId>
-        <artifactId>kops-core</artifactId>
+        <groupId>com.afsoltech.hops</groupId>
+        <artifactId>hops-core</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kops-core-entity</artifactId>
+    <artifactId>hops-core-entity</artifactId>
 	<packaging>jar</packaging>
 
     <dependencies>
 
         <!-- Project -->
         <dependency>
-            <groupId>com.afsoltech.kops</groupId>
-            <artifactId>kops-core-model</artifactId>
+            <groupId>com.afsoltech.hops</groupId>
+            <artifactId>hops-core-model</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 		<dependency>

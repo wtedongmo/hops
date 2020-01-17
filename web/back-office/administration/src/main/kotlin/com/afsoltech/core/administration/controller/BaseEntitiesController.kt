@@ -4,7 +4,7 @@ import com.afsoltech.core.backoffice.controller.AbstractBasePagingController
 import com.afsoltech.core.model.BaseEntityModel
 import com.afsoltech.core.model.SearchModel
 import com.afsoltech.core.administration.utils.CheckAuth
-import com.afsoltech.kops.service.backoffice.BaseEntitiesService
+import com.afsoltech.hops.service.backoffice.BaseEntitiesService
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page

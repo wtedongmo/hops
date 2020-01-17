@@ -1,11 +1,11 @@
 package com.afsoltech.core
 
-import com.afsoltech.kops.core.model.notice.AuthRequestDto
-import com.afsoltech.kops.core.model.notice.NoticeRequestDto
-import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
-import com.afsoltech.kops.service.integration.CheckUserInfoService
-import com.afsoltech.kops.service.integration.ListPaidNoticeService
-import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
+import com.afsoltech.hops.core.model.notice.AuthRequestDto
+import com.afsoltech.hops.core.model.notice.NoticeRequestDto
+import com.afsoltech.hops.core.model.notice.UnpaidNoticeRequestDto
+import com.afsoltech.hops.service.integration.CheckUserInfoService
+import com.afsoltech.hops.service.integration.ListPaidNoticeService
+import com.afsoltech.hops.service.integration.ListUnpaidNoticeService
 import mu.KLogging
 import org.junit.Assert
 import org.junit.Test
@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner::class)
 @SpringBootTest//(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TestKopsPortalService {
+class TestHopsPortalService {
 companion object : KLogging()
 
     @Autowired

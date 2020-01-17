@@ -5,19 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.afsoltech.kops</groupId>
-        <artifactId>kops-web-back-office</artifactId>
+        <groupId>com.afsoltech.hops</groupId>
+        <artifactId>hops-web-back-office</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kops-web-back-office-administration</artifactId>
+    <artifactId>hops-web-back-office-administration</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <!-- AFSOLTECH -->
         <dependency>
-            <groupId>com.afsoltech.kops</groupId>
-            <artifactId>kops-service-back-office</artifactId>
+            <groupId>com.afsoltech.hops</groupId>
+            <artifactId>hops-service-back-office</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>

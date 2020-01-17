@@ -1,9 +1,9 @@
 package com.afsoltech.core
 
-import com.afsoltech.kops.core.model.notice.NoticeRequestDto
-import com.afsoltech.kops.core.model.notice.NoticeResponseDto
-import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
-import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
+import com.afsoltech.hops.core.model.notice.NoticeRequestDto
+import com.afsoltech.hops.core.model.notice.NoticeResponseDto
+import com.afsoltech.hops.core.model.notice.UnpaidNoticeRequestDto
+import com.afsoltech.hops.core.model.integration.UnpaidNoticeResponseDto
 import mu.KLogging
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TestKopsPortalIntegrationRestController {
+class TestHopsPortalIntegrationRestController {
 companion object : KLogging()
 
     @Autowired

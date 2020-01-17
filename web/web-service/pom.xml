@@ -5,20 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.afsoltech.kops</groupId>
-        <artifactId>kops-web</artifactId>
+        <groupId>com.afsoltech.hops</groupId>
+        <artifactId>hops-web</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kops-web-service-web</artifactId>
+    <artifactId>hops-web-service-web</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
 
         <!-- Project -->
         <dependency>
-            <groupId>com.afsoltech.kops</groupId>
-            <artifactId>kops-service-ws</artifactId>
+            <groupId>com.afsoltech.hops</groupId>
+            <artifactId>hops-service-ws</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 

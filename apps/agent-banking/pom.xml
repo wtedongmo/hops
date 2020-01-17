@@ -5,19 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.afsoltech.kops</groupId>
-        <artifactId>kops-apps</artifactId>
+        <groupId>com.afsoltech.hops</groupId>
+        <artifactId>hops-apps</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kops-apps-agent-banking-release</artifactId>
+    <artifactId>hops-apps-agent-banking-release</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <!-- Afsoltech -->
         <dependency>
-            <groupId>com.afsoltech.kops</groupId>
-            <artifactId>kops-web-back-office-agent-banking</artifactId>
+            <groupId>com.afsoltech.hops</groupId>
+            <artifactId>hops-web-back-office-agent-banking</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 

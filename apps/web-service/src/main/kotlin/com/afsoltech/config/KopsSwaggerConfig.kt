@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class KopsSwaggerConfig : AbstractRestConfig() {
+class HopsSwaggerConfig : AbstractRestConfig() {
 
         @Value("\${api.epayment.core.version}")
         var projectVersion : String = ""
