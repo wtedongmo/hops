@@ -1,14 +1,15 @@
 package com.afsoltech.kops.service.ws
 
-import com.afsoltech.core.entity.temp.PäymentResultCode
-import com.afsoltech.core.entity.temp.TempPayment
+import com.afsoltech.core.entity.cap.temp.PäymentResultCode
+import com.afsoltech.core.entity.cap.temp.TempPayment
 import com.afsoltech.core.entity.user.UserApp
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.model.attribute.PaymentStatus
-import com.afsoltech.core.repository.temp.TempPaymentRepository
+import com.afsoltech.core.repository.cap.temp.TempPaymentRepository
 import com.afsoltech.kops.core.model.AskBankAuthPaymentRequestDto
 import com.afsoltech.kops.core.model.AskBankAuthPaymentResponseDto
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -71,7 +72,7 @@ class AskBankAuthPaymentService(val restTemplate: RestTemplate) {
 
         /*Update of payment status*/
         if(result.resultCode.equals(PäymentResultCode.S.name)) {
-            if(result.resultData?.authRsltCd!!.equals(LoadBaseDataToMap.bankAuthCodeApproved!!))
+            if(result.resultData?.authRsltCd!!.equals(LoadSettingDataToMap.bankAuthCodeApproved!!))
                 tempPayment.paymentStatus = PaymentStatus.AUTHORIZED
             else
                 tempPayment.paymentStatus = PaymentStatus.NOT_AUTHORIZED

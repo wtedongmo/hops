@@ -4,10 +4,10 @@ import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.model.attribute.PaymentStatus
-import com.afsoltech.core.repository.PaymentRepository
+import com.afsoltech.core.repository.cap.PaymentRepository
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import com.afsoltech.kops.core.model.integration.VentilationRequest
 import com.afsoltech.kops.core.model.integration.VentilationResponse
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
@@ -32,7 +32,7 @@ class VentilationService (val restTemplate: RestTemplate, val paymentRepository:
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
+        val bankApiKey = LoadSettingDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
         throw UnauthorizedException("Error.Payment.Parameter.ApiKey.NotFound")
         headers.add("apikey", bankApiKey.value)
         //val paymentRequestToSend = PaymentProcessMapper.ModelMapPaymentProcess.map(paymentRequest)

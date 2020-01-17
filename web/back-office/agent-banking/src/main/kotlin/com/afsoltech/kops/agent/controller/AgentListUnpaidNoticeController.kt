@@ -1,5 +1,6 @@
 package com.afsoltech.kops.agent.controller
 
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
 import mu.KLogging
@@ -51,16 +52,24 @@ class AgentListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNot
                 webRequest.taxpayerRepresentativeNumber,
                 webRequest.dueDate?.replace("-", "")
         )
-        var listUnPaidNotice = listUnpaidNoticeService.listUnpaidNotice(noticeRequest, null).result()
-        listUnPaidNotice.forEach { item ->
-            item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-            item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
-        }
-        logger.trace {"UnPaid Notice List "+ listUnPaidNotice }
+
 
         val modelAndView = ModelAndView()
         modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("UnpaidNotice", listUnPaidNotice)
+
+        try {
+            var listUnPaidNotice = listUnpaidNoticeService.listUnpaidNotice(noticeRequest, null).result()
+            listUnPaidNotice.forEach { item ->
+                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
+            }
+            logger.trace {"UnPaid Notice List "+ listUnPaidNotice }
+            modelAndView.addObject("UnpaidNotice", listUnPaidNotice)
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/agent-banking/list-unpaid-customs?errorMessage=admin.system.error")
+        }
+
         modelAndView.addObject("parentMenuHighlight", "notices-index")
         modelAndView.addObject("menuHighlight", "notices-unpaid")
         modelAndView.viewName = "agent-banking/list-unpaid-customs"

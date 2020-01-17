@@ -1,8 +1,8 @@
 package com.afsoltech.kops.service.backoffice
 
-import com.afsoltech.core.entity.PaymentMode
+import com.afsoltech.core.entity.cap.PaymentMode
 import com.afsoltech.core.model.BaseEntityModel
-import com.afsoltech.core.repository.PaymentModeRepository
+import com.afsoltech.core.repository.cap.PaymentModeRepository
 import com.afsoltech.core.service.search.SearchService
 import com.afsoltech.core.util.ensureNotNull
 import com.afsoltech.kops.core.entity.customs.Beneficiary

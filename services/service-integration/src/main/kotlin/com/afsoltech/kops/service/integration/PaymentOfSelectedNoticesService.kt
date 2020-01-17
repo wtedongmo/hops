@@ -1,13 +1,12 @@
 package com.afsoltech.kops.service.integration
 
-import com.afsoltech.core.entity.temp.PäymentResultCode
-import com.afsoltech.core.entity.temp.TempPayment
+import com.afsoltech.core.entity.cap.temp.TempPayment
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.core.model.attribute.PaymentStatus
-import com.afsoltech.core.repository.PaymentRepository
-import com.afsoltech.core.repository.temp.TempPaymentRepository
+import com.afsoltech.core.repository.cap.temp.TempPaymentRepository
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import com.afsoltech.kops.core.entity.customs.NoticeBeneficiary
 import com.afsoltech.kops.core.model.integration.PaymentProcessRequestDto
 import com.afsoltech.kops.core.model.integration.PaymentProcessResponseDto
@@ -16,7 +15,6 @@ import com.afsoltech.kops.core.repository.NoticeRepository
 import com.afsoltech.kops.core.repository.PaymentOfNoticeRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
 import com.afsoltech.kops.service.mapper.NoticeModelToEntity
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import com.afsoltech.epayment.service.mapper.NoticeEntityToEntity
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
@@ -52,7 +50,7 @@ class PaymentOfSelectedNoticesService(
         /* Send Payment To EPAYMENT */
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        LoadBaseDataToMap.ePaymentApiKey?.let {
+        LoadSettingDataToMap.ePaymentApiKey?.let {
             headers.add("apikey", it)
             val httpEntity = HttpEntity(paymentRequest, headers)
             var response : ResponseEntity<PaymentProcessResponseDto>? = null

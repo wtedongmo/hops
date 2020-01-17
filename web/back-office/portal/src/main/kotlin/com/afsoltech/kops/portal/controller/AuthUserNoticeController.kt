@@ -50,92 +50,107 @@ class AuthUserNoticeController(val checkUserInfoService: CheckUserInfoService, v
     @PostMapping("/auth-customs-user")
     fun authCustomsUserAndGenerateOTP(@ModelAttribute("authCustomsUserForm") authForm: AuthUserCustomsDto, request: HttpServletRequest): ModelAndView { //@ResponseBody
 
-        val model = ModelAndView()
-        logger.trace { "Params ${authForm.niu}  ${authForm.email}  ${authForm.category}" }
-        enforce(!authForm.niu.isNullOrBlank() && !authForm.email.isNullOrBlank() && !authForm.category?.name.isNullOrBlank(),
-                listOf("app.customs.auth.field.required"))
+        try{
+            val model = ModelAndView()
+            logger.trace { "Params ${authForm.niu}  ${authForm.email}  ${authForm.category}" }
+            enforce(!authForm.niu.isNullOrBlank() && !authForm.email.isNullOrBlank() && !authForm.category?.name.isNullOrBlank(),
+                    listOf("app.customs.auth.field.required"))
 
-        val boolNui = authForm.niu!!.length<10 || authForm.niu!!.length>20
-        val boolEmail = authForm.email!!.length<5 || authForm.email!!.length>100
-        val boolCategory = !authForm.category!!.equals(CustomsUserCategory.E) && !authForm.category!!.equals(CustomsUserCategory.R)
-        if(boolNui || boolEmail  || boolCategory){
-            model.viewName = "redirect:/portal/auth-customs-user?errorMessage=app.customs.auth.bad.params"
-            return model
-        }
-
-        val authRequest = AuthRequestDto(authForm.niu!!, authForm.email!!, authForm.category!!.name)
-        val authResponse = checkUserInfoService.checkUserInfo(authRequest, request)
-
-        var error: String? = null
-
-        val valrandom = Math.random() + 0.3
-        if (!authResponse.resultCode.equals("S", true)) { // valrandom < 0.5
-            // valeur Non OK
-            model.viewName = "redirect:/portal/auth-customs-user?error=true"
-            return model
-        } else {
-            //valeur OK
-            model.addObject("loginMessage", "Good informations")
-            request.getSession().setAttribute("Auth_Customs", authRequest);
-            try {
-                val auth = SecurityContextHolder.getContext().authentication
-                otpService.generateOTPAndSendMail(auth.name, RequestType.AUTH_CUSTOMS, false)
-               model.addObject("message", "app.customs.auth.code.send.mail")
-               model.addObject("otpForm", OtpDto())
-//                model.addObject("otpFormLink", "/validateOtp")
-                model.viewName = "portal/auth-customs-otp-form"
+            val boolNui = authForm.niu!!.length<10 || authForm.niu!!.length>20
+            val boolEmail = authForm.email!!.length<5 || authForm.email!!.length>100
+            val boolCategory = !authForm.category!!.equals(CustomsUserCategory.E) && !authForm.category!!.equals(CustomsUserCategory.R)
+            if(boolNui || boolEmail  || boolCategory){
+                model.viewName = "redirect:/portal/auth-customs-user?errorMessage=app.customs.auth.bad.params"
                 return model
-            } catch (e: ServletException) {
-                error = e.message
-                request.logout()
-                logger.error("Error while login ", e)
             }
 
+            val authRequest = AuthRequestDto(authForm.niu!!, authForm.email!!, authForm.category!!.name)
+            val authResponse = checkUserInfoService.checkUserInfo(authRequest, request)
+
+            var error: String? = null
+
+            val valrandom = Math.random() + 0.3
+            if (!authResponse.resultCode.equals("S", true)) { // valrandom < 0.5
+                // valeur Non OK
+                model.viewName = "redirect:/portal/auth-customs-user?error=true"
+                return model
+            } else {
+                //valeur OK
+                model.addObject("loginMessage", "Good informations")
+                request.getSession().setAttribute("Auth_Customs", authRequest);
+                try {
+                    val auth = SecurityContextHolder.getContext().authentication
+                    otpService.generateOTPAndSendMail(auth.name, RequestType.AUTH_CUSTOMS, false)
+                   model.addObject("message", "app.customs.auth.code.send.mail")
+                   model.addObject("otpForm", OtpDto())
+    //                model.addObject("otpFormLink", "/validateOtp")
+                    model.viewName = "portal/auth-customs-otp-form"
+                    return model
+                } catch (e: ServletException) {
+                    error = e.message
+                    request.logout()
+                    logger.error("Error while login ", e)
+                }
+
+            }
+            model.viewName = "redirect:/portal/auth-customs-user?errorMessage=${error?: "Null Exception found"}"
+            return model
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=admin.system.error")
         }
-        model.viewName = "redirect:/portal/auth-customs-user?errorMessage=${error?: "Null Exception found"}"
-        return model
     }
 
 
     @GetMapping("/auth-customs-resend-code")
     fun resendOtp(): ModelAndView {
 
-        val model = ModelAndView()
-        val auth = SecurityContextHolder.getContext().authentication
-        model.addObject("username", auth.name)
-        val username = auth.name
+        try{
+            val model = ModelAndView()
+            val auth = SecurityContextHolder.getContext().authentication
+            model.addObject("username", auth.name)
+            val username = auth.name
 
-        otpService.generateOTPAndSendMail(username, RequestType.AUTH_CUSTOMS,true)
-        model.addObject("otpMessage", "app.customs.auth.otp.code.resend")
-        model.addObject("otpForm", OtpDto())
-        model.viewName = "portal/auth-customs-otp-form"
-        return model
+            otpService.generateOTPAndSendMail(username, RequestType.AUTH_CUSTOMS,true)
+            model.addObject("otpMessage", "app.customs.auth.otp.code.resend")
+            model.addObject("otpForm", OtpDto())
+            model.viewName = "portal/auth-customs-otp-form"
+            return model
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=admin.system.error")
+        }
     }
 
     @PostMapping("/valid-auth-customs-otp")
     fun validateOtp(otpnum: OtpDto, servletRequest: HttpServletRequest): ModelAndView {
 
-        val model = ModelAndView()
-        val auth = SecurityContextHolder.getContext().authentication
-        val username = auth.name
-        model.addObject("username", auth.name)
+        try{
+            val model = ModelAndView()
+            val auth = SecurityContextHolder.getContext().authentication
+            val username = auth.name
+            model.addObject("username", auth.name)
 
-        logger.info(" Otp Number : " + otpnum.otpNumber!!)
+            logger.info(" Otp Number : " + otpnum.otpNumber!!)
 
-        //Validate the Otp
-        if (otpnum.otpNumber != null) {
-            if (otpService!!.validateOTP(username, RequestType.AUTH_CUSTOMS, otpnum.otpNumber!!)) {
-                model.addObject("otpMessage", "app.customs.auth.otp.code.valid") //SUCCESS
-                model.addObject("unpaidNoticeForm", UnpaidNoticeRequestDto())
-                model.viewName = "portal/unpaid-customs-form"
-                servletRequest.getSession().setAttribute("loggedInUser", username);
-                return model
+            //Validate the Otp
+            if (otpnum.otpNumber != null) {
+                if (otpService!!.validateOTP(username, RequestType.AUTH_CUSTOMS, otpnum.otpNumber!!)) {
+                    model.addObject("otpMessage", "app.customs.auth.otp.code.valid") //SUCCESS
+                    model.addObject("unpaidNoticeForm", UnpaidNoticeRequestDto())
+                    model.viewName = "portal/unpaid-customs-form"
+                    servletRequest.getSession().setAttribute("loggedInUser", username);
+                    return model
+                }
             }
-        }
 
-        model.addObject("errorMessage", "app.customs.auth.otp.code.failed") //FAIL
-        model.addObject("otpForm", OtpDto())
-        model.viewName = "portal/auth-customs-otp-form"
-        return model
+            model.addObject("errorMessage", "app.customs.auth.otp.code.failed") //FAIL
+            model.addObject("otpForm", OtpDto())
+            model.viewName = "portal/auth-customs-otp-form"
+            return model
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/auth-customs-otp-form?errorMessage=admin.system.error")
+        }
     }
 }

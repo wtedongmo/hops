@@ -1,6 +1,6 @@
 package com.afsoltech.kops.service.ws
 
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeBeneficiaryRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
@@ -40,7 +40,7 @@ class DeleteTemporaryNoticeService (val selectedNoticeRepository: SelectedNotice
 
     fun deleteTemporarySelectedNotice(){
 
-        expiredSelectedDuration = LoadBaseDataToMap.settingMap.get("app.notice.expired.duration.selected")?.value?.toLong()?: 10
+        expiredSelectedDuration = LoadSettingDataToMap.settingMap.get("app.notice.expired.duration.selected")?.value?.toLong()?: 10
         val currentTime = LocalDateTime.now()
         val expiredTime = currentTime.minusMinutes(expiredSelectedDuration)
         val expiredTemporaryNoticeList = selectedNoticeRepository.findListExpiredNotice(expiredTime)
@@ -66,8 +66,8 @@ class DeleteTemporaryNoticeService (val selectedNoticeRepository: SelectedNotice
     @Transactional
     fun resetTemporaryUnpaidNoticeTable(){
 
-        requestResetSelectedNotice = LoadBaseDataToMap.settingMap.get("sql.request.reset.sequence.temprary.notice")?.value?: ""
-        requestResetSelectedNoticeBeneficiary = LoadBaseDataToMap.settingMap.get("sql.request.reset.sequence.temprary.notice.beneficiary")?.value?: ""
+        requestResetSelectedNotice = LoadSettingDataToMap.settingMap.get("sql.request.reset.sequence.temprary.notice")?.value?: ""
+        requestResetSelectedNoticeBeneficiary = LoadSettingDataToMap.settingMap.get("sql.request.reset.sequence.temprary.notice.beneficiary")?.value?: ""
 
         logger.trace{" Start Reset sequence in temporary customs table \n"}
         deleteTemporarySelectedNotice()

@@ -2,10 +2,9 @@ package com.afsoltech.kops.service.integration
 
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
-import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
 import com.afsoltech.kops.core.model.notice.AuthRequestDto
 import com.afsoltech.kops.core.model.notice.AuthResponseDto
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
@@ -17,7 +16,7 @@ import org.springframework.web.client.RestTemplate
 import javax.servlet.http.HttpServletRequest
 
 @Service
-class CheckUserInfoService(val restTemplate: RestTemplate, val checkParticipantAPIRequest: CheckParticipantAPIRequest) {
+class CheckUserInfoService(val restTemplate: RestTemplate) {
 
     companion object : KLogging()
 
@@ -30,7 +29,7 @@ class CheckUserInfoService(val restTemplate: RestTemplate, val checkParticipantA
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        LoadBaseDataToMap.ePaymentApiKey?.let {
+        LoadSettingDataToMap.ePaymentApiKey?.let {
             headers.add("apikey", it)
             val entity = HttpEntity(authRequest, headers)
             val responce = restTemplate.exchange(userAuthURL, HttpMethod.POST, entity, AuthResponseDto::class.java)

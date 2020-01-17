@@ -2,11 +2,11 @@ package com.afsoltech.kops.service.integration
 
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
-import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
 import com.afsoltech.kops.core.model.notice.NoticeResponses
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
+import com.afsoltech.core.service.utils.TranslateUtils
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Service
 class ListUnpaidNoticeService(
-        val restTemplate: RestTemplate, val checkParticipantAPIRequest: CheckParticipantAPIRequest
+        val restTemplate: RestTemplate
 ) {
 
     companion object : KLogging(){
@@ -46,7 +46,7 @@ class ListUnpaidNoticeService(
 //    lateinit var bankApiKey: String
 
     init {
-        expiryTimeMinute = LoadBaseDataToMap.settingMap.get("app.notice.expired.duration.unpaid")?.value?.toLong()?: 10
+        expiryTimeMinute = LoadSettingDataToMap.settingMap.get("app.notice.expired.duration.unpaid")?.value?.toLong()?: 10
 
         unpaidNoticeCache = CacheBuilder.newBuilder().expireAfterWrite(expiryTimeMinute, TimeUnit.MINUTES).build(object :
                 CacheLoader<String, UnpaidNoticeResponseDto>() {
@@ -62,7 +62,7 @@ class ListUnpaidNoticeService(
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        LoadBaseDataToMap.ePaymentApiKey?.let {
+        LoadSettingDataToMap.ePaymentApiKey?.let {
             headers.add("apikey", it)
 
             val entity = HttpEntity(noticeRequest, headers)

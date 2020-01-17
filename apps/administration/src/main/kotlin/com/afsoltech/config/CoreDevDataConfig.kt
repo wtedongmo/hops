@@ -1,12 +1,12 @@
 package com.afsoltech.config
 
-import com.afsoltech.core.entity.Provider
-import com.afsoltech.core.entity.fee.FeeAppliedType
-import com.afsoltech.core.entity.fee.ProviderFee
+import com.afsoltech.core.entity.app.Provider
+import com.afsoltech.core.entity.app.fee.FeeAppliedType
+import com.afsoltech.core.entity.app.fee.ProviderFee
 import com.afsoltech.core.model.attribute.BaseStatus
-import com.afsoltech.core.repository.ProviderRepository
-import com.afsoltech.core.repository.fee.ProviderFeeRepository
-import com.afsoltech.core.service.utils.EncryptDecryptUtils
+import com.afsoltech.core.repository.app.ProviderRepository
+import com.afsoltech.core.repository.app.fee.ProviderFeeRepository
+import com.afsoltech.core.service.app.utils.EncryptDecryptUtils
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner

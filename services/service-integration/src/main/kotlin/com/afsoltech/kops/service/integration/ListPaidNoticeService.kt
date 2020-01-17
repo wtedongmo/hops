@@ -2,11 +2,10 @@ package com.afsoltech.kops.service.integration
 
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
-import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
 import com.afsoltech.kops.core.model.notice.NoticeRequestDto
 import com.afsoltech.kops.core.model.notice.NoticeResponseDto
 import com.afsoltech.kops.core.model.notice.NoticeResponses
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
@@ -21,8 +20,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Service
 class ListPaidNoticeService(
-        val restTemplate: RestTemplate, val checkParticipantAPIRequest: CheckParticipantAPIRequest
-) {
+        val restTemplate: RestTemplate) { // , val checkParticipantAPIRequest: CheckParticipantAPIRequest
 
     companion object : KLogging()
 
@@ -54,7 +52,7 @@ class ListPaidNoticeService(
         headers.contentType = MediaType.APPLICATION_JSON
 //        val bankApiKey = LoadBaseDataToMap.settingMap.get("app.bank.epayment.apikey") ?:
 
-        LoadBaseDataToMap.ePaymentApiKey?.let {
+            LoadSettingDataToMap.ePaymentApiKey?.let {
             headers.add("apikey", it)
 
             val entity = HttpEntity(noticeRequest, headers)

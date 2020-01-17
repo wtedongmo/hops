@@ -1,5 +1,6 @@
 package com.afsoltech.core.controller
 
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.core.model.notice.AuthRequestDto
@@ -19,7 +20,8 @@ class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeSe
 //    lateinit var userNiuCode: String
 
     @GetMapping
-    fun unPaidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?, request: HttpServletRequest): ModelAndView {
+    fun unPaidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?,
+                         @RequestParam(value = "errorMessage", required = false) errorMessage: String?, request: HttpServletRequest): ModelAndView {
 //        @RequestParam(value = "lang", required = false) lang: Locale?, res: HttpServletResponse
         val model = ModelAndView()
 
@@ -34,6 +36,10 @@ class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeSe
         error?.let {
             if (error) model.addObject("errorMessage", "bad.information.provided")
         }
+        errorMessage?.let {
+            model.addObject("errorMessage", errorMessage)
+        }
+
         model.addObject("username", auth.name)
         model.addObject("unpaidNoticeForm", UnpaidNoticeRequestDto())
         model.addObject("parentMenuHighlight", "notices-index")
@@ -51,55 +57,60 @@ class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeSe
     @PostMapping
     fun retrieveListPaidNotice(@ModelAttribute("unpaidNoticeForm") portalRequest: UnpaidNoticeRequestDto, request: HttpServletRequest): ModelAndView { //
 
-        val authCustoms = request.getSession().getAttribute("Auth_Customs") as AuthRequestDto?
-        val auth = SecurityContextHolder.getContext().authentication
-        val listUnPaidNotice : List<UnpaidNoticeResponseDto>
+        try{
+            val authCustoms = request.getSession().getAttribute("Auth_Customs") as AuthRequestDto?
+            val auth = SecurityContextHolder.getContext().authentication
+            val listUnPaidNotice : List<UnpaidNoticeResponseDto>
 
-        if(authCustoms==null){
-            if(!portalRequest.noticeNumber.isNullOrBlank() && !portalRequest.taxpayerNumber.isNullOrBlank()){
-                portalRequest.notificationDate =  portalRequest.notificationDate?.replace("-", "")?.trim()
-                portalRequest.dueDate =  portalRequest.dueDate?.replace("-", "")?.trim()
-                listUnPaidNotice = listUnpaidNoticeService.listUnpaidNotice(portalRequest, request).result()
-            }else
-                return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=app.auth.customs.required")
-        }else {
+            if(authCustoms==null){
+                if(!portalRequest.noticeNumber.isNullOrBlank() && !portalRequest.taxpayerNumber.isNullOrBlank()){
+                    portalRequest.notificationDate =  portalRequest.notificationDate?.replace("-", "")?.trim()
+                    portalRequest.dueDate =  portalRequest.dueDate?.replace("-", "")?.trim()
+                    listUnPaidNotice = listUnpaidNoticeService.listUnpaidNotice(portalRequest, request).result()
+                }else
+                    return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=app.auth.customs.required")
+            }else {
 
-            val username = auth.name
-            val nuiUser = authCustoms.taxpayerNumber!! //username.split("#").first()
-            val nui = if (portalRequest.taxpayerNumber.isNullOrBlank()) nuiUser
-            else portalRequest.taxpayerNumber
+                val username = auth.name
+                val nuiUser = authCustoms.taxpayerNumber!! //username.split("#").first()
+                val nui = if (portalRequest.taxpayerNumber.isNullOrBlank()) nuiUser
+                else portalRequest.taxpayerNumber
 
-            val representative = if (!portalRequest.taxpayerRepresentativeNumber.isNullOrBlank()) portalRequest.taxpayerRepresentativeNumber
-            else if (!nui.equals(nuiUser, true)) nuiUser
-            else ""
+                val representative = if (!portalRequest.taxpayerRepresentativeNumber.isNullOrBlank()) portalRequest.taxpayerRepresentativeNumber
+                else if (!nui.equals(nuiUser, true)) nuiUser
+                else ""
 
-            if (!nui.equals(nuiUser, true) && !representative.equals(nuiUser, true)) {
-                return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
+                if (!nui.equals(nuiUser, true) && !representative.equals(nuiUser, true)) {
+                    return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
+                }
+    //        val portalRequest = NoticePortalRequestDto()
+                val noticeRequest = UnpaidNoticeRequestDto(
+                        portalRequest.noticeNumber,
+                        portalRequest.notificationDate?.replace("-", "")?.trim(),
+                        nui,
+                        representative,
+                        portalRequest.dueDate?.replace("-", "")
+                )
+                listUnPaidNotice = listUnpaidNoticeService.listUnpaidNotice(noticeRequest, null).result()
             }
-//        val portalRequest = NoticePortalRequestDto()
-            val noticeRequest = UnpaidNoticeRequestDto(
-                    portalRequest.noticeNumber,
-                    portalRequest.notificationDate?.replace("-", "")?.trim(),
-                    nui,
-                    representative,
-                    portalRequest.dueDate?.replace("-", "")
-            )
-            listUnPaidNotice = listUnpaidNoticeService.listUnpaidNotice(noticeRequest, null).result()
-        }
 
-        listUnPaidNotice.forEach { item ->
-            item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-            item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
-        }
-        logger.trace {"UnPaid Notice List "+ listUnPaidNotice }
+            listUnPaidNotice.forEach { item ->
+                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
+            }
+            logger.trace {"UnPaid Notice List "+ listUnPaidNotice }
 
-        val modelAndView = ModelAndView()
-        modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("UnpaidNotice", listUnPaidNotice)
-        modelAndView.addObject("parentMenuHighlight", "notices-index")
-        modelAndView.addObject("menuHighlight", "notices-unpaid")
-        modelAndView.viewName = "portal/list-unpaid-customs"
-        return modelAndView
+            val modelAndView = ModelAndView()
+            modelAndView.addObject("username", auth.name)
+            modelAndView.addObject("UnpaidNotice", listUnPaidNotice)
+            modelAndView.addObject("parentMenuHighlight", "notices-index")
+            modelAndView.addObject("menuHighlight", "notices-unpaid")
+            modelAndView.viewName = "portal/list-unpaid-customs"
+            return modelAndView
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/list-unpaid-customs?errorMessage=admin.system.error")
+        }
     }
 
 

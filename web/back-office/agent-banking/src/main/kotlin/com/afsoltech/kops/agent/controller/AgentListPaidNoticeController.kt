@@ -1,5 +1,6 @@
 package com.afsoltech.kops.agent.controller
 
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.notice.NoticeRequestDto
 import com.afsoltech.kops.core.model.notice.NoticeResponseDto
 import com.afsoltech.kops.service.integration.ListPaidNoticeService
@@ -50,16 +51,23 @@ class AgentListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeSer
                 webRequest.taxpayerRepresentativeNumber,
                 webRequest.paymentDate?.replace("-", "")
         )
-        var listPaidNotice = listPaidNoticeService.listPaidNotice(noticeRequest).resultData
-        listPaidNotice?.forEach { item ->
-            item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-            item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
-        }
-        logger.trace {"Paid Notice List "+ listPaidNotice }
 
         val modelAndView = ModelAndView()
         modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("PaidNotice", listPaidNotice?: emptyList<NoticeResponseDto>())
+//        request.session.setAttribute("paidNoticeForm", webRequest)
+        try {
+            val listPaidNotice = listPaidNoticeService.listPaidNotice(noticeRequest).resultData
+            listPaidNotice?.forEach { item ->
+                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
+            }
+            logger.trace {"Paid Notice List "+ listPaidNotice }
+            modelAndView.addObject("PaidNotice", listPaidNotice?: emptyList<NoticeResponseDto>())
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/agent-banking/list-paid-customs?errorMessage=admin.system.error")
+        }
+
         modelAndView.addObject("parentMenuHighlight", "notices-index")
         modelAndView.addObject("menuHighlight", "notices-paid")
         modelAndView.viewName = "agent-banking/list-paid-customs"

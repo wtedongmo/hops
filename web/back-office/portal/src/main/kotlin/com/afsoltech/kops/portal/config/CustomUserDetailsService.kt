@@ -5,7 +5,7 @@ import com.afsoltech.core.model.attribute.BaseStatus
 import com.afsoltech.core.model.user.attribute.UserPrivilege
 import com.afsoltech.core.model.user.attribute.UserType
 import com.afsoltech.core.repository.user.UserAppRepository
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -32,8 +32,8 @@ class CustomUserDetailsService { //: UserDetailsService
     //    @Value("\${app.login.attempt.time:10}")
     var DEFAULT_ATTEMPT_TIME = 10
     init {
-        DEFAULT_ATTEMPT_NUMBER = LoadBaseDataToMap.settingMap.get("app.login.attempt.number")?.value?.toInt()?: 5
-        DEFAULT_ATTEMPT_TIME = LoadBaseDataToMap.settingMap.get("app.login.attempt.time")?.value?.toInt()?: 5
+        DEFAULT_ATTEMPT_NUMBER = LoadSettingDataToMap.settingMap.get("app.login.attempt.number")?.value?.toInt()?: 5
+        DEFAULT_ATTEMPT_TIME = LoadSettingDataToMap.settingMap.get("app.login.attempt.time")?.value?.toInt()?: 5
 
     }
 

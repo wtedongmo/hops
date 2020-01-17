@@ -1,10 +1,10 @@
 package com.afsoltech.kops.service.ws
 
-import com.afsoltech.core.entity.fee.FeeAppliedType
+import com.afsoltech.core.entity.app.fee.FeeAppliedType
 import com.afsoltech.core.exception.BadRequestException
-import com.afsoltech.core.repository.ProviderRepository
-import com.afsoltech.core.repository.fee.ProviderFeeRepository
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.repository.app.ProviderRepository
+import com.afsoltech.core.repository.app.fee.ProviderFeeRepository
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import com.afsoltech.core.util.enforce
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import com.afsoltech.kops.core.model.notice.BillFeeDto
@@ -29,10 +29,10 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
     //    @Value("\${app.provider.notice.code}")
 //    private var providerNoticeCode: String=""
 
-    init{
+//    init{
 //        bankCode = LoadBaseDataToMap.settingMap.get("app.bank.code.initial")?.value?: ""
 //        providerNoticeCode = LoadBaseDataToMap.settingMap.get("app.provider.notice.code")?.value?: ""
-    }
+//    }
 
 
     fun calculateFeeNotice(userLogin: String): BillFeeDto { //:Boolean
@@ -68,7 +68,7 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
 
         val benefList = selectedNoticeBenfRepository.findBySelectedNoticeList(noticeIdList)
         benefList.forEach { benef ->
-            externalAmount += if(benef.accountNumber!!.startsWith(LoadBaseDataToMap.bankCode)) BigDecimal.ZERO else benef.amount!!
+            externalAmount += if(benef.accountNumber!!.startsWith(LoadSettingDataToMap.bankCode)) BigDecimal.ZERO else benef.amount!!
         }
 
         return calculateFee(totalAmount, externalAmount)
@@ -84,7 +84,7 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
 //        providerNoticeCode = LoadBaseDataToMap.settingMap.get("app.provider.notice.code")?.value?: ""
 
         var feeAmount = BigDecimal.ZERO
-        val providerOp = providerRepository.findOneByParticipantCode(LoadBaseDataToMap.providerNoticeCode)
+        val providerOp = providerRepository.findOneByParticipantCode(LoadSettingDataToMap.providerNoticeCode)
         if(providerOp.isPresent) {
             val provider = providerOp.get()
             val providerFeeList = providerFeeRepository.findByAmountIntervalAndProviderAndFeeType(totalAmount, provider.id!!,
@@ -105,7 +105,7 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
             return BillFeeDto(totalAmount, feeAmount, totalAmount + feeAmount)
         }
 
-        throw BadRequestException("Error.Provider.NotFound", listOf(LoadBaseDataToMap.providerNoticeCode))
+        throw BadRequestException("Error.Provider.NotFound", listOf(LoadSettingDataToMap.providerNoticeCode))
     }
 
 }

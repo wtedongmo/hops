@@ -1,6 +1,7 @@
 package com.afsoltech.kops.agent.controller
 
-import com.afsoltech.core.service.AccountBankService
+import com.afsoltech.core.service.cap.AccountBankService
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.service.integration.ListUnpaidNoticeService
@@ -32,39 +33,45 @@ class AgentSaveSelectedUnpaidNoticeController (val saveSelectedNoticeService: Sa
         if(selectedNoticeNumberList.isNullOrEmpty()){
             return ModelAndView("redirect:/agent-banking/list-unpaid-customs?error=true");
         }
-        val selectedNoticeList = saveSelectedNoticeService.saveSelectedNotices(username, selectedNoticeNumberList)
-        val selectedNotices = mutableListOf<UnpaidNoticeResponseDto>()
-        var taxpayerNumber=""
-        selectedNoticeList.forEach {notice ->
-            val noticeCache = ListUnpaidNoticeService.unpaidNoticeCache!!.get(notice.noticeNumber!!)
-            noticeCache.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.notificationDate)
-            noticeCache.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.dueDate)
-            selectedNotices.add(noticeCache)
 
-            if(taxpayerNumber.isEmpty())
-                taxpayerNumber = notice.taxpayerNumber!!
+        try{
+            val selectedNoticeList = saveSelectedNoticeService.saveSelectedNotices(username, selectedNoticeNumberList)
+            val selectedNotices = mutableListOf<UnpaidNoticeResponseDto>()
+            var taxpayerNumber=""
+            selectedNoticeList.forEach {notice ->
+                val noticeCache = ListUnpaidNoticeService.unpaidNoticeCache!!.get(notice.noticeNumber!!)
+                noticeCache.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.notificationDate)
+                noticeCache.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.dueDate)
+                selectedNotices.add(noticeCache)
+
+                if(taxpayerNumber.isEmpty())
+                    taxpayerNumber = notice.taxpayerNumber!!
+            }
+
+            val billFeeDto = calculateFeeNoticeService.calculateFee(selectedNoticeList)
+            billFeeDto.number = selectedNoticeList.size
+            val accountList = accountBankService.findByUser(username)
+
+            val modelAndView = ModelAndView()
+            modelAndView.addObject("username", auth.name)
+            modelAndView.addObject("message", "app.payment.bill.choose.account")
+            modelAndView.addObject("selectedBills", selectedNotices)
+            modelAndView.addObject("billFee", billFeeDto)
+            modelAndView.addObject("accountList", accountList)
+            val billFeeAct = BillPaymentNoticeModel(otp = null, accountNumber = null, selectedBills = selectedNotices, billFee = billFeeDto,
+                    taxpayerNumber = taxpayerNumber)
+            request.session.setAttribute(username+"_billPayInfo", billFeeAct)
+
+            modelAndView.addObject("BillPayment", billFeeAct)
+            // menu highlight
+            modelAndView.addObject("parentMenuHighlight", "notices-index")
+            modelAndView.addObject("menuHighlight", "notices-list")
+            modelAndView.viewName = "agent-banking/bill-select-account"
+            return modelAndView
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/agent-banking/list-unpaid-customs?errorMessage=admin.system.error")
         }
-
-        val billFeeDto = calculateFeeNoticeService.calculateFee(selectedNoticeList)
-        billFeeDto.number = selectedNoticeList.size
-        val accountList = accountBankService.findByUser(username)
-
-        val modelAndView = ModelAndView()
-        modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("message", "app.payment.bill.choose.account")
-        modelAndView.addObject("selectedBills", selectedNotices)
-        modelAndView.addObject("billFee", billFeeDto)
-        modelAndView.addObject("accountList", accountList)
-        val billFeeAct = BillPaymentNoticeModel(otp = null, accountNumber = null, selectedBills = selectedNotices, billFee = billFeeDto,
-                taxpayerNumber = taxpayerNumber)
-        request.session.setAttribute(username+"_billPayInfo", billFeeAct)
-
-        modelAndView.addObject("BillPayment", billFeeAct)
-        // menu highlight
-        modelAndView.addObject("parentMenuHighlight", "notices-index")
-        modelAndView.addObject("menuHighlight", "notices-list")
-        modelAndView.viewName = "agent-banking/bill-select-account"
-        return modelAndView
     }
 
 

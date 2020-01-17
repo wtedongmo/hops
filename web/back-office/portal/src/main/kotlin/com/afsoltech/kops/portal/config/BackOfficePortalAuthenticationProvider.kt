@@ -5,7 +5,6 @@ import com.afsoltech.core.model.attribute.BaseStatus
 import com.afsoltech.core.model.user.attribute.UserPrivilege
 import com.afsoltech.core.model.user.attribute.UserType
 import com.afsoltech.core.repository.user.UserAppRepository
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

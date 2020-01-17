@@ -1,13 +1,14 @@
 package com.afsoltech.kops.service.ws
 
-import com.afsoltech.core.entity.temp.TempPayment
+import com.afsoltech.core.entity.cap.temp.TempPayment
 import com.afsoltech.core.entity.user.UserApp
 import com.afsoltech.core.exception.BadRequestException
-import com.afsoltech.core.repository.temp.TempPaymentRepository
-import com.afsoltech.core.repository.user.AccountBankRepository
+import com.afsoltech.core.repository.cap.AccountBankRepository
+import com.afsoltech.core.repository.cap.temp.TempPaymentRepository
 import com.afsoltech.core.repository.user.UserAppRepository
-import com.afsoltech.core.service.OTPService
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.user.OTPService
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import com.afsoltech.kops.core.model.InitPaymentRequestDto
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
@@ -91,7 +92,7 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
                     nberExist++
                     noticeAmount += notice.amount!!
                     notice.beneficiaryList.forEach { benef ->
-                        externalAmount += if(benef.accountNumber!!.startsWith(LoadBaseDataToMap.bankCode)) BigDecimal.ZERO else benef.amount!!
+                        externalAmount += if(benef.accountNumber!!.startsWith(LoadSettingDataToMap.bankCode)) BigDecimal.ZERO else benef.amount!!
                     }
                     noticeStr.append(",").append(notice.noticeNumber)
                 }
@@ -115,11 +116,11 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
 
             val internalPaymentNumber = getInternalPaymentNumber()
 
-            val tempPayment = TempPayment(internalPaymentNumber = internalPaymentNumber, bankCode = LoadBaseDataToMap.bankCode,
+            val tempPayment = TempPayment(internalPaymentNumber = internalPaymentNumber, bankCode = LoadSettingDataToMap.bankCode,
                     bankAgencyCode = account.branchCode, customerNumber = initPaymentRequest.customerNumber, payerAccountNumber = account.accountNo,
-                    payerAccountName = account.accountName, paymentMode = LoadBaseDataToMap.paymentMode, amount = noticeAmount, feeAmount = feeAmount,
-                    totalAmount = totalAmount,  paymentDate = LocalDateTime.now(), providerCode = LoadBaseDataToMap.providerNoticeCode,
-                    billNumber = noticeStr.substring(1), operationCode=LoadBaseDataToMap.operationCode, currency=account.currency, userLogin = user.login)
+                    payerAccountName = account.accountName, paymentMode = LoadSettingDataToMap.paymentMode, amount = noticeAmount, feeAmount = feeAmount,
+                    totalAmount = totalAmount,  paymentDate = LocalDateTime.now(), providerCode = LoadSettingDataToMap.providerNoticeCode,
+                    billNumber = noticeStr.substring(1), operationCode=LoadSettingDataToMap.operationCode, currency=account.currency, userLogin = user.login)
 
             return tempPaymentRepository.save(tempPayment)
 
@@ -138,7 +139,7 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
         var internalPaymentNumber = String()
         do {
             paymentIdInc++
-            internalPaymentNumber = LoadBaseDataToMap.bankCode+StringDateFormaterUtils.DateToString.format(LocalDate.now())+ ""+
+            internalPaymentNumber = LoadSettingDataToMap.bankCode+StringDateFormaterUtils.DateToString.format(LocalDate.now())+ ""+
                     StringUtils.leftPad(""+paymentIdInc, 6, "0")
             val tempP = tempPaymentRepository.findByInternalPaymentNumber(internalPaymentNumber)
         }while(tempP.isNotEmpty())

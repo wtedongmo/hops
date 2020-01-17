@@ -1,7 +1,7 @@
 package com.afsoltech.kops.service.ws
 
 import com.afsoltech.core.exception.BadRequestException
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 import javax.servlet.http.HttpServletRequest
 
 @Service
-class AuthJWTService(val env: Environment, val restTemplate: RestTemplate, val loadBaseDataToMap: LoadBaseDataToMap) {
+class AuthJWTService(val env: Environment, val restTemplate: RestTemplate) {
 
     companion object : KLogging(){
         var bank_apikey :String=""
@@ -40,14 +40,14 @@ class AuthJWTService(val env: Environment, val restTemplate: RestTemplate, val l
 //    private var expiryTimeSeconds: Long=180
 
     init{
-        sessionAuthCache = CacheBuilder.newBuilder().expireAfterWrite(LoadBaseDataToMap.expiryTimeSeconds, TimeUnit.SECONDS).build(object :
+        sessionAuthCache = CacheBuilder.newBuilder().expireAfterWrite(LoadSettingDataToMap.expiryTimeSeconds, TimeUnit.SECONDS).build(object :
                 CacheLoader<String, Any?>() {
             override fun load(key: String): Any? {
                 return Any()
             }
         })
 
-        bank_apikey = LoadBaseDataToMap.settingMap.get("app.bank.core.apikey")?.value?: ""
+        bank_apikey = LoadSettingDataToMap.settingMap.get("app.bank.core.apikey")?.value?: ""
 //        nanobnk_apikey = env.getProperty("app.ussd.bank.nano.apikey")?:""
         sessionAuthCache!!.put("x-afst-apikey", bank_apikey)
     }
@@ -56,7 +56,7 @@ class AuthJWTService(val env: Environment, val restTemplate: RestTemplate, val l
      * Default authentication of user with his phone number and pin
      */
     fun authJWTService(msisdn: String, pin: String, request: HttpServletRequest): AuthJWTResponseDto{
-        defaultDeviceType = LoadBaseDataToMap.settingMap.get("app.bank.default.device.type")?.value?: ""
+        defaultDeviceType = LoadSettingDataToMap.settingMap.get("app.bank.default.device.type")?.value?: ""
         val authJWTRequestDto = AuthJWTRequestDto( "MOBILE", defaultDeviceType /*"deviceuid-1234"*/, "MOBILE", msisdn,
                 "PIN", pin)
         val authJWTResponseDto = authJWTService(authJWTRequestDto, msisdn, request)

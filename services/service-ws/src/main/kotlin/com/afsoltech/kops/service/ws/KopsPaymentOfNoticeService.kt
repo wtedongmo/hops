@@ -1,12 +1,13 @@
 package com.afsoltech.kops.service.ws
 
-import com.afsoltech.core.entity.temp.PäymentResultCode
-import com.afsoltech.core.entity.temp.TempPayment
+import com.afsoltech.core.entity.cap.temp.PäymentResultCode
+import com.afsoltech.core.entity.cap.temp.TempPayment
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.model.attribute.PaymentStatus
-import com.afsoltech.core.repository.PaymentRepository
+import com.afsoltech.core.repository.cap.PaymentRepository
 import com.afsoltech.core.repository.user.UserAppRepository
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.entity.customs.NoticeBeneficiary
 import com.afsoltech.kops.core.model.InitPaymentRequestDto
 import com.afsoltech.kops.core.model.notice.NoticeRequestDto
@@ -81,7 +82,7 @@ class KopsPaymentOfNoticeService(val userAppRepository: UserAppRepository,
 
 
             if(askBankPaymentAuth.resultCode.equals(PäymentResultCode.S.name)&&
-                    askBankPaymentAuth.resultData?.authRsltCd!!.equals(LoadBaseDataToMap.bankAuthCodeApproved)){
+                    askBankPaymentAuth.resultData?.authRsltCd!!.equals(LoadSettingDataToMap.bankAuthCodeApproved)){
                 var callApiCancel=false
                 try {
                     val noticeListDto = mutableListOf<NoticeOfPaymentDto>()
@@ -109,8 +110,8 @@ class KopsPaymentOfNoticeService(val userAppRepository: UserAppRepository,
                     val paidNoticeRequest = NoticeRequestDto(taxpayerNumber = tempPayment.customerNumber,
                             paymentDate = StringDateFormaterUtils.DateToString.format(LocalDate.now()))
 
-                    checkNumberApp = LoadBaseDataToMap.settingMap.get("app.payment.notice.check.number")?.value?.toInt()?: 5
-                    sleepMillis = LoadBaseDataToMap.settingMap.get("app.payment.notice.check.sleep.millis")?.value?.toLong()?: 3000
+                    checkNumberApp = LoadSettingDataToMap.settingMap.get("app.payment.notice.check.number")?.value?.toInt()?: 5
+                    sleepMillis = LoadSettingDataToMap.settingMap.get("app.payment.notice.check.sleep.millis")?.value?.toLong()?: 3000
 
                     //We use this to reload a service if there is and error
                     var continueCheck=true

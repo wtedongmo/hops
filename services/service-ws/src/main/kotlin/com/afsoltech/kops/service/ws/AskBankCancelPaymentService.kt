@@ -1,12 +1,13 @@
 package com.afsoltech.kops.service.ws
 
-import com.afsoltech.core.entity.temp.PäymentResultCode
-import com.afsoltech.core.entity.temp.TempPayment
+import com.afsoltech.core.entity.cap.temp.PäymentResultCode
+import com.afsoltech.core.entity.cap.temp.TempPayment
 import com.afsoltech.core.entity.user.UserApp
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.model.attribute.PaymentStatus
-import com.afsoltech.core.repository.temp.TempPaymentRepository
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.repository.cap.temp.TempPaymentRepository
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.*
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -78,7 +79,7 @@ class AskBankCancelPaymentService(val restTemplate: RestTemplate) {
 
         /*Update of payment status*/
         if(result.resultCode.equals(PäymentResultCode.S.name)) {
-            if(result.resultData?.cancelRsltCd!!.equals(LoadBaseDataToMap.bankAuthCodeApproved!!))
+            if(result.resultData?.cancelRsltCd!!.equals(LoadSettingDataToMap.bankAuthCodeApproved!!))
                 tempPayment.paymentStatus = PaymentStatus.AUTH_CANCEL
             else
                 tempPayment.paymentStatus = PaymentStatus.AUTH_CANCEL_FAIL

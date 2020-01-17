@@ -1,8 +1,10 @@
 package com.afsoltech.kops.agent.controller
 
-import com.afsoltech.core.service.AccountBankService
+import com.afsoltech.core.service.cap.AccountBankService
 import com.afsoltech.core.service.user.OTPService
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.BillPaymentResumeDto
 import com.afsoltech.kops.core.model.InitPaymentRequestDto
@@ -64,7 +66,7 @@ class AgentValidPaymentBillOtpController(val kopsPaymentOfNoticeService: KopsPay
             if(account==null)
                 payResume = BillPaymentResumeDto()
             else
-                payResume = BillPaymentResumeDto(bankName = LoadBaseDataToMap.bankName, bankCode = LoadBaseDataToMap.bankCode,
+                payResume = BillPaymentResumeDto(bankName = LoadSettingDataToMap.bankName, bankCode = LoadSettingDataToMap.bankCode,
                         bankAgency = account.accountAgency, accountNumber = account.accountNumber,
                         accountName = account.accountName, transactionNumber = paymentResp.bankPaymentNumber,
                         camcisPaymentNumber = paymentResp.camcisPaymentNumber,

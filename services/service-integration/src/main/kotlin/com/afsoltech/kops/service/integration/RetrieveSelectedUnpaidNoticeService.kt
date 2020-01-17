@@ -2,7 +2,6 @@ package com.afsoltech.kops.service.integration
 
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
-import com.afsoltech.core.service.utils.CheckParticipantAPIRequest
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNoticeBeneficiary
 import com.afsoltech.kops.core.model.notice.NoticeResponses
 import com.afsoltech.kops.core.model.integration.OutSelectedNoticeRequestDto
@@ -10,7 +9,7 @@ import com.afsoltech.kops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeBeneficiaryRepository
 import com.afsoltech.kops.core.repository.temp.SelectedNoticeRepository
 import com.afsoltech.kops.service.mapper.NoticeModelToEntity
-import com.afsoltech.core.service.utils.LoadBaseDataToMap
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
 import com.afsoltech.kops.core.entity.customs.temp.SelectedNotice
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
@@ -28,8 +27,7 @@ import javax.transaction.Transactional
 @Service
 class RetrieveSelectedUnpaidNoticeService(
         val restTemplate: RestTemplate, val selectedNoticeRepository: SelectedNoticeRepository,
-        val selectedNoticeBeneficiaryRepository: SelectedNoticeBeneficiaryRepository, val checkParticipantAPIRequest: CheckParticipantAPIRequest
-) {
+        val selectedNoticeBeneficiaryRepository: SelectedNoticeBeneficiaryRepository) { //, val checkParticipantAPIRequest: CheckParticipantAPIRequest
 
     companion object : KLogging()
 
@@ -43,7 +41,7 @@ class RetrieveSelectedUnpaidNoticeService(
 //        checkParticipantAPIRequest.checkAPIRequest(request)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        LoadBaseDataToMap.ePaymentApiKey?.let {
+        LoadSettingDataToMap.ePaymentApiKey?.let {
             headers.add("apikey", it)
 
             val entity = HttpEntity(selectedRequest, headers)

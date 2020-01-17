@@ -1,7 +1,8 @@
 package com.afsoltech.core.controller
 
 import com.afsoltech.core.exception.NotFoundException
-import com.afsoltech.core.service.AccountBankService
+import com.afsoltech.core.service.cap.AccountBankService
+import com.afsoltech.core.service.utils.StringDateFormaterUtils
 import com.afsoltech.kops.core.model.BillPaymentNoticeModel
 import com.afsoltech.kops.core.model.integration.OutSelectedNoticeRequestDto
 import com.afsoltech.kops.service.integration.RetrieveSelectedUnpaidNoticeService
@@ -26,48 +27,50 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
                                      @RequestParam(value = "errorMessage", required = false) errorMessage: String?,
                                      request: HttpServletRequest): ModelAndView {
 
-//        if(taxpayerNumber.isNullOrBlank())
-//            return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
+        try{
+            val auth = SecurityContextHolder.getContext().authentication
+            val username= auth.name
+            val selectedRequest= OutSelectedNoticeRequestDto(taxpayerNumber)
+            val result = retrieveSelectedUnpaidNoticeService.listSelectedUnpaidNotice(selectedRequest, username, request)
+                logger.trace { "Retrieved selected unpaid notice $result" }
 
-        val auth = SecurityContextHolder.getContext().authentication
-        val username= auth.name
-        val selectedRequest= OutSelectedNoticeRequestDto(taxpayerNumber)
-        val result = retrieveSelectedUnpaidNoticeService.listSelectedUnpaidNotice(selectedRequest, username, request)
-            logger.trace { "Retrieved selected unpaid notice $result" }
+    //        var billFeeDto :BillFeeDto?=null
+            val selectedNoticeList = result.result()
+            val noticeNumberList = mutableListOf<String>()
+            selectedNoticeList.forEach { item ->
+                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
+                noticeNumberList.add(item.noticeNumber!!)
+            }
+            val billFeeDto = calculateFeeNoticeService.calculateFeeNotice(noticeNumberList)
+            billFeeDto.number = selectedNoticeList.size
 
-//        var billFeeDto :BillFeeDto?=null
-        val selectedNoticeList = result.result()
-        val noticeNumberList = mutableListOf<String>()
-        selectedNoticeList.forEach { item ->
-            item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-            item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
-            noticeNumberList.add(item.noticeNumber!!)
+            val accountList = accountBankService.findByUser(username)
+
+            val modelAndView = ModelAndView()
+            errorMessage?.let {
+                modelAndView.addObject("errorMessage", errorMessage)
+            }
+
+            modelAndView.addObject("username", auth.name)
+            modelAndView.addObject("message", "app.payment.bill.choose.account")
+            modelAndView.addObject("selectedBills", selectedNoticeList)
+            modelAndView.addObject("billFee", billFeeDto)
+            modelAndView.addObject("accountList", accountList)
+
+            val billFeeAct = BillPaymentNoticeModel(otp = null, accountNumber = null, selectedBills = selectedNoticeList, billFee = billFeeDto,
+                    taxpayerNumber = taxpayerNumber)
+            modelAndView.addObject("BillPayment", billFeeAct)
+            request.session.setAttribute(username+"_billPayInfo", billFeeAct)
+            // menu highlight
+            modelAndView.addObject("parentMenuHighlight", "notices-index")
+            modelAndView.addObject("menuHighlight", "notices-list")
+            modelAndView.viewName = "portal/bill-select-account"
+            return modelAndView
+        }catch (ex: Exception){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/retrieve-selected-customer-form?errorMessage=admin.system.error")
         }
-        val billFeeDto = calculateFeeNoticeService.calculateFeeNotice(noticeNumberList)
-        billFeeDto.number = selectedNoticeList.size
-
-        val accountList = accountBankService.findByUser(username)
-
-        val modelAndView = ModelAndView()
-        errorMessage?.let {
-            modelAndView.addObject("errorMessage", errorMessage)
-        }
-
-        modelAndView.addObject("username", auth.name)
-        modelAndView.addObject("message", "app.payment.bill.choose.account")
-        modelAndView.addObject("selectedBills", selectedNoticeList)
-        modelAndView.addObject("billFee", billFeeDto)
-        modelAndView.addObject("accountList", accountList)
-
-        val billFeeAct = BillPaymentNoticeModel(otp = null, accountNumber = null, selectedBills = selectedNoticeList, billFee = billFeeDto,
-                taxpayerNumber = taxpayerNumber)
-        modelAndView.addObject("BillPayment", billFeeAct)
-        request.session.setAttribute(username+"_billPayInfo", billFeeAct)
-        // menu highlight
-        modelAndView.addObject("parentMenuHighlight", "notices-index")
-        modelAndView.addObject("menuHighlight", "notices-list")
-        modelAndView.viewName = "portal/bill-select-account"
-        return modelAndView
 
     }
 
@@ -99,7 +102,6 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
 
         if(taxpayerNumber.isBlank() || taxpayerNumber.isEmpty())
             return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
-
 
         val auth = SecurityContextHolder.getContext().authentication
         val username= auth.name
