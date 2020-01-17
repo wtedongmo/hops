@@ -35,8 +35,8 @@
             <section class="content">
 
                 <div class="box box-info">
-                    <div th:if="${errorMessage}" th:text="#{__${errorMessage}__}" style="color:red"/>
-                    <div th:if="${message}" th:text="#{__${message}__}" style="color:green"/>
+                    <div th:if="${errorMessage}"  th:text="#{__${errorMessage}__}" class="alert alert-warning"/>
+                    <div th:if="${message}" th:text="#{__${message}__}" class="alert alert-info"/>
                     <form class="form-horizontal" th:action="@{/portal/list-unpaid-customs}" th:object="${unpaidNoticeForm}" th:method="post">
                         <div class="box-body no-padding">
                             <div class="row no-margin">

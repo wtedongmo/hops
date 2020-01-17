@@ -1,5 +1,6 @@
 package com.afsoltech.kops.service.integration
 
+import com.afsoltech.core.entity.cap.temp.PäymentResultCode
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.kops.core.model.notice.NoticeRequestDto
@@ -59,10 +60,13 @@ class ListPaidNoticeService(
             val responce = restTemplate.exchange(listPaidNoticeURL, HttpMethod.POST, entity,
                     object : ParameterizedTypeReference<NoticeResponses<NoticeResponseDto>>() {})
 
-            var responses = responce.body ?: throw BadRequestException("Error.Parameter.Value")
-            logger.trace{"List of Paid Notice \n $responses"}
+            var result = responce.body ?: throw BadRequestException("Error.Parameter.Value")
+            logger.trace{"List of Paid Notice \n $result"}
 
-            return responses
+            if(!result.resultCode!!.equals(PäymentResultCode.S.name)){
+                throw BadRequestException(result.resultMsg)
+            }
+            return result
         }
          throw UnauthorizedException("Error.Payment.Parameter.ApiKey.NotFound")
     }

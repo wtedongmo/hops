@@ -1,5 +1,6 @@
 package com.afsoltech.epayment.service
 
+import com.afsoltech.core.entity.cap.temp.PäymentResultCode
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.exception.UnauthorizedException
@@ -50,6 +51,7 @@ class VentilationService (val restTemplate: RestTemplate, val paymentRepository:
 
         val httpStatus = response.statusCode
         val responseVent = response.body
+
         if (!httpStatus.toString().startsWith("2") || responseVent == null) {
             payment.paymentStatus = PaymentStatus.VENTIL_ERROR
             paymentRepository.save(payment)
@@ -57,6 +59,10 @@ class VentilationService (val restTemplate: RestTemplate, val paymentRepository:
                 throw RestException(httpStatus, httpStatus.reasonPhrase)
             if (responseVent == null)
                 throw BadRequestException("Error.Payment.Ventil.Error")
+        }
+
+        if(!responseVent?.resultCode!!.equals(PäymentResultCode.S.name)){
+            throw BadRequestException(responseVent.resultMessage)
         }
         payment.ventilationStatus = ventilationRequest.ventilationStatus
         payment.ventilationMessage = ventilationRequest.ventilationMessage

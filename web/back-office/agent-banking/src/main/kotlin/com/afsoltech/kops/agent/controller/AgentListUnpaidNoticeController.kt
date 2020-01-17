@@ -67,7 +67,7 @@ class AgentListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNot
             modelAndView.addObject("UnpaidNotice", listUnPaidNotice)
         }catch (ex: Exception){
             logger.error(ex.message, ex)
-            return ModelAndView("redirect:/agent-banking/list-unpaid-customs?errorMessage=admin.system.error")
+            return ModelAndView("redirect:/agent-banking/list-unpaid-customs?errorMessage="+(ex.message ?:"admin.system.error"))
         }
 
         modelAndView.addObject("parentMenuHighlight", "notices-index")

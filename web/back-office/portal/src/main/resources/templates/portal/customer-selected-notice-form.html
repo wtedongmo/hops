@@ -35,7 +35,7 @@
 			<section class="content">
 
 				<div class="box box-info">
-					<div th:if="${errorMessage}" th:text="#{__${errorMessage}__}" style="color:red"/>
+					<div th:if="${errorMessage}"  th:text="#{__${errorMessage}__}" class="alert alert-warning"/>
 					<div th:if="${message}" th:text="#{__${message}__}" style="color:green"/>
 
 					<form class="form-horizontal" th:action="@{/portal/retrieve-selected-customs}" th:method="post">

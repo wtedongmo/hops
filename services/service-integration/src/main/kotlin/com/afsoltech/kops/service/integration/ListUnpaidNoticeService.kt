@@ -1,5 +1,6 @@
 package com.afsoltech.kops.service.integration
 
+import com.afsoltech.core.entity.cap.temp.PäymentResultCode
 import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.exception.UnauthorizedException
 import com.afsoltech.kops.core.model.notice.NoticeResponses
@@ -71,6 +72,10 @@ class ListUnpaidNoticeService(
 
             var result = responce.body ?: throw BadRequestException("Error.Parameter.Value")
             logger.trace { "List of UnPaid Notice \n $result" }
+
+            if(!result.resultCode!!.equals(PäymentResultCode.S.name)){
+                throw BadRequestException(result.resultMsg)
+            }
 
             val listUnpaidNotice = result.result()
             listUnpaidNotice.forEach { notice ->

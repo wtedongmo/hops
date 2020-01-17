@@ -35,7 +35,7 @@
             <section class="content">
 
                 <div class="box box-info">
-                    <div th:if="${errorMessage}" th:text="#{__${errorMessage}__}" style="color:red"/>
+                    <div th:if="${errorMessage}"  th:text="#{__${errorMessage}__}" class="alert alert-warning"/>
                     <form class="form-horizontal" th:action="@{/agent-banking/list-paid-customs}" th:object="${paidNoticeForm}" th:method="post">
                         <div class="box-body no-padding">
                             <div class="row no-margin">
@@ -81,7 +81,7 @@
                                             </label>
                                         </cmm-label>
                                         <div class="input-group col-sm-8">
-                                            <cmm-textinput><input class="form-control" th:field="*{taxpayerNumber}" type="text"  placeholder="" style="height: 26px;" />
+                                            <cmm-textinput><input class="form-control" th:field="*{taxpayerNumber}" type="text" required="true" placeholder="" style="height: 26px;" />
                                             </cmm-textinput>
                                         </div>
                                     </div>

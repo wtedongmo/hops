@@ -16,7 +16,8 @@ class AgentListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeSer
     companion object : KLogging()
 
     @GetMapping
-    fun paidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?, request: HttpServletRequest): ModelAndView {
+    fun paidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?,
+                       @RequestParam(value = "errorMessage", required = false) errorMessage: String?, request: HttpServletRequest): ModelAndView {
 
         val model = ModelAndView()
 
@@ -25,6 +26,9 @@ class AgentListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeSer
 //        model.addObject("noticesError", "error")
         error?.let {
             if (error) model.addObject("errorMessage", "bad.informations.provided")
+        }
+        errorMessage?.let {
+            model.addObject("errorMessage", errorMessage)
         }
 //        logger.info("username: " + auth.name)
         model.addObject("username", auth.name)
@@ -65,7 +69,7 @@ class AgentListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeSer
             modelAndView.addObject("PaidNotice", listPaidNotice?: emptyList<NoticeResponseDto>())
         }catch (ex: Exception){
             logger.error(ex.message, ex)
-            return ModelAndView("redirect:/agent-banking/list-paid-customs?errorMessage=admin.system.error")
+            return ModelAndView("redirect:/agent-banking/list-paid-customs?errorMessage="+(ex.message ?:"admin.system.error"))
         }
 
         modelAndView.addObject("parentMenuHighlight", "notices-index")
