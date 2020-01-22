@@ -40,10 +40,10 @@ class ListPaidNoticeService(
 
 //       var paymentNoticeRequest= OutboundNoticeRequestDto(
 //                noticeRequest.noticeNumber,
-//               StringDateFormaterUtils.DateToString.format(noticeRequest.notificationDate),
+//               StringDateFormatterUtils.DateToString.format(noticeRequest.notificationDate),
 //                noticeRequest.taxpayerNumber,
 //                noticeRequest.taxpayerRepresentativeNumber,
-//               StringDateFormaterUtils.DateToString.format(noticeRequest.paymentDate)
+//               StringDateFormatterUtils.DateToString.format(noticeRequest.paymentDate)
 //        )
 
 //        val inboundParticipant = checkParticipantAPIRequest.checkAPIRequest(request)

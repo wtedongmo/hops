@@ -1,8 +1,9 @@
 package com.afsoltech.core.controller
 
 import com.afsoltech.core.exception.NotFoundException
+import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.service.cap.AccountBankService
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.model.BillPaymentNoticeModel
 import com.afsoltech.hops.core.model.integration.OutSelectedNoticeRequestDto
 import com.afsoltech.hops.service.integration.RetrieveSelectedUnpaidNoticeService
@@ -38,8 +39,8 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
             val selectedNoticeList = result.result()
             val noticeNumberList = mutableListOf<String>()
             selectedNoticeList.forEach { item ->
-                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-                item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
+                item.notificationDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.dueDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.dueDate)
                 noticeNumberList.add(item.noticeNumber!!)
             }
             val billFeeDto = calculateFeeNoticeService.calculateFeeNotice(noticeNumberList)
@@ -67,6 +68,9 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
             modelAndView.addObject("menuHighlight", "notices-list")
             modelAndView.viewName = "portal/bill-select-account"
             return modelAndView
+        }catch (ex: RestException){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/retrieve-selected-customer-form?errorMessage="+(ex.message?:""))
         }catch (ex: Exception){
             logger.error(ex.message, ex)
             return ModelAndView("redirect:/portal/retrieve-selected-customer-form?errorMessage=admin.system.error")

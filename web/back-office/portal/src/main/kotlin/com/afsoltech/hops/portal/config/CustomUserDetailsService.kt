@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
+import java.time.Instant
 
 import java.util.Arrays
 
@@ -72,8 +72,8 @@ class CustomUserDetailsService { //: UserDetailsService
         var isBlocked = false
 
         if (user.loginAttempts != null) {
-            if (user.loginAttempts!! > DEFAULT_ATTEMPT_NUMBER && checkNotNull(user.lastLoginAttempt?.plusMinutes(DEFAULT_ATTEMPT_TIME.toLong())?.
-                            isAfter(LocalDateTime.now()))) {
+            if (user.loginAttempts!! > DEFAULT_ATTEMPT_NUMBER && checkNotNull(user.lastLoginAttempt?.plusSeconds(DEFAULT_ATTEMPT_TIME.toLong())?.
+                            isAfter(Instant.now()))) {
                 isBlocked = true
             }
         }
@@ -93,7 +93,7 @@ class CustomUserDetailsService { //: UserDetailsService
 //    @Transactional
     fun saveLoginAttempts(user: UserApp, loginAttempt: Int) {
         user.loginAttempts = loginAttempt
-        user.lastLoginAttempt = LocalDateTime.now()
+        user.lastLoginAttempt = Instant.now()
 
         userRepository!!.save(user)
     }
@@ -119,7 +119,7 @@ class CustomUserDetailsService { //: UserDetailsService
         return bCryptPasswordEncoder.matches(enteredPlainPassword, dbEncryptedPassword)
     }
 
-    private fun isAccountNonExpired(expiredDate: LocalDateTime): Boolean {
-        return !expiredDate.isBefore(LocalDateTime.now())
+    private fun isAccountNonExpired(expiredDate: Instant): Boolean {
+        return !expiredDate.isBefore(Instant.now())
     }
 }

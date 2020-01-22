@@ -1,10 +1,11 @@
 package com.afsoltech.core.controller
 
+import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.model.attribute.RequestType
 import com.afsoltech.core.service.cap.AccountBankService
 import com.afsoltech.core.service.user.OTPService
 import com.afsoltech.core.service.utils.LoadSettingDataToMap
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.hops.core.model.BillPaymentNoticeModel
 import com.afsoltech.hops.core.model.BillPaymentResumeDto
@@ -71,7 +72,7 @@ class ValidPaymentBillOtpController(val hopsPaymentOfNoticeService: HopsPaymentO
                         bankAgency = account.accountAgency, accountNumber = account.accountNumber,
                         accountName = account.accountName, transactionNumber = paymentResp.bankPaymentNumber,
                         camcisPaymentNumber = paymentResp.camcisPaymentNumber,
-                        paymentDate =  StringDateFormaterUtils.ParsePaymentDate.formatDateTime(paymentResp.paymentDate!!))
+                        paymentDate =  StringDateFormatterUtils.ParsePaymentDate.formatDateTime(paymentResp.paymentDate!!, LoadSettingDataToMap.timeZoneId))
 
             //Build model and view for response
             val modelAndView = ModelAndView()
@@ -91,10 +92,13 @@ class ValidPaymentBillOtpController(val hopsPaymentOfNoticeService: HopsPaymentO
             modelAndView.addObject("menuHighlight", "notices-list")
             modelAndView.viewName = "portal/bill-payment-receipt"
             return modelAndView
+        }catch (ex: RestException){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/list-unpaid-customs?errorMessage="+(ex.message?:""))
         }catch (ex: Exception){
             logger.error { ex.message+"\n"+ ex.printStackTrace()}
             return ModelAndView("redirect:/portal/payment-bill-bad-otp/${billFeeActSession.taxpayerNumber}?errorMessage=" +
-                    "${ex.message?:"Null Exception found"}");
+                    "admin.system.error");
         }
 
     }

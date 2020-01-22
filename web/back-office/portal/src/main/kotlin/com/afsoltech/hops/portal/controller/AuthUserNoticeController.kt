@@ -1,5 +1,6 @@
 package com.afsoltech.core.controller
 
+import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.model.attribute.RequestType
 import com.afsoltech.core.service.user.OTPService
 import com.afsoltech.core.util.enforce
@@ -9,7 +10,9 @@ import com.afsoltech.hops.core.model.notice.AuthRequestDto
 import com.afsoltech.hops.service.integration.CheckUserInfoService
 import com.afsoltech.core.model.attribute.AuthUserCustomsDto
 import com.afsoltech.core.model.attribute.CustomsUserCategory
+import com.afsoltech.core.service.utils.TranslateUtils
 import mu.KLogging
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
@@ -21,6 +24,8 @@ import javax.servlet.http.HttpServletRequest
 class AuthUserNoticeController(val checkUserInfoService: CheckUserInfoService, val otpService: OTPService){
     companion object : KLogging()
 
+    @Autowired
+    lateinit var translateUtils: TranslateUtils
     @GetMapping("/", "/auth-customs-user")
     fun unPaidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?,
                          @RequestParam(value = "errorMessage", required = false) errorMessage: String?,
@@ -95,6 +100,9 @@ class AuthUserNoticeController(val checkUserInfoService: CheckUserInfoService, v
             }
             model.viewName = "redirect:/portal/auth-customs-user?errorMessage=${error?: "Null Exception found"}"
             return model
+        }catch (ex: RestException){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/auth-customs-user?errorMessage="+translateUtils.translate(ex.message?:""))
         }catch (ex: Exception){
             logger.error(ex.message, ex)
             return ModelAndView("redirect:/portal/auth-customs-user?errorMessage=admin.system.error")
@@ -148,6 +156,9 @@ class AuthUserNoticeController(val checkUserInfoService: CheckUserInfoService, v
             model.addObject("otpForm", OtpDto())
             model.viewName = "portal/auth-customs-otp-form"
             return model
+        }catch (ex: RestException){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/auth-customs-otp-form?errorMessage="+translateUtils.translate(ex.message?:""))
         }catch (ex: Exception){
             logger.error(ex.message, ex)
             return ModelAndView("redirect:/portal/auth-customs-otp-form?errorMessage=admin.system.error")

@@ -7,7 +7,7 @@
 //import com.afsoltech.epayment.service.ListPaidNoticeService
 //import com.afsoltech.epayment.service.ListUnpaidNoticeService
 //import com.afsoltech.epayment.service.PaymentProcessOfNoticesService
-//import com.afsoltech.epayment.service.utils.StringDateFormaterUtils
+//import com.afsoltech.epayment.service.utils.StringDateFormatterUtils
 //import mu.KLogging
 //import org.junit.Assert
 //import org.junit.Test
@@ -100,7 +100,7 @@
 ////        }
 ////        val payReq = PaymentProcessRequestDto("NNB012019030700005", "10001", null,
 ////                "M051200041474C", totalAmount.toBigDecimal(),
-////                StringDateFormaterUtils.StringToDateTime.parse("20190311091233"), "012456310248", null, "CARTE", listNotice)
+////                StringDateFormatterUtils.StringToDateTime.parse("20190311091233"), "012456310248", null, "CARTE", listNotice)
 ////        val result = paymentProcessService.paymentOfNoticeProcess(payReq)
 ////        Assert.assertNotNull(result)
 ////        logger.info { result }

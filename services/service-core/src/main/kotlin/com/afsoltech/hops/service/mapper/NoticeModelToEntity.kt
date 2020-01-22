@@ -2,7 +2,8 @@ package com.afsoltech.hops.service.mapper
 
 import com.afsoltech.core.entity.cap.Payment
 import com.afsoltech.core.entity.cap.temp.TempPayment
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.LoadSettingDataToMap
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.entity.customs.PaymentOfNotice
 import com.afsoltech.hops.core.entity.customs.temp.SelectedNotice
 import com.afsoltech.hops.core.entity.customs.temp.SelectedNoticeBeneficiary
@@ -21,7 +22,7 @@ class NoticeModelToEntity {
             val entity = SelectedNotice(
                     remoteNoticeId = model.noticeId,
                     noticeNumber = model.noticeNumber,
-                    notificationDate = StringDateFormaterUtils.StringToDate.parse(model.notificationDate),
+                    notificationDate = StringDateFormatterUtils.StringToDate.parse(model.notificationDate),
                     noticeType = model.noticeType,
                     referenceNumber = model.referenceNumber,
                     taxpayerNumber = model.taxPayerNumber,
@@ -30,7 +31,7 @@ class NoticeModelToEntity {
                     cdaCode = model.taxPayerRepresentativeCode,
                     cdaName = model.taxPayerRepresentativeName,
                     issuerOffice = model.issuerOffice,
-                    dueDate = StringDateFormaterUtils.StringToDate.parse(model.dueDate),
+                    dueDate = StringDateFormatterUtils.StringToDate.parse(model.dueDate),
                     amount = model.noticeAmount
             )
             return entity
@@ -78,7 +79,7 @@ class NoticeModelToEntity {
 
     object PaymentProcessToEntity {
         fun from(model: PaymentProcessRequestDto, tempPayment: TempPayment):  Payment {
-            var payDateTime = StringDateFormaterUtils.ParsePaymentDate.parse(model.paymentDate)
+            var payDateTime = StringDateFormatterUtils.ParsePaymentDate.parse(model.paymentDate, LoadSettingDataToMap.timeZoneId)
             val entity = Payment(
                     paymentNumber = tempPayment.internalPaymentNumber,
                     bankCode = tempPayment.bankCode,

@@ -13,7 +13,7 @@
 //import com.afsoltech.epayment.portal.controller.PortalListUnpaidNoticeController
 //import com.afsoltech.epayment.portal.service.PortalCheckUserInfosService
 //import com.afsoltech.epayment.repository.OutboundNoticeRepository
-//import com.afsoltech.epayment.service.utils.StringDateFormaterUtils
+//import com.afsoltech.epayment.service.utils.StringDateFormatterUtils
 //import mu.KLogging
 //import org.junit.Assert
 //import org.junit.Test
@@ -71,7 +71,7 @@
 //                customs!!.noticeAmount!!))
 //        val payReq = PaymentProcessRequestDto("N000120190307000070", "10001", null,
 //                "M051200041474C", customs!!.noticeAmount!!,
-//                StringDateFormaterUtils.StringToDateTime.parse("20190311091233"), "012456310248", null, "CARTE", listNotice)
+//                StringDateFormatterUtils.StringToDateTime.parse("20190311091233"), "012456310248", null, "CARTE", listNotice)
 //        val result = paymentOfNoticeController.paymentOfNoticeProcess(payReq)
 //        Assert.assertNotNull(result)
 //        TestEPaymentService.logger.info { result }

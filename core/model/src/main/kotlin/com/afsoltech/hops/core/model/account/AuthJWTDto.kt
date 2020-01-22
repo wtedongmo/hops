@@ -2,7 +2,7 @@ package com.afsoltech.hops.core.model.account
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import java.time.LocalDateTime
+import java.time.Instant
 
 data class AuthJWTRequestDto(
         val identifierType:String,

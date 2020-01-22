@@ -14,7 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
+import java.time.Instant
 
 @Component
 class BackOfficePortalAuthenticationProvider(val userRepository: UserAppRepository) : AuthenticationProvider {
@@ -60,8 +60,8 @@ class BackOfficePortalAuthenticationProvider(val userRepository: UserAppReposito
         var isBlocked = false
 
         if (user.loginAttempts != null) {
-            if (user.loginAttempts!! > DEFAULT_ATTEMPT_NUMBER && checkNotNull(user.lastLoginAttempt?.plusMinutes(DEFAULT_ATTEMPT_TIME.toLong())?.
-                            isAfter(LocalDateTime.now()))) {
+            if (user.loginAttempts!! > DEFAULT_ATTEMPT_NUMBER && checkNotNull(user.lastLoginAttempt?.plusSeconds(DEFAULT_ATTEMPT_TIME.toLong())?.
+                            isAfter(Instant.now()))) {
                 isBlocked = true
             }
         }
@@ -81,7 +81,7 @@ class BackOfficePortalAuthenticationProvider(val userRepository: UserAppReposito
     @Transactional
     fun saveLoginAttempts(user: UserApp, loginAttempt: Int) {
         user.loginAttempts = loginAttempt
-        user.lastLoginAttempt = LocalDateTime.now()
+        user.lastLoginAttempt = Instant.now()
 
         userRepository.save(user)
     }
@@ -111,7 +111,7 @@ class BackOfficePortalAuthenticationProvider(val userRepository: UserAppReposito
         return checkNotNull(p0?.equals(UsernamePasswordAuthenticationToken::class.java))
     }
 
-    private fun isAccountNonExpired(expiredDate: LocalDateTime?): Boolean {
-        return expiredDate?.isAfter(LocalDateTime.now())?:true
+    private fun isAccountNonExpired(expiredDate: Instant?): Boolean {
+        return expiredDate?.isAfter(Instant.now())?:true
     }
 }

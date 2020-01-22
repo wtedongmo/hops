@@ -7,7 +7,7 @@ import com.afsoltech.core.model.attribute.PaymentStatus
 import com.afsoltech.core.repository.cap.PaymentRepository
 import com.afsoltech.core.repository.user.UserAppRepository
 import com.afsoltech.core.service.utils.LoadSettingDataToMap
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.entity.customs.NoticeBeneficiary
 import com.afsoltech.hops.core.model.InitPaymentRequestDto
 import com.afsoltech.hops.core.model.notice.NoticeRequestDto
@@ -29,6 +29,7 @@ import com.afsoltech.hops.core.model.AskBankAuthPaymentResponseDto
 import mu.KLogging
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
@@ -72,7 +73,7 @@ class HopsPaymentOfNoticeService(val userAppRepository: UserAppRepository,
 
             val random = Random()
             val authCode = 10000000 + random.nextInt(90000000)
-            val txDate = StringDateFormaterUtils.DateTimeToString.format(tempPayment.paymentDate)
+            val txDate = StringDateFormatterUtils.DateTimeToString.format(tempPayment.paymentDate)
             val askBankPaymentAuth = AskBankAuthPaymentResponseDto(PäymentResultCode.S.name, "Success",
                     AskBankAuthPaymentRespDataDto(opCode=tempPayment.operationCode!!, acntNo = tempPayment.payerAccountNumber!!,
                     providerCode = tempPayment.providerCode!!, customerNo = tempPayment.customerNumber!!, trxRefNo = tempPayment.internalPaymentNumber!!,
@@ -99,7 +100,7 @@ class HopsPaymentOfNoticeService(val userAppRepository: UserAppRepository,
 
                     tempPayment.bankAuthNumber = askBankPaymentAuth.resultData?.authCd
 
-                    val txDate = StringDateFormaterUtils.DateTimeToString.format(tempPayment.paymentDate)!!
+                    val txDate = StringDateFormatterUtils.DateTimeToString.format(tempPayment.paymentDate)!!
                     val paymentRequest = PaymentProcessRequestDto(bankPaymentNumber = tempPayment.internalPaymentNumber!!, bankCode = tempPayment.bankCode!!,
                             bankName = tempPayment.bankName, taxpayerNumber = tempPayment.customerNumber!!, totalAmount = tempPayment.amount!!, paymentDate = txDate,
                             accountNumber = tempPayment.payerAccountNumber!!, accountName = tempPayment.payerAccountName, paymentMethod = tempPayment.paymentMode!!,
@@ -108,7 +109,7 @@ class HopsPaymentOfNoticeService(val userAppRepository: UserAppRepository,
                     val response  = paymentOfSelectedNoticesService.paymentOfSelectedNotice(tempPayment, paymentRequest)
 
                     val paidNoticeRequest = NoticeRequestDto(taxpayerNumber = tempPayment.customerNumber,
-                            paymentDate = StringDateFormaterUtils.DateToString.format(LocalDate.now()))
+                            paymentDate = StringDateFormatterUtils.DateToString.format(LocalDate.now(ZoneId.of(LoadSettingDataToMap.timeZoneId))))
 
                     checkNumberApp = LoadSettingDataToMap.settingMap.get("app.payment.notice.check.number")?.value?.toInt()?: 5
                     sleepMillis = LoadSettingDataToMap.settingMap.get("app.payment.notice.check.sleep.millis")?.value?.toLong()?: 3000

@@ -3,7 +3,7 @@
 //import com.afsoltech.EPaymentRestApp
 //import com.afsoltech.epayment.model.inbound.*
 //import com.afsoltech.epayment.repository.OutboundNoticeRepository
-//import com.afsoltech.epayment.service.utils.StringDateFormaterUtils
+//import com.afsoltech.epayment.service.utils.StringDateFormatterUtils
 //import mu.KLogging
 //import org.junit.Assert
 //import org.junit.Test
@@ -80,7 +80,7 @@
 //        val payReq = PaymentProcessRequestDto("N000120190307000109", "10001", null,
 //                notice!!.taxPayerNumber!!, /*BigDecimal("22579139")*/ notice!!.noticeAmount!!,
 //                "20190429091233", "012456310248", null, "CARD", listNotice)
-//        //StringDateFormaterUtils.StringToDateTime.parse(
+//        //StringDateFormatterUtils.StringToDateTime.parse(
 //        val entity2 = HttpEntity(payReq, headers)
 //        val response = testRestTemplate.postForEntity("/api/v1/epayment/payment-of-customs",
 //                entity2, PaymentProcessResponseDto::class.java) //HttpMethod.POST,

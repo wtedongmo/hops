@@ -1,32 +1,33 @@
 package com.afsoltech.config
 
-import com.afsoltech.util.rest.config.AbstractRestConfig
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
+import springfox.documentation.swagger2.annotations.EnableSwagger2
 
+@EnableSwagger2
 @Configuration
-class HopsSwaggerConfig : AbstractRestConfig() {
+class HopsSwaggerConfig  {
 
         @Value("\${api.epayment.core.version}")
         var projectVersion : String = ""
 
-        override fun endpointBasePackage(): String {
+        fun endpointBasePackage(): String {
             return "com.afsoltech.epayment.core.web"
         }
 
-        override fun restProjectBaseUrl(): String {
+        fun restProjectBaseUrl(): String {
             return "/"
         }
 
-        override fun restProjectDescription(): String {
+        fun restProjectDescription(): String {
             return "epayment-core-web"
         }
 
-        override fun restProjectName(): String {
+        fun restProjectName(): String {
             return "epayment-core-web"
         }
 
-        override fun restProjectVersion(): String {
+        fun restProjectVersion(): String {
             return "v$projectVersion"
         }
 

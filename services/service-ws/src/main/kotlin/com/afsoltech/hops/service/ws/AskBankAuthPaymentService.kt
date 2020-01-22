@@ -9,7 +9,7 @@ import com.afsoltech.core.repository.cap.temp.TempPaymentRepository
 import com.afsoltech.hops.core.model.AskBankAuthPaymentRequestDto
 import com.afsoltech.hops.core.model.AskBankAuthPaymentResponseDto
 import com.afsoltech.core.service.utils.LoadSettingDataToMap
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -37,7 +37,7 @@ class AskBankAuthPaymentService(val restTemplate: RestTemplate) {
     @Synchronized
     fun askBankAuthPayment(user: UserApp, tempPayment: TempPayment) : AskBankAuthPaymentResponseDto { //:Boolean
 
-        val txDate = StringDateFormaterUtils.DateTimeToString.format(tempPayment.paymentDate)
+        val txDate = StringDateFormatterUtils.DateTimeToString.format(tempPayment.paymentDate)
         val askBankPaymentRequestDto = AskBankAuthPaymentRequestDto(opCode=tempPayment.operationCode!!, acntNo = tempPayment.payerAccountNumber!!,
                 providerCode = tempPayment.providerCode!!, customerNo = tempPayment.customerNumber!!, trxRefNo = tempPayment.internalPaymentNumber!!,
                 trxDt = txDate!!, amount = tempPayment.amount!!, fee = tempPayment.feeAmount!!, totalAmount = tempPayment.totalAmount!!,

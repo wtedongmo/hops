@@ -1,6 +1,6 @@
 package com.afsoltech.hops.agent.controller
 
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.hops.service.integration.ListUnpaidNoticeService
 import mu.KLogging
@@ -60,8 +60,8 @@ class AgentListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNot
         try {
             val listUnPaidNotice = listUnpaidNoticeService.listUnpaidNotice(noticeRequest, null).result()
             listUnPaidNotice.forEach { item ->
-                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-                item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
+                item.notificationDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.dueDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.dueDate)
             }
             logger.trace {"UnPaid Notice List "+ listUnPaidNotice }
             modelAndView.addObject("UnpaidNotice", listUnPaidNotice)

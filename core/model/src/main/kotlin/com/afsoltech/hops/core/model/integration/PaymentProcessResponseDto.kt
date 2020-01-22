@@ -1,7 +1,7 @@
 package com.afsoltech.hops.core.model.integration
 
 import java.math.BigDecimal
-import java.time.LocalDateTime
+import java.time.Instant
 
 data class PaymentProcessResponseDto (
         val result: String? = null,
@@ -22,7 +22,7 @@ data class PaymentOfNoticeResponsesDto(
         val bankCode: String? = null,
         val taxpayerNumber: String? = null,
         val accountNumber: String? = null,
-        val paymentDate: LocalDateTime? = null,
+        val paymentDate: Instant? = null,
         val totalAmount: BigDecimal? = null,
         val resultMsg: String? = null
 //        val resultData: List<String>? = null

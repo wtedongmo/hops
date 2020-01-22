@@ -1,6 +1,6 @@
 package com.afsoltech.hops.agent.controller
 
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.model.notice.NoticeRequestDto
 import com.afsoltech.hops.core.model.notice.NoticeResponseDto
 import com.afsoltech.hops.service.integration.ListPaidNoticeService
@@ -62,8 +62,8 @@ class AgentListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeSer
         try {
             val listPaidNotice = listPaidNoticeService.listPaidNotice(noticeRequest).resultData
             listPaidNotice?.forEach { item ->
-                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-                item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
+                item.notificationDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.paymentDate = StringDateFormatterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
             }
             logger.trace {"Paid Notice List "+ listPaidNotice }
             modelAndView.addObject("PaidNotice", listPaidNotice?: emptyList<NoticeResponseDto>())

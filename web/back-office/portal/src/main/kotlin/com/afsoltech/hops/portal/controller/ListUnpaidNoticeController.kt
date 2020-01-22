@@ -1,11 +1,14 @@
 package com.afsoltech.core.controller
 
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.exception.RestException
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
+import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.hops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.hops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.hops.core.model.notice.AuthRequestDto
 import com.afsoltech.hops.service.integration.ListUnpaidNoticeService
 import mu.KLogging
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
@@ -18,6 +21,8 @@ class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeSe
 
 //    @Value("\${epayment.portal.link.code.toreplace}")
 //    lateinit var userNiuCode: String
+    @Autowired
+    lateinit var translateUtils: TranslateUtils
 
     @GetMapping
     fun unPaidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?,
@@ -55,7 +60,7 @@ class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeSe
 
 
     @PostMapping
-    fun retrieveListPaidNotice(@ModelAttribute("unpaidNoticeForm") portalRequest: UnpaidNoticeRequestDto, request: HttpServletRequest): ModelAndView { //
+    fun retrieveListUnPaidNotice(@ModelAttribute("unpaidNoticeForm") portalRequest: UnpaidNoticeRequestDto, request: HttpServletRequest): ModelAndView { //
 
         try{
             val authCustoms = request.getSession().getAttribute("Auth_Customs") as AuthRequestDto?
@@ -95,8 +100,8 @@ class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeSe
             }
 
             listUnPaidNotice.forEach { item ->
-                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-                item.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.dueDate)
+                item.notificationDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.dueDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.dueDate)
             }
             logger.trace {"UnPaid Notice List "+ listUnPaidNotice }
 
@@ -107,6 +112,9 @@ class ListUnpaidNoticeController(val listUnpaidNoticeService: ListUnpaidNoticeSe
             modelAndView.addObject("menuHighlight", "notices-unpaid")
             modelAndView.viewName = "portal/list-unpaid-customs"
             return modelAndView
+        }catch (ex: RestException){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/list-unpaid-customs?errorMessage="+translateUtils.translate(ex.message?:""))
         }catch (ex: Exception){
             logger.error(ex.message, ex)
             return ModelAndView("redirect:/portal/list-unpaid-customs?errorMessage=admin.system.error")

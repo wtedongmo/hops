@@ -1,11 +1,14 @@
 package com.afsoltech.core.controller
 
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.exception.RestException
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
+import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.hops.core.model.notice.AuthRequestDto
 import com.afsoltech.hops.core.model.notice.NoticeRequestDto
 import com.afsoltech.hops.core.model.notice.NoticeResponseDto
 import com.afsoltech.hops.service.integration.ListPaidNoticeService
 import mu.KLogging
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
@@ -15,6 +18,9 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/portal/list-paid-customs")
 class ListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeService){
     companion object : KLogging()
+
+    @Autowired
+    lateinit var translateUtils: TranslateUtils
 
     @GetMapping
     fun paidNoticeForm(@RequestParam(value = "error", required = false) error: Boolean?,
@@ -84,8 +90,8 @@ class ListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeService)
             }
 
             listPaidNotice.forEach { item ->
-                item.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(item.notificationDate)
-                item.paymentDate = StringDateFormaterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
+                item.notificationDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.notificationDate)
+                item.paymentDate = StringDateFormatterUtils.StringDateToDateFormat.formatPaidDate(item.paymentDate)
             }
             logger.trace {"Paid Notice List "+ listPaidNotice }
 
@@ -96,10 +102,15 @@ class ListPaidNoticeController(val listPaidNoticeService: ListPaidNoticeService)
             modelAndView.addObject("menuHighlight", "notices-paid")
             modelAndView.viewName = "portal/list-paid-customs"
             return modelAndView
+
+        }catch (ex: RestException){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/list-paid-customs?errorMessage="+translateUtils.translate(ex.message?:""))
         }catch (ex: Exception){
             logger.error(ex.message, ex)
             return ModelAndView("redirect:/portal/list-paid-customs?errorMessage=admin.system.error")
         }
+
     }
 
 

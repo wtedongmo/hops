@@ -7,18 +7,18 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = arrayOf("com.afsoltech"))
-class EPaymentRestApp{
+class HopsRestApp{
     companion object : KLogging()
 }
 
 fun main(args: Array<String>) {
-    println("loading epayment web Rest-core")
-    SpringApplication.run(EPaymentRestApp::class.java, *args)
+    println("loading hops web Rest-core")
+    SpringApplication.run(HopsRestApp::class.java, *args)
 
-//    val ctx = SpringApplicationBuilder(EPaymentRestApp::class.java).run()
+//    val ctx = SpringApplicationBuilder(HopsRestApp::class.java).run()
 //    val deleteServ = ctx.getBean(DeleteTemporaryNoticeService::class.java)
 //    deleteServ.deleteTemporaryUnpaidNotice()
 //    deleteServ.resetTemporaryUnpaidNoticeTable()
 
-    println("loaded  epayment web Rest-core")
+    println("loaded  hops web Rest-core")
 }

@@ -20,7 +20,7 @@
 //import org.springframework.web.util.ContentCachingRequestWrapper
 //import org.springframework.web.util.ContentCachingResponseWrapper
 //import java.nio.charset.Charset
-//import java.time.LocalDateTime
+//import java.time.Instant
 //import java.time.LocalTime
 //
 //@Component
@@ -55,7 +55,7 @@
 //    @Throws(ServletException::class, IOException::class)
 //    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
 //
-//        val start = LocalDateTime.now()
+//        val start = Instant.now()
 //        val startTime = System.currentTimeMillis()
 //        val sessionLog = SessionLog()
 //        sessionLog.startTime = LocalTime.now()

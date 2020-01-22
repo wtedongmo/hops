@@ -3,7 +3,7 @@ package com.afsoltech.hops.agent.controller
 import com.afsoltech.core.service.cap.AccountBankService
 import com.afsoltech.core.service.user.OTPService
 import com.afsoltech.core.service.utils.LoadSettingDataToMap
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.hops.core.model.BillPaymentNoticeModel
 import com.afsoltech.hops.core.model.BillPaymentResumeDto
@@ -70,7 +70,7 @@ class AgentValidPaymentBillOtpController(val hopsPaymentOfNoticeService: HopsPay
                         bankAgency = account.accountAgency, accountNumber = account.accountNumber,
                         accountName = account.accountName, transactionNumber = paymentResp.bankPaymentNumber,
                         camcisPaymentNumber = paymentResp.camcisPaymentNumber,
-                        paymentDate =  StringDateFormaterUtils.ParsePaymentDate.formatDateTime(paymentResp.paymentDate!!))
+                        paymentDate =  StringDateFormatterUtils.ParsePaymentDate.formatDateTime(paymentResp.paymentDate!!, LoadSettingDataToMap.timeZoneId))
 
             //Build model and view for response
             val modelAndView = ModelAndView()

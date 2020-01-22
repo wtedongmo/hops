@@ -1,7 +1,7 @@
 package com.afsoltech.hops.agent.controller
 
 import com.afsoltech.core.service.cap.AccountBankService
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.model.BillPaymentNoticeModel
 import com.afsoltech.hops.core.model.integration.UnpaidNoticeResponseDto
 import com.afsoltech.hops.service.integration.ListUnpaidNoticeService
@@ -40,8 +40,8 @@ class AgentSaveSelectedUnpaidNoticeController (val saveSelectedNoticeService: Sa
             var taxpayerNumber=""
             selectedNoticeList.forEach {notice ->
                 val noticeCache = ListUnpaidNoticeService.unpaidNoticeCache!!.get(notice.noticeNumber!!)
-                noticeCache.notificationDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.notificationDate)
-                noticeCache.dueDate = StringDateFormaterUtils.StringDateToDateFormat.format(noticeCache.dueDate)
+                noticeCache.notificationDate = StringDateFormatterUtils.StringDateToDateFormat.format(noticeCache.notificationDate)
+                noticeCache.dueDate = StringDateFormatterUtils.StringDateToDateFormat.format(noticeCache.dueDate)
                 selectedNotices.add(noticeCache)
 
                 if(taxpayerNumber.isEmpty())

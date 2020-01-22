@@ -7,7 +7,7 @@ import com.afsoltech.core.exception.BadRequestException
 import com.afsoltech.core.model.attribute.PaymentStatus
 import com.afsoltech.core.repository.cap.temp.TempPaymentRepository
 import com.afsoltech.core.service.utils.LoadSettingDataToMap
-import com.afsoltech.core.service.utils.StringDateFormaterUtils
+import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.model.*
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,7 +36,7 @@ class AskBankCancelPaymentService(val restTemplate: RestTemplate) {
     @Synchronized
     fun askBankCancelPayment(user: UserApp, tempPayment: TempPayment) : AskBankCancelPaymentResponseDto { //:Boolean
 
-        val txDate = StringDateFormaterUtils.DateTimeToString.format(tempPayment.paymentDate)
+        val txDate = StringDateFormatterUtils.DateTimeToString.format(tempPayment.paymentDate)
         val askBankCancelPaymentRequestDto = AskBankCancelPaymentRequestDto(opCode=tempPayment.operationCode!!, acntNo = tempPayment.payerAccountNumber!!,
                 providerCode = tempPayment.providerCode!!, customerNo = tempPayment.customerNumber!!, trxRefNo = tempPayment.internalPaymentNumber!!,
                 trxDt = txDate!!, amount = tempPayment.amount!!, fee = tempPayment.feeAmount!!, totalAmount = tempPayment.totalAmount!!,

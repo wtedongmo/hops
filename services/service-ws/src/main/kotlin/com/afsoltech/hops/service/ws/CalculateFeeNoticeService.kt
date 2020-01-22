@@ -84,7 +84,7 @@ class CalculateFeeNoticeService(val selectedNoticeRepository: SelectedNoticeRepo
 //        providerNoticeCode = LoadBaseDataToMap.settingMap.get("app.provider.notice.code")?.value?: ""
 
         var feeAmount = BigDecimal.ZERO
-        val providerOp = providerRepository.findOneByParticipantCode(LoadSettingDataToMap.providerNoticeCode)
+        val providerOp = providerRepository.findOneByCode(LoadSettingDataToMap.providerNoticeCode)
         if(providerOp.isPresent) {
             val provider = providerOp.get()
             val providerFeeList = providerFeeRepository.findByAmountIntervalAndProviderAndFeeType(totalAmount, provider.id!!,

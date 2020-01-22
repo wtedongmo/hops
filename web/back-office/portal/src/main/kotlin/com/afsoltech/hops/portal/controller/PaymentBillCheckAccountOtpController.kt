@@ -1,12 +1,15 @@
 package com.afsoltech.core.controller
 
 import com.afsoltech.core.exception.NotFoundException
+import com.afsoltech.core.exception.RestException
 import com.afsoltech.core.model.attribute.RequestType
 import com.afsoltech.core.service.user.OTPService
+import com.afsoltech.core.service.utils.TranslateUtils
 import com.afsoltech.hops.core.model.BillPaymentNoticeModel
 import com.afsoltech.hops.service.ws.AccountBalanceService
 
 import mu.KLogging
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
@@ -19,6 +22,9 @@ class PaymentBillCheckAccountOtpController(val accountBalanceService: AccountBal
 //    @Autowired
 //    @Qualifier(value = "errorMessageSource")
 //    lateinit var messageSource: MessageSource
+
+    @Autowired
+    lateinit var translateUtils: TranslateUtils
 
     @PostMapping("/portal/payment-bill-check-account")
     fun paymentBillCheckAccountOtpValid(@ModelAttribute("BillPayment") billFeeAct: BillPaymentNoticeModel,
@@ -63,10 +69,12 @@ class PaymentBillCheckAccountOtpController(val accountBalanceService: AccountBal
             modelAndView.addObject("menuHighlight", "notices-list")
             modelAndView.viewName = "portal/bill-resume-otp"
             return modelAndView
+        }catch (ex: RestException){
+            logger.error(ex.message, ex)
+            return ModelAndView("redirect:/portal/display-selected-customs/${billFeeActSession.taxpayerNumber}?errorMessage="+translateUtils.translate(ex.message?:""))
         }catch (ex: Exception){
             logger.error { ex.message+"\n"+ ex.printStackTrace()}
-            return ModelAndView("redirect:/portal/display-selected-customs/${billFeeActSession.taxpayerNumber}?errorMessage=" +
-                    "${ex.message}");
+            return ModelAndView("redirect:/portal/display-selected-customs/${billFeeActSession.taxpayerNumber}?errorMessage=admin.system.error");
         }
     }
 

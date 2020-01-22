@@ -7,7 +7,7 @@ import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.Instant
 import javax.persistence.*
 
 
@@ -64,7 +64,7 @@ data class Notice(
         var amount: BigDecimal? = null,
 
         @Column(name = "PAYMENT_DATE")
-        var paymentDate: LocalDateTime? = null,
+        var paymentDate: Instant? = null,
 
         @Column(name = "PAYMENT_AMOUNT")
         var paymentAmount: BigDecimal? = null,
@@ -90,13 +90,13 @@ data class Notice(
         var isReconciled: Boolean? = null,
 
         @Column(name = "RECONCILIATION_DATE")
-        var reconciliationDate: LocalDateTime? = null,
+        var reconciliationDate: Instant? = null,
 
         @Column(name = "REMOTE_PAIMENT_AMOUNT")
         var remotePaymentAmount: BigDecimal? = null,
 
         @Column(name = "REMOTE_PAIMENT_DATE")
-        var remotePaymentDate: LocalDateTime? = null,
+        var remotePaymentDate: Instant? = null,
 
         @Column(name = "REMOTE_PAIMENT_NUMBER")
         var remotePaymentNumber: String? = null,

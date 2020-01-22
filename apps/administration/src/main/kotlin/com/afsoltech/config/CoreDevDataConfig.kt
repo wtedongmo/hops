@@ -35,8 +35,8 @@ class CoreDevDataConfig {
         val providerL = Provider()
         providerL.let {
             it.id = 1
-            it.participantCode = "CUSTOMS"
-            it.participantName = "Cameroon Customs Information System ePayment"
+            it.code = "CUSTOMS"
+            it.name = "Cameroon Customs Information System ePayment"
             it.status = BaseStatus.ACTIVE
             it.providerKey = "4xZjMg3z3yMSAWKQ0sox2onUjZk8js9k"
             it.providerKeyPass = "APIKEY"

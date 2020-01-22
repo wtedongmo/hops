@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
+import java.time.Instant
 
 @Component
 class RunScheduledDeleteTask (val deleteNoticeService: DeleteTemporaryNoticeService) {
