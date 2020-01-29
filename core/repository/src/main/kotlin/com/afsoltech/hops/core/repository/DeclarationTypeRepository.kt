@@ -5,5 +5,5 @@ import com.afsoltech.core.repository.base.BaseRepository
 import com.afsoltech.hops.core.entity.customs.DeclarationType
 
 interface DeclarationTypeRepository: BaseRepository<DeclarationType, Long> {
-    fun findByStatus(status: BaseStatus) : List<DeclarationType>
+//    fun findByStatus(status: BaseStatus) : List<DeclarationType>
 }

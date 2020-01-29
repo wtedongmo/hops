@@ -7,5 +7,5 @@ import com.afsoltech.hops.core.entity.customs.NoticeType
 
 interface NoticeTypeRepository: BaseRepository<NoticeType, Long> {
 
-    fun findByStatus(status: BaseStatus): List<NoticeType>
+//    fun findByStatus(status: BaseStatus): List<NoticeType>
 }

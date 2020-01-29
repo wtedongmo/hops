@@ -6,5 +6,5 @@ import com.afsoltech.hops.core.entity.customs.Beneficiary
 
 interface BeneficiaryRepository: BaseRepository<Beneficiary, Long> {
 
-    fun findByStatus(status: BaseStatus) : List<Beneficiary>
+//    fun findByStatus(status: BaseStatus) : List<Beneficiary>
 }

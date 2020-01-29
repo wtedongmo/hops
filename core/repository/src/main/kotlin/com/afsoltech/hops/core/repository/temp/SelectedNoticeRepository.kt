@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param
 import java.time.Instant
 
 interface SelectedNoticeRepository: BaseRepository<SelectedNotice, Long> {
-    fun findByStatus(status: BaseStatus) : List<SelectedNotice>
+//    fun findByStatus(status: BaseStatus) : List<SelectedNotice>
 
     fun findByNoticeNumber(noticeNumber: String) : List<SelectedNotice>
     fun findByUserLogin(userLogin: String) : List<SelectedNotice>

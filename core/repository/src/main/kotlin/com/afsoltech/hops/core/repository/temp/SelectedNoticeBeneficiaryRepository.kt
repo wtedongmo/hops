@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface SelectedNoticeBeneficiaryRepository: BaseRepository<SelectedNoticeBeneficiary, Long> {
-    fun findByStatus(status: BaseStatus) : List<SelectedNoticeBeneficiary>
+//    fun findByStatus(status: BaseStatus) : List<SelectedNoticeBeneficiary>
 
     @Query("select n from SelectedNoticeBeneficiary n where n.selectedNotice.id in :noticeIdList")
     fun findBySelectedNoticeList(@Param("noticeIdList") noticeIdList: List<Long>) : List<SelectedNoticeBeneficiary>
