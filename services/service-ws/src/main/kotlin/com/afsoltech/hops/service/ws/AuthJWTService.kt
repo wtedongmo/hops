@@ -36,7 +36,7 @@ class AuthJWTService(val env: Environment, val restTemplate: RestTemplate) {
 //    @Value("\${app.bank.default.device.type}")
     private var defaultDeviceType: String=""
 
-//    @Value("\${app.session.jwt.duration.expiry.second:180}")
+//    @Value("\${app.session.role.duration.expiry.second:180}")
 //    private var expiryTimeSeconds: Long=180
 
     init{

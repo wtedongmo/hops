@@ -21,7 +21,7 @@ import java.time.Instant
 
 import java.util.Arrays
 
-//@Service
+//@Services
 class CustomUserDetailsService { //: UserDetailsService
 
 //    @Autowired

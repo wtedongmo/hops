@@ -10,7 +10,7 @@
 //import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 //import org.springframework.context.annotation.Bean
 //import org.springframework.context.annotation.Configuration
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+//import org.springframework.role.crypto.bcrypt.BCryptPasswordEncoder
 //
 //@ConditionalOnProperty(name = ["spring.jpa.hibernate.ddl-auto"], havingValue = "create")
 //@Configuration

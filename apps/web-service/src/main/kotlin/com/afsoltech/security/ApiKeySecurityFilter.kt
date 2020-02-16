@@ -1,4 +1,4 @@
-//package com.afsoltech.security
+//package com.afsoltech.role
 //
 //import com.afsoltech.epayment.repository.InboundParticipantRepository
 //import com.afsoltech.util.rest.error.ForbiddenException

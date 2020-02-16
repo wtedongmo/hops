@@ -1,7 +1,7 @@
 package com.afsoltech.config
 
-import com.afsoltech.core.entity.security.Menu
-import com.afsoltech.core.entity.security.Rubric
+import com.afsoltech.core.entity.role.Menu
+import com.afsoltech.core.entity.role.Rubric
 import com.afsoltech.core.model.attribute.BaseStatus
 import com.afsoltech.core.repository.security.MenuRepository
 import com.afsoltech.core.repository.security.RubricRepository
@@ -9,7 +9,6 @@ import mu.KLogging
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
@@ -49,7 +48,7 @@ class CreateRubric(val requestMappingHandlerMapping: RequestMappingHandlerMappin
             logger.trace { "$key ==== ${value.beanType.`package`.name}" }
             if(key.methodsCondition.methods.contains(RequestMethod.GET) && (value.beanType.`package`.name.contains("administration", true))){
                 key.name?.let{name ->
-                    val boolMenu= value.beanType.`package`.name.contains("security", true)
+                    val boolMenu= value.beanType.`package`.name.contains("role", true)
                     val code: String
                     if(name.contains(' ') || name.contains('_')){
                         val tabs = if(name.contains(' ')) name.split(' ') else name.split('_')

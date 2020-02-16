@@ -34,7 +34,7 @@ class SaveSelectedUnpaidNoticeController (val saveSelectedNoticeService: SaveSel
 
             logger.info("\nUser: $username; Selected Notices: $selectedNoticeNumberList" )
 
-            //Call Service to save selected Notices
+            //Call Services to save selected Notices
             if(selectedNoticeNumberList.isNullOrEmpty()){
                 return ModelAndView("redirect:/portal/list-unpaid-customs?error=true");
             }

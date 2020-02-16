@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletResponse
 class IpWhiteListSecurityFilter (val env: Environment) : GenericFilterBean() {
     companion object : KLogging()
 
-//    @Value("#{T(java.util.Arrays).asList('\${api.security.ip.whitelist:}')}")
+//    @Value("#{T(java.util.Arrays).asList('\${api.role.ip.whitelist:}')}")
 
-//    @Value("\${api.security.ip.whitelist}")
+//    @Value("\${api.role.ip.whitelist}")
 //    lateinit var ipWhiteListString: String
 
-//    @Value("\${api.security.ip.whitelist}")
+//    @Value("\${api.role.ip.whitelist}")
 //    lateinit var ipWhite: String //= emptyList<String>()
     var ipWhitelist=emptyList<String>()
 
@@ -41,7 +41,7 @@ class IpWhiteListSecurityFilter (val env: Environment) : GenericFilterBean() {
 
 
         if(ipWhitelist.isEmpty()) {
-            val ipWhiteListString = env.getProperty("api.security.ip.whitelist")
+            val ipWhiteListString = env.getProperty("api.role.ip.whitelist")
             if (!ipWhiteListString.isNullOrBlank())
                 ipWhitelist = ipWhiteListString.split(",")
         }

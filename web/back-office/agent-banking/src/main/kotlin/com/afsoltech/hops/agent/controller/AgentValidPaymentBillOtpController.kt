@@ -58,7 +58,7 @@ class AgentValidPaymentBillOtpController(val hopsPaymentOfNoticeService: HopsPay
             val paymentRequestDto = InitPaymentRequestDto(billFeeAct.accountNumber!!, billFeeActSession.billFee!!.amount,
                     billFeeActSession.billFee!!.feeAmount,
                     billFeeActSession.billFee!!.totalAmount,  billFeeActSession.taxpayerNumber!!, noticeNumberList)
-            //Call Service to do payment
+            //Call Services to do payment
             val paymentResp = hopsPaymentOfNoticeService.paymentOfNotice(username, paymentRequestDto, request)
 
             val account = accountBankService.findByAccountNumber(billFeeActSession.accountNumber!!)

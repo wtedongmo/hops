@@ -10,3 +10,6 @@
 *.zip
 */logs
 *.rar
+*/log
+*.gz
+

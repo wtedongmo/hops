@@ -1,7 +1,7 @@
 package com.afsoltech.config
 
-import com.afsoltech.core.entity.security.Profile
-import com.afsoltech.core.entity.security.UserProfile
+import com.afsoltech.core.entity.role.Profile
+import com.afsoltech.core.entity.role.UserProfile
 import com.afsoltech.core.entity.user.UserApp
 import com.afsoltech.core.model.attribute.BaseStatus
 import com.afsoltech.core.model.user.attribute.UserPrivilege
@@ -26,7 +26,7 @@ class TempConfig(val userRepository: UserAppRepository, val userProfileRepositor
     fun initUsers() = CommandLineRunner {
         logger.trace { "init users" }
         val bCryptPasswordEncoder= BCryptPasswordEncoder()
-        var userAdmin = UserApp(id=1, login = "admin", password = bCryptPasswordEncoder.encode("admin0"),
+        var userAdmin = UserApp(id=1, login = "admin", password = bCryptPasswordEncoder.encode("adminadmin0"),
                 privilege = UserPrivilege.ADMIN, type = UserType.ADMIN,  email="wtedongmo@gmail.com")
         userAdmin.status = BaseStatus.ACTIVE
 
@@ -39,7 +39,7 @@ class TempConfig(val userRepository: UserAppRepository, val userProfileRepositor
         profile = profileRepository.save(profile)
 
         logger.trace { "init Profile" }
-        val userProfile= UserProfile(id = 1, userP = userAdmin, profileUser = profile, type = UserType.ADMIN, privilege = UserPrivilege.ADMIN)
+        val userProfile= UserProfile(id = 1, user = userAdmin, profile = profile, type = UserType.ADMIN, privilege = UserPrivilege.ADMIN)
         userProfile.status = BaseStatus.ACTIVE
         userProfileRepository.save(userProfile)
     }

@@ -55,7 +55,7 @@ class CoreDevDataConfig {
 
         feeRepository.save(
                 ProviderFee(id=1, feeAppliedType =FeeAppliedType.SERVICE, feeFixed=BigDecimal(300), maxAmount= BigDecimal(500000000),
-                        description = "Customs Service Fee fixe", provider = provider)
+                        description = "Customs Services Fee fixe", provider = provider)
         )
 
         feeRepository.save(

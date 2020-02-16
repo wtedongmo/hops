@@ -4,7 +4,7 @@
 //import com.afsoltech.epayment.model.attribute.BankStatus
 //import com.afsoltech.epayment.portal.repository.ParticipantRepository
 //import mu.KLogging
-//import org.springframework.security.core.context.SecurityContextHolder
+//import org.springframework.role.core.context.SecurityContextHolder
 //import org.springframework.web.bind.annotation.GetMapping
 //import org.springframework.web.bind.annotation.RestController
 //import org.springframework.web.servlet.ModelAndView
