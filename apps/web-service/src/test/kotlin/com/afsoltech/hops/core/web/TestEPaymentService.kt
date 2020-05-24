@@ -104,7 +104,7 @@
 ////        val result = paymentProcessService.paymentOfNoticeProcess(payReq)
 ////        Assert.assertNotNull(result)
 ////        logger.info { result }
-//////        Assert.assertEquals("Succès", result?.resultMsg)
+//////        Assert.assertEquals("Succes", result?.resultMsg)
 ////        Assert.assertEquals("E", result?.result)
 ////        //assertEquals(result.size, "Hello string!")
 ////    }

@@ -54,12 +54,12 @@ class CoreDevDataConfig {
         logger.info { "init Fees" }
 
         feeRepository.save(
-                ProviderFee(id=1, feeAppliedType =FeeAppliedType.SERVICE, feeFixed=BigDecimal(300), maxAmount= BigDecimal(500000000),
+                ProviderFee(id = 1, feeAppliedType = FeeAppliedType.SERVICE, feeFixed = BigDecimal(300), maxAmount = BigDecimal(500000000),
                         description = "Customs Services Fee fixe", provider = provider)
         )
 
         feeRepository.save(
-                ProviderFee(id=2, feeAppliedType =FeeAppliedType.ADDITIONAL, maxFee=BigDecimal(500), feeRate=5.0, maxAmount= BigDecimal(500000000),
+                ProviderFee(id = 2, feeAppliedType = FeeAppliedType.ADDITIONAL, maxFee = BigDecimal(500), feeRate = 5.0, maxAmount = BigDecimal(500000000),
                         description = "Customs Additional Fee", provider = provider)
         )
     }

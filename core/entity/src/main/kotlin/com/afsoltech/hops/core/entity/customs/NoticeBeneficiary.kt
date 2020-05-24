@@ -13,7 +13,7 @@ data class NoticeBeneficiary (
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_BENEFICIARY_ID")
         @Id
         @Column(name = "NOTICE_BENEFICIARY_ID")
-        var id: Long? = null,
+        var id: Long?? = null,
 
         @Column(name = "BENEFICIARY_NAME", columnDefinition = "varchar(150)")
         @Basic(optional = false)

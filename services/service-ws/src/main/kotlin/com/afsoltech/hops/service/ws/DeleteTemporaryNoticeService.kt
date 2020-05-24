@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.Instant
+import java.time.LocalDateTime
 
 
 @Service
@@ -41,7 +41,7 @@ class DeleteTemporaryNoticeService (val selectedNoticeRepository: SelectedNotice
     fun deleteTemporarySelectedNotice(){
 
         expiredSelectedDuration = LoadSettingDataToMap.settingMap.get("app.notice.expired.duration.selected")?.value?.toLong()?: 10
-        val currentTime = Instant.now()
+        val currentTime = LocalDateTime.now()
         val expiredTime = currentTime.minusSeconds(expiredSelectedDuration)
         val expiredTemporaryNoticeList = selectedNoticeRepository.findListExpiredNotice(expiredTime)
         logger.trace{"Delete of checked Notices \n $expiredTemporaryNoticeList"}

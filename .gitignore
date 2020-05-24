@@ -5,6 +5,8 @@
 **/target
 /*.log
 /*.log.json
+/apps/web-service/com.*
+/apps/web-service/hibernate
 /core/release/web/*.log
 *.log
 *.zip
@@ -12,4 +14,5 @@
 *.rar
 */log
 *.gz
-
+*.lock
+*_1

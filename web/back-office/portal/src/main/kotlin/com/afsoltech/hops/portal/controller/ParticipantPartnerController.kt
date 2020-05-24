@@ -1,4 +1,4 @@
-//package com.afsoltech.epayment.portal.controller
+//package com.afsoltech.epayment.portal.rest
 //
 //import com.afsoltech.epayment.model.attribute.BankDto
 //import com.afsoltech.epayment.model.attribute.BankStatus

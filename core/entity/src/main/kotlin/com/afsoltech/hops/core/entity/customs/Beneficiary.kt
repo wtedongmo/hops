@@ -12,7 +12,7 @@ data class Beneficiary (
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BENEFICIARY_ID")
         @Id
         @Column(name = "BENEFICIARY_ID")
-        var id: Long? = null,
+        var id: Long?? = null,
 
         @Basic(optional = false)
         @Column(name = "CODE", columnDefinition = "char(5)", unique = true)

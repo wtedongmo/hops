@@ -17,7 +17,7 @@ data class SelectedNotice(
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SELECTED_NOTICE_ID")
         @Id
         @Column(name = "SELECTED_NOTICE_ID")
-        var id: Long? = null,
+        var id: Long?? = null,
 
         @Column(name = "REMOTE_NOTICE_ID")
         var remoteNoticeId: Long? = null,

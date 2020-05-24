@@ -7,7 +7,7 @@ import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.Instant
+import java.time.LocalDateTime
 import javax.persistence.*
 
 
@@ -20,7 +20,7 @@ data class Notice(
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_ID")
         @Id
         @Column(name = "NOTICE_ID")
-        var id: Long? = null,
+        var id: Long?? = null,
 
         @Column(name = "NOTICE_NUMBER", columnDefinition = "varchar(100)", unique = true)
         @Basic(optional = false)
@@ -64,7 +64,7 @@ data class Notice(
         var amount: BigDecimal? = null,
 
         @Column(name = "PAYMENT_DATE")
-        var paymentDate: Instant? = null,
+        var paymentDate: LocalDateTime? = null,
 
         @Column(name = "PAYMENT_AMOUNT")
         var paymentAmount: BigDecimal? = null,
@@ -90,13 +90,13 @@ data class Notice(
         var isReconciled: Boolean? = null,
 
         @Column(name = "RECONCILIATION_DATE")
-        var reconciliationDate: Instant? = null,
+        var reconciliationDate: LocalDateTime? = null,
 
         @Column(name = "REMOTE_PAIMENT_AMOUNT")
         var remotePaymentAmount: BigDecimal? = null,
 
         @Column(name = "REMOTE_PAIMENT_DATE")
-        var remotePaymentDate: Instant? = null,
+        var remotePaymentDate: LocalDateTime? = null,
 
         @Column(name = "REMOTE_PAIMENT_NUMBER")
         var remotePaymentNumber: String? = null,

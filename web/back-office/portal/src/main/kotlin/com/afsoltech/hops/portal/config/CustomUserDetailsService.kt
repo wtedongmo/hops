@@ -12,12 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import java.time.Instant
+import java.time.LocalDateTime
 
 import java.util.Arrays
 
@@ -57,9 +54,9 @@ class CustomUserDetailsService { //: UserDetailsService
             if (isUserAllowed(user) && validPaas){
 
                 resetLoginAttempts(user)
-                val authority = SimpleGrantedAuthority(user.type!!.name+ "_" +user.privilege!!.name) //portal.getRole()
+                val authority = SimpleGrantedAuthority(user.type!!.name+ "_" + UserPrivilege.ADMIN.name) //portal.getRole()
                 return User(user.login!!, user.password!!, user.isEnabled!!, isAccountNonExpired(user.expiredDate!!), true, true,
-                        getAuthorities(user.type!!, user.privilege!!))
+                        getAuthorities(user.type!!, UserPrivilege.ADMIN))
             }
         }
 
@@ -73,7 +70,7 @@ class CustomUserDetailsService { //: UserDetailsService
 
         if (user.loginAttempts != null) {
             if (user.loginAttempts!! > DEFAULT_ATTEMPT_NUMBER && checkNotNull(user.lastLoginAttempt?.plusSeconds(DEFAULT_ATTEMPT_TIME.toLong())?.
-                            isAfter(Instant.now()))) {
+                            isAfter(LocalDateTime.now()))) {
                 isBlocked = true
             }
         }
@@ -93,7 +90,7 @@ class CustomUserDetailsService { //: UserDetailsService
 //    @Transactional
     fun saveLoginAttempts(user: UserApp, loginAttempt: Int) {
         user.loginAttempts = loginAttempt
-        user.lastLoginAttempt = Instant.now()
+        user.lastLoginAttempt = LocalDateTime.now()
 
         userRepository!!.save(user)
     }
@@ -119,7 +116,7 @@ class CustomUserDetailsService { //: UserDetailsService
         return bCryptPasswordEncoder.matches(enteredPlainPassword, dbEncryptedPassword)
     }
 
-    private fun isAccountNonExpired(expiredDate: Instant): Boolean {
-        return !expiredDate.isBefore(Instant.now())
+    private fun isAccountNonExpired(expiredDate: LocalDateTime): Boolean {
+        return !expiredDate.isBefore(LocalDateTime.now())
     }
 }

@@ -10,7 +10,7 @@ data class DeclarationType (
         @SequenceGenerator(name = "DECLARATION_TYPE_ID", sequenceName = "DECLARATION_TYPE_ID", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DECLARATION_TYPE_ID")
         @Id @Column(name = "DECLARATION_TYPE_ID")
-        var id: Long? = null,
+        var id: Long?? = null,
 
         @Basic(optional = false)
         @Column(name = "CODE", columnDefinition = "char(3)", unique = true)

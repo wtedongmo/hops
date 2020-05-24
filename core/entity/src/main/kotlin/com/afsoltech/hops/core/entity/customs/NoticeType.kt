@@ -12,7 +12,7 @@ data class NoticeType (
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_TYPE_ID")
         @Id
         @Column(name = "NOTICE_TYPE_ID")
-        var id: Long? = null,
+        var id: Long?? = null,
 
         @Basic(optional = false)
         @Column(name = "CODE", columnDefinition = "char(1)", unique = true)

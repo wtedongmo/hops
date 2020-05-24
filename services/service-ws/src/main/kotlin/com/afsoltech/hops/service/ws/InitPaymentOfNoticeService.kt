@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import kotlin.text.StringBuilder
 
@@ -119,7 +120,7 @@ class InitPaymentOfNoticeService(val selectedNoticeRepository: SelectedNoticeRep
             val tempPayment = TempPayment(internalPaymentNumber = internalPaymentNumber, bankCode = LoadSettingDataToMap.bankCode,
                     bankAgencyCode = account.branchCode, customerNumber = initPaymentRequest.customerNumber, payerAccountNumber = account.accountNo,
                     payerAccountName = account.accountName, paymentMode = LoadSettingDataToMap.paymentMode, amount = noticeAmount, feeAmount = feeAmount,
-                    totalAmount = totalAmount,  paymentDate = Instant.now(), providerCode = LoadSettingDataToMap.providerNoticeCode,
+                    totalAmount = totalAmount,  paymentDate = LocalDateTime.now(), providerCode = LoadSettingDataToMap.providerNoticeCode,
                     billNumber = noticeStr.substring(1), operationCode=LoadSettingDataToMap.operationCode, currency=account.currency, userLogin = user.login)
 
             return tempPaymentRepository.save(tempPayment)

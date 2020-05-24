@@ -3,8 +3,8 @@ package com.afsoltech.config
 import com.afsoltech.core.entity.role.Menu
 import com.afsoltech.core.entity.role.Rubric
 import com.afsoltech.core.model.attribute.BaseStatus
-import com.afsoltech.core.repository.security.MenuRepository
-import com.afsoltech.core.repository.security.RubricRepository
+import com.afsoltech.core.repository.role.MenuRepository
+import com.afsoltech.core.repository.role.RubricRepository
 import mu.KLogging
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

@@ -14,7 +14,7 @@ data class PaymentOfNotice (
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PAYMENT_OF_NOTICE_ID")
         @Id
         @Column(name = "PAYMENT_OF_NOTICE_ID")
-        var id: Long? = null,
+        var id: Long?? = null,
 
         @Column(name = "NOTICE_NUMBER")
         var noticeNumber : String? = null,

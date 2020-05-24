@@ -6,7 +6,7 @@ import com.afsoltech.hops.core.entity.customs.Notice
 import com.afsoltech.hops.core.entity.customs.temp.SelectedNotice
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import java.time.Instant
+import java.time.LocalDateTime
 
 interface SelectedNoticeRepository: BaseRepository<SelectedNotice, Long> {
 //    fun findByStatus(status: BaseStatus) : List<SelectedNotice>
@@ -15,7 +15,7 @@ interface SelectedNoticeRepository: BaseRepository<SelectedNotice, Long> {
     fun findByUserLogin(userLogin: String) : List<SelectedNotice>
 
     @Query("select n from SelectedNotice n where n.dateCreated < :expiredTime")
-    fun findListExpiredNotice(@Param("expiredTime") expiredTime: Instant): List<SelectedNotice>
+    fun findListExpiredNotice(@Param("expiredTime") expiredTime: LocalDateTime): List<SelectedNotice>
 
     @Query("select n from SelectedNotice n where n.noticeNumber in :noticeNumberList")
     fun findListNoticeNumber(@Param("noticeNumberList") noticeNumberList: List<String>) : List<SelectedNotice>

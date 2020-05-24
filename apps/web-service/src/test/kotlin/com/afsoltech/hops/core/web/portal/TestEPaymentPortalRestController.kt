@@ -1,4 +1,4 @@
-//package com.afsoltech.epayment.integration.outbound.controller
+//package com.afsoltech.epayment.integration.outbound.rest
 //
 //import com.afsoltech.epayment.core.web.ListPaidNoticeController
 //import com.afsoltech.epayment.core.web.ListUnpaidNoticeController
@@ -9,8 +9,8 @@
 //import com.afsoltech.epayment.model.inbound.PaymentProcessRequestDto
 //import com.afsoltech.epayment.model.inbound.UnpaidNoticeRequestDto
 //import com.afsoltech.epayment.model.outbound.OutboundNoticeRequestDto
-//import com.afsoltech.epayment.portal.controller.PortalListPaidNoticeController
-//import com.afsoltech.epayment.portal.controller.PortalListUnpaidNoticeController
+//import com.afsoltech.epayment.portal.rest.PortalListPaidNoticeController
+//import com.afsoltech.epayment.portal.rest.PortalListUnpaidNoticeController
 //import com.afsoltech.epayment.portal.service.PortalCheckUserInfosService
 //import com.afsoltech.epayment.repository.OutboundNoticeRepository
 //import com.afsoltech.epayment.service.utils.StringDateFormatterUtils

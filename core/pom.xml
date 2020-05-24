@@ -17,8 +17,13 @@
 		<module>model</module>
         <module>entity</module>
 		<module>repository</module>
-		<module>service</module>
-		<module>exception</module>
+		<!--<module>service</module>-->
+		<!--<module>exception</module>-->
     </modules>
+
+    <!--<properties>-->
+        <!--<spring-boot.repackage.skip>true</spring-boot.repackage.skip>-->
+        <!--<skipTests>true</skipTests>-->
+    <!--</properties>-->
 
 </project>

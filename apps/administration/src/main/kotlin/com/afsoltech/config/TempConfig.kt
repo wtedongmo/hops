@@ -6,8 +6,8 @@ import com.afsoltech.core.entity.user.UserApp
 import com.afsoltech.core.model.attribute.BaseStatus
 import com.afsoltech.core.model.user.attribute.UserPrivilege
 import com.afsoltech.core.model.user.attribute.UserType
-import com.afsoltech.core.repository.security.ProfileRepository
-import com.afsoltech.core.repository.security.UserProfileRepository
+import com.afsoltech.core.repository.role.ProfileRepository
+import com.afsoltech.core.repository.role.UserProfileRepository
 import com.afsoltech.core.repository.user.UserAppRepository
 import mu.KLogging
 import org.springframework.boot.CommandLineRunner
@@ -26,8 +26,8 @@ class TempConfig(val userRepository: UserAppRepository, val userProfileRepositor
     fun initUsers() = CommandLineRunner {
         logger.trace { "init users" }
         val bCryptPasswordEncoder= BCryptPasswordEncoder()
-        var userAdmin = UserApp(id=1, login = "admin", password = bCryptPasswordEncoder.encode("adminadmin0"),
-                privilege = UserPrivilege.ADMIN, type = UserType.ADMIN,  email="wtedongmo@gmail.com")
+        var userAdmin = UserApp(id=1, login = "admin", password = bCryptPasswordEncoder.encode("adminadmin001"),
+                /*privilege = UserPrivilege.ADMIN,*/ type = UserType.ADMIN,  email="wtedongmo@gmail.com")
         userAdmin.status = BaseStatus.ACTIVE
 
         userAdmin = userRepository.save(userAdmin)
@@ -39,7 +39,7 @@ class TempConfig(val userRepository: UserAppRepository, val userProfileRepositor
         profile = profileRepository.save(profile)
 
         logger.trace { "init Profile" }
-        val userProfile= UserProfile(id = 1, user = userAdmin, profile = profile, type = UserType.ADMIN, privilege = UserPrivilege.ADMIN)
+        val userProfile= UserProfile(id = 1, user = userAdmin, profile = profile, privilege = UserPrivilege.ADMIN)
         userProfile.status = BaseStatus.ACTIVE
         userProfileRepository.save(userProfile)
     }

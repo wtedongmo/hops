@@ -14,7 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import java.time.Instant
+import java.time.LocalDateTime
 
 @Component
 class BackOfficePortalAuthenticationProvider(val userRepository: UserAppRepository) : AuthenticationProvider {
@@ -44,7 +44,7 @@ class BackOfficePortalAuthenticationProvider(val userRepository: UserAppReposito
                             else isPasswordVerified(user.password!!, username+password)
                 if (isUserAllowed(user) && validPaas){
                     resetLoginAttempts(user)
-                    return UsernamePasswordAuthenticationToken(username, password, getAuthorities(checkNotNull(user.type), checkNotNull(user.privilege)))
+                    return UsernamePasswordAuthenticationToken(username, password, getAuthorities(checkNotNull(user.type), UserPrivilege.ADMIN))
                 }
             }
 
@@ -61,7 +61,7 @@ class BackOfficePortalAuthenticationProvider(val userRepository: UserAppReposito
 
         if (user.loginAttempts != null) {
             if (user.loginAttempts!! > DEFAULT_ATTEMPT_NUMBER && checkNotNull(user.lastLoginAttempt?.plusSeconds(DEFAULT_ATTEMPT_TIME.toLong())?.
-                            isAfter(Instant.now()))) {
+                            isAfter(LocalDateTime.now()))) {
                 isBlocked = true
             }
         }
@@ -81,7 +81,7 @@ class BackOfficePortalAuthenticationProvider(val userRepository: UserAppReposito
     @Transactional
     fun saveLoginAttempts(user: UserApp, loginAttempt: Int) {
         user.loginAttempts = loginAttempt
-        user.lastLoginAttempt = Instant.now()
+        user.lastLoginAttempt = LocalDateTime.now()
 
         userRepository.save(user)
     }
@@ -111,7 +111,7 @@ class BackOfficePortalAuthenticationProvider(val userRepository: UserAppReposito
         return checkNotNull(p0?.equals(UsernamePasswordAuthenticationToken::class.java))
     }
 
-    private fun isAccountNonExpired(expiredDate: Instant?): Boolean {
-        return expiredDate?.isAfter(Instant.now())?:true
+    private fun isAccountNonExpired(expiredDate: LocalDateTime?): Boolean {
+        return expiredDate?.isAfter(LocalDateTime.now())?:true
     }
 }

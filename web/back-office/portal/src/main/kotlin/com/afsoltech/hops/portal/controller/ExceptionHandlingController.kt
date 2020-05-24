@@ -1,4 +1,4 @@
-//package com.afsoltech.hops.portal.controller
+//package com.afsoltech.hops.portal.rest
 //
 //import com.afsoltech.core.exception.ExpiredException
 //import mu.KLogging

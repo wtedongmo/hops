@@ -1,4 +1,4 @@
-//package com.afsoltech.hops.web.controller
+//package com.afsoltech.hops.web.rest
 //
 //import com.afsoltech.epayment.model.inbound.*
 //import com.afsoltech.epayment.service.ListPaidNoticeService
