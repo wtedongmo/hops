@@ -38,7 +38,7 @@
 					<div th:if="${errorMessage}"  th:text="#{__${errorMessage}__}" class="alert alert-warning"/>
 					<div th:if="${message}" th:text="#{__${message}__}" style="color:green"/>
 
-					<form class="form-horizontal" th:action="@{/portal/retrieve-selected-customs}" th:method="post">
+					<form class="form-horizontal" th:action="@{/portal/retrieve-selected-customs}" th:object="${taxpayer}" th:method="post">
 						<!--th:object="${otpForm}"-->
 						<div class="box-body no-padding">
 							<div class="row no-margin">
@@ -52,8 +52,8 @@
 										</cmm-label>
 										<div class="input-group col-sm-8">
 											<cmm-textinput>
-												<input  th:field="*{niu}"  class="form-control" type="text" th:value="${niu}" required="true"
-														placeholder="Niu" style="height: 26px;" />
+												<input  th:field="*{taxpayerNumber}"  class="form-control" type="text" th:value="${taxpayerNumber}"
+														required="true" placeholder="" style="height: 26px;" />
 											</cmm-textinput>
 										</div>
 									</div>

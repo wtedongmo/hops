@@ -9,12 +9,13 @@
         <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="icon" type="image/x-icon" th:href="@{/img/favicon.ico}" />
+        <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
         <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
         <link rel="stylesheet" type="text/css" th:href="@{/vendor/datatables/datatables.min.css}" />
         <link rel="stylesheet" type="text/css" th:href="@{/css/afst_temp.css}" />
         <link rel="stylesheet" type="text/css" th:href="@{/css/afst_temp_responsive.css}" />
     </div>
-    <title th:text="#{portal.title}">Hops e-Portal</title>
+    <title th:text="#{portal.title}">Hops Admin</title>
 </head>
 
 <body class="skin-blue sidebar-mini" style="height: auto;">
@@ -22,32 +23,31 @@
     <div class="wrapper" style="overflow-y: hidden; height: auto;">
         <cmm-top-area th:fragment="header">
             <header class="main-header" style="background: #4c7188">
-
                 <a class="logo" style="background: #4c7188; cursor: pointer;">
-                    <span class="logo-lg"><strong class="logo_real"><span class="blind" th:text="#{portal.title}">Hops Portal</span></strong></span>
+                    <span class="logo-lg"><strong class="logo_real"><span class="blind" th:text="#{modules.title}">Hops Portal</span></strong></span>
                 </a>
 
                 <nav class="navbar navbar-static-top" style="background: #4c7188">
-                    <a class="sidebar-toggle" data-toggle="offcanvas" th:href="@{/portal/}" id="sidebar-toggle" role="button">
+                    <a class="sidebar-toggle" data-toggle="offcanvas" th:href="@{/admin/}" id="sidebar-toggle" role="button">
                         <span class="sr-only">Toggle navigation</span>
                     </a>
                     <div style="float:left;">
                         <cmm-top-menu>
                             <ul class="topmenubar">
                                 <li class="topmenuLI">
-                                    <a class="menu_deth"><i class="fa "></i><span th:text="#{portal.title}">Hops Portal</span></a>
+                                    <a class="menu_deth"><i class="fa "></i><span th:text="#{modules.title}">Hops Portal</span></a>
                                 </li>
                             </ul>
                         </cmm-top-menu>
                     </div>
-                    <a class="m_sidebar-toggle" data-toggle="offcanvas" th:href="@{/portal/}" id="m_sidebar-toggle" role="button">
+                    <a class="m_sidebar-toggle" data-toggle="offcanvas" th:href="@{/admin/}" id="m_sidebar-toggle" role="button">
                         <span class="sr-only">Toggle navigation2</span>
                     </a>
                     <cmm-navbar>
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
                                 <li class="dropdown messages-menu">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" th:href="@{/portal/}" placement="bottom">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" th:href="@{/admin/}" placement="bottom">
                                         <i class="fa fa-globe"></i>
                                         <span class="label label-warning">Lang</span>
                                     </a>
@@ -56,8 +56,7 @@
                                         <li>
                                             <ul class="menu">
                                                 <li>
-                                                    <!--<a href="javascript:;">-->
-                                                    <a href="/hops-portal/lang?lang=en">
+                                                    <a href="javascript:;">
                                                         <div class="inner">
                                                             <div class="inner_cont">
                                                                 <span class="cont_list locales" data-locale="en" th:text="#{lang.eng}">English</span>
@@ -66,12 +65,10 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <!--<a href="javascript:;">-->
-                                                    <a href="/hops-portal/lang?lang=fr">
+                                                    <a href="javascript:;">
                                                         <div class="inner">
                                                             <div class="inner_cont">
                                                                 <span class="cont_list locales" data-locale="fr" th:text="#{lang.fr}">Français</span>
-                                                                <!--<span class="cont_list locales" data-locale="fr" th:text="#{lang.fr}">Français</span>-->
                                                             </div>
                                                         </div>
                                                     </a>
@@ -100,52 +97,54 @@
                             </li>
                             <!--<li><span class="username" th:if="${login}" th:text="${login}">username</span></li>-->
                         </ul>
-                        <ul class="sidebar-menu">
+                        <ul sec:authorize="isAuthenticated()" class="sidebar-menu">
                             <li class="header" th:text="#{navigation.title}">Navigation Principale</li>
-                            <li th:class="${parentMenuHighlight == 'notices-index'}? 'treeview active' : 'treeview'">
-                                <a>
-                                    <i class="fa fa-folder"></i> <span th:text="#{notice.label}">Avis de paiement</span>
-                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                                </a>
-
-                                <ul class="treeview-menu">
-                                    <li th:class="${menuHighlight == 'notices-auth'}? 'active' : ''">
-                                        <a th:href="@{/portal/auth-customs-user}">
-                                            <i class="fa fa-circle-o"></i> <span th:text="#{notice.auth.label}">Avis non Payes</span>
-                                        </a>
-                                    </li>
-                                     <li th:class="${menuHighlight == 'notices-unpaid'}? 'active' : ''">
-                                        <a th:href="@{/portal/list-unpaid-customs}">
-                                            <i class="fa fa-circle-o"></i> <span th:text="#{notice.unpaid.list.label}">Avis non Payes</span>
-                                        </a>
-                                    </li>
-                                    <li th:class="${menuHighlight == 'notices-selected'}? 'active' : ''">
-                                        <!--<a th:href="@{/portal/retrieve-selected-customs/M000000000041H}">-->
-                                        <a th:href="@{/portal/retrieve-selected-customer-form}">
-                                            <i class="fa fa-circle-o"></i> <span th:text="#{notice.unpaid.selected.label}">Avis payes</span>
-                                        </a>
-                                    </li>
-
-                                    <li th:class="${menuHighlight == 'notices-paid'}? 'active' : ''">
-                                        <a th:href="@{/portal/list-paid-customs}">
-                                            <i class="fa fa-circle-o"></i> <span th:text="#{notice.paid.list.label}">Avis payes</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
                             <!--<li th:class="${parentMenuHighlight == 'bank-index'}? 'treeview active' : 'treeview'">-->
                                 <!--<a>-->
-                                    <!--<i class="fa fa-folder"></i> <span th:text="#{partner.list.label}">Partenaire de Paiement</span>-->
+                                    <!--<i class="fa fa-folder"></i> <span>End Points</span>-->
                                     <!--<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>-->
                                 <!--</a>-->
-                                <!--<ul class="treeview-menu">-->
+                                <!--<ul class="treeview-menu" >-->
                                     <!--<li th:class="${menuHighlight == 'bank-list'}? active : ''">-->
-                                        <!--<a th:href="@{/portal/list-partner}">-->
-                                            <!--<i class="fa fa-circle-o"></i> <span th:text="#{partner.list.label}">Liste</span>-->
+                                        <!--<a th:href="@{/admin/end-points}">-->
+                                            <!--<i class="fa fa-circle-o"></i> <span>End Points</span>-->
                                         <!--</a>-->
                                     <!--</li>-->
                                 <!--</ul>-->
                             <!--</li>-->
+                            <li sec:authorize="hasAnyAuthority('ADMIN_ADMIN')" th:class="${parentMenuHighlight == 'bank-index'}? 'treeview active' : 'treeview'"
+                                th:each="menu: ${session.listMenu}">
+                                <a>
+                                    <i class="fa fa-folder"></i> <span th:text="#{__${menu.label}__}">Users</span>
+                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu" th:each="rubric: ${menu.rubricList}">
+                                    <li th:class="${menuHighlight == 'bank-list'}? active : ''">
+                                        <a th:href="@{__${rubric.uri}__}">
+                                            <i class="fa fa-circle-o"></i> <span th:text="#{__${rubric.label}__}">Users</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li sec:authorize="!hasAnyAuthority('ADMIN_ADMIN')" th:class="${parentMenuHighlight == 'bank-index'}? 'treeview active' : 'treeview'">
+                                <a>
+                                    <i class="fa fa-folder"></i> <span th:text="#{app.menu.user.label}">Application</span>
+                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu" th:each="rubric: ${session.listRubric}">
+
+                                    <li th:class="${menuHighlight == 'bank-list'}? active : ''">
+                                        <a th:href="@{__${rubric.uri}__}">
+                                            <i class="fa fa-circle-o"></i> <span th:text="#{__${rubric.label}__}">Customs</span>
+                                        </a>
+                                    </li>
+                                    <!--<li th:class="${menuHighlight == 'bank-list'}? active : ''">-->
+                                    <!--<a th:href="@{/admin/inbound-participants}">-->
+                                    <!--<i class="fa fa-circle-o"></i> <span th:text="#{admin.category.inbound}">Participants</span>-->
+                                    <!--</a>-->
+                                    <!--</li>-->
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 </section>
@@ -163,27 +162,43 @@
                     Design, Implementation of Hops e-Payment by Afsoltech
                 </div>
                 <!--th:text="#{app.copyright}"-->
-                <strong> <span >Copyright © 2020</span> <a th:href="@{/portal/}" th:text="#{apps.title}">Afsoltech</a>.</strong> All rights reserved.
+                <strong> <span >Copyright © 2020</span> <a th:href="@{/home}" th:text="#{apps.title}">Afsoltech</a>.</strong> All rights reserved.
             </footer>
         </cmm-bottom-area>
 
     </div>
     <!-- end wrapper-->
     <div th:fragment="footerfiles">
-        <script type="text/javascript" th:src="@{/js/inline.js}"></script>
-        <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
-        <script type="text/javascript" th:src="@{/js/vendor.js}"></script>
-        <script type="text/javascript" th:src="@{/js/main.js}"></script>
+        <script type="text/javascript" th:src="@{/static/js/inline.js}"></script>
+        <script type="text/javascript" th:src="@{/static/js/scripts.js}"></script>
+        <script type="text/javascript" th:src="@{/static/js/vendor.js}"></script>
+        <script type="text/javascript" th:src="@{/static/js/main.js}"></script>
 
         <script type="text/javascript" th:src="@{/vendor/datatables/datatables.min.js}"></script>
-        <script type="text/javascript" th:src="@{/js/afst_temp.js}"></script>
-        <!--<script type="text/javascript" th:src="@{/js/afst_locale.js}"></script>-->
+        <script type="text/javascript" th:src="@{/static/js/afst_temp.js}"></script>
+        <script>
+            var showAddForm= function () {
+                var showTypeAddForm = $("#showTypeAddForm").val();
+                if (showTypeAddForm == true || showTypeAddForm == 'true') {
+                    $("#showTypeAddForm").val(false);
+                } else {
+                    $("#showTypeAddForm").val(true);
+                }
+                $("#typeAddForm").submit();
+            }
+        </script>
 
+        <script>
+            var cancelForm = function() {
+                $("#addTypeContainer").toggle(1000);
+                $("#showTypeAddForm").val(false);
+            }
+        </script>
         <script>
             $(".locales").click(function () {
                 var selectedOption = $(this).data('locale').trim();
                 if (selectedOption != ''){
-                    window.location.replace('hops-portal/?lang=' + selectedOption);
+                    window.location.replace('hops-admin/?lang=' + selectedOption);
                 }
             });
         </script>

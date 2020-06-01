@@ -126,7 +126,7 @@ class BaseEntitiesController(val baseEntitiesService: BaseEntitiesService): Abst
                        @RequestParam(value = "pageNumber", required = false) pageNumber: Int?): ModelAndView {
 
         if(!checkAuth.hasAuthorization()){
-            return ModelAndView("redirect:/admin/base-entities?pageNumber=$pageNumber&id=${baseEntity.entityId}&accessDenied=true")
+            return ModelAndView("redirect:/admin/base-entities/${baseEntity.entityId}?pageNumber=$pageNumber&accessDenied=true")
         }
         baseEntitiesService.saveBaseEntity(baseEntity)
 
@@ -134,7 +134,7 @@ class BaseEntitiesController(val baseEntitiesService: BaseEntitiesService): Abst
     }
 
     fun redirectToPage(pageNumber: Int?, id: Long?, entityId: Int?): ModelAndView {
-        var url = "redirect:/admin/base-entities"
+        var url = "redirect:/admin/base-entities/$entityId"
 
         pageNumber?.let {
             url = "$url?pageNumber=$pageNumber"
@@ -144,12 +144,12 @@ class BaseEntitiesController(val baseEntitiesService: BaseEntitiesService): Abst
             }
         }
 
-        entityId?.let {
-            if(pageNumber==null)
-                url = "$url?id=$entityId"
-            else
-                url = "$url&id=$entityId"
-        }
+//        entityId?.let {
+//            if(pageNumber==null)
+//                url = "$url?id=$entityId"
+//            else
+//                url = "$url&id=$entityId"
+//        }
 
         return ModelAndView("$url&success=true")
     }

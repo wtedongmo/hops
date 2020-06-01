@@ -71,7 +71,7 @@ class BackOfficeAgenBankingAuthenticationProvider(val userRepository: UserAppRep
     }
 
     private fun isUserAllowed(user: UserApp): Boolean {
-        return (user.status?.name.equals(BaseStatus.ACTIVE.name, true))
+        return (user.status?.name.equals(BaseStatus.ACTIVE.name, true)&& !(user.type?.equals(UserType.CUSTOMER)?:false))
     }
 
     private fun resetLoginAttempts(user: UserApp) {

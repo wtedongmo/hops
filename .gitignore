@@ -7,6 +7,9 @@
 /*.log.json
 /apps/web-service/com.*
 /apps/web-service/hibernate
+/apps/administration/hibernate
+/apps/agent-banking/hibernate
+/apps/portal/hibernate
 /core/release/web/*.log
 *.log
 *.zip
@@ -16,3 +19,4 @@
 *.gz
 *.lock
 *_1
+*.war

@@ -85,7 +85,7 @@ class AuthUserNoticeController(val checkUserInfoService: CheckUserInfoService, v
                 request.getSession().setAttribute("Auth_Customs", authRequest);
                 try {
                     val auth = SecurityContextHolder.getContext().authentication
-                    otpService.generateOTPAndSendMail(auth.name, RequestType.AUTH_CUSTOMS, false)
+                    otpService.generateOTPAndSendMail(auth.name, authForm.email!!, RequestType.AUTH_CUSTOMS, false)
                    model.addObject("message", "app.customs.auth.code.send.mail")
                    model.addObject("otpForm", OtpDto())
     //                model.addObject("otpFormLink", "/validateOtp")

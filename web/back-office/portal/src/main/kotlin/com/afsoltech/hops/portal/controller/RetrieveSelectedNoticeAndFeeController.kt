@@ -6,6 +6,7 @@ import com.afsoltech.core.service.cap.AccountBankService
 import com.afsoltech.core.service.utils.StringDateFormatterUtils
 import com.afsoltech.hops.core.model.BillPaymentNoticeModel
 import com.afsoltech.hops.core.model.integration.OutSelectedNoticeRequestDto
+import com.afsoltech.hops.core.model.notice.UnpaidNoticeRequestDto
 import com.afsoltech.hops.service.integration.RetrieveSelectedUnpaidNoticeService
 import com.afsoltech.hops.service.ws.CalculateFeeNoticeService
 
@@ -37,6 +38,11 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
 
     //        var billFeeDto :BillFeeDto?=null
             val selectedNoticeList = result.result()
+            if(selectedNoticeList.isEmpty()){
+                return ModelAndView("redirect:/portal/retrieve-selected-customer-form?errorMessage=empty.search.result")
+//                throw NotFoundException("empty.search.result") // , listOf(taxpayerNumber)
+            }
+
             val noticeNumberList = mutableListOf<String>()
             selectedNoticeList.forEach { item ->
                 item.notificationDate = StringDateFormatterUtils.StringDateToDateFormat.format(item.notificationDate)
@@ -87,6 +93,7 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
             modelAndView.addObject("errorMessage", errorMessage)
         }
         modelAndView.addObject("niu", String())
+        modelAndView.addObject("taxpayer", UnpaidNoticeRequestDto())
         modelAndView.addObject("parentMenuHighlight", "notices-index")
         modelAndView.addObject("menuHighlight", "notices-selected")
         modelAndView.viewName = "portal/customer-selected-notice-form"
@@ -94,9 +101,9 @@ class RetrieveSelectedNoticeAndFeeController(val retrieveSelectedUnpaidNoticeSer
     }
 
     @PostMapping("/retrieve-selected-customs")
-    fun retrieveSelectedNotice(@ModelAttribute("Customs") customerNiu: String,
+    fun retrieveSelectedNotice(@ModelAttribute("taxpayer") taxpayer: UnpaidNoticeRequestDto,
                                request: HttpServletRequest): ModelAndView {
-        return ModelAndView("redirect:/portal/retrieve-selected-customs/$customerNiu")
+        return ModelAndView("redirect:/portal/retrieve-selected-customs/${taxpayer.taxpayerNumber}")
     }
 
     @GetMapping("/display-selected-customs/{taxpayerNumber}")

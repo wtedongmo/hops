@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hops Mail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body style="width: auto; align-items: center; margin: 0 20% 20px 20%; background-color: #ddd;">
+	<div style="background-color: #FFF">
+		
+		<h3> Corfirm Registration</h3>
+		<div style="padding-left: 20px; padding-right: 20px">
+			<div style="margin: 15px 0">
+				
+				<span><strong>Hi, dear {{name}},</strong></span>
+				<br/>
+				<span>Your account has been created. To enable it please <strong>  <a href="{{url}}">click here</a> </strong> </span>
+				<br/>
+				<span>You can also copy the link below and paste in your browser</span> 
+				
+				<br/>
+				<span>{{url}}</span>
+				<br/><br/>
+				<span>This link will expire after {{expiredTime}}</span>
+				
+				<br/><br/>
+				<span>If the link has been expired, <strong> <a href="{{resendTokenUrl}}">Click here</a> </strong> to request a new link by mail  </span>
+			</div>
+			
+		</div>
+		<!-- <div style="margin: 0 20px 7px 20px; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd">
+			<table style="width: 100%; ">
+				<tr>
+					<td style="width: 30%"><span>Your Login</span>:</td>
+					<td style="width: 70%"><strong>
+						<span>{{login}}</span>  
+						
+					</strong></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><span>Your Password</span>:</td>
+					<td style="width: 70%"><strong>{{password}}</strong></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><span>URL</span>:</td>
+					<td style="width: 70%"><strong>  <a href="{{url}}">click here</a> </strong></td>
+				</tr>
+			</table>
+		</div> -->
+
+	
+		<div style="padding-left: 20px; padding-right: 20px">
+			<div style="margin: 15px 0">
+								
+				Thanks and regards, <br/>
+
+				Yours truly Hops.<br/><br/>
+			</div>
+			
+		</div>
+		
+		
+		
+		
+		<div style="padding-left: 20px; padding-right: 20px">
+			<div style="margin: 15px 0; font-size:11px">
+			Disclaimer Notice: <br/>
+				
+				This is an automatic response, please do not reply to this email. 
+				
+			</div>
+			
+		</div>
+
+		
+	</div>
+</body>
+</html>
